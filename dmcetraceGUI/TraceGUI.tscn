@@ -1,0 +1,349 @@
+[gd_scene load_steps=26 format=3 uid="uid://haxot671h3c4"]
+
+[ext_resource type="Script" path="res://TraceGUI.gd" id="1_rncp3"]
+[ext_resource type="Script" path="res://TChart.gd" id="2_m5p0u"]
+[ext_resource type="Script" path="res://FChart.gd" id="2_u40rw"]
+[ext_resource type="Script" path="res://FMarkers.gd" id="3_1kuvw"]
+[ext_resource type="Script" path="res://TMarkers.gd" id="3_rw642"]
+[ext_resource type="Script" path="res://TCoreLabels.gd" id="6_peopc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gplwm"]
+content_margin_left = 8.0
+content_margin_top = 40.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.156863, 0.156863, 0.156863, 1)
+border_color = Color(0.960784, 0.960784, 0.960784, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_40014"]
+bg_color = Color(0.27451, 0.27451, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mrl6m"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xhfom"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.137255, 0.137255, 0.137255, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.27451, 0.27451, 0.27451, 1)
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vo8sc"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tyybl"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5pex6"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1n3jt"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.117647, 0.117647, 0.117647, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.27451, 0.27451, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q8b8d"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0mv3j"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rex43"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mnfpc"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.117647, 0.117647, 0.117647, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.27451, 0.27451, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iqdt1"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+border_color = Color(0.27451, 0.27451, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hvjs6"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a3unn"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kt5st"]
+bg_color = Color(0.156863, 0.156863, 0.156863, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4hdv6"]
+bg_color = Color(0.235294, 0.235294, 0.235294, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rwee7"]
+bg_color = Color(0.235294, 0.235294, 0.235294, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2gb4t"]
+content_margin_left = 5.0
+bg_color = Color(0.0862745, 0.0862745, 0.0862745, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.235294, 0.235294, 0.235294, 1)
+
+[node name="TraceGui" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rncp3")
+
+[node name="Background" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 1600.0
+offset_bottom = 1024.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_gplwm")
+
+[node name="VSplitTop" type="VSplitContainer" parent="Background"]
+layout_mode = 2
+split_offset = 300
+
+[node name="myHSplitContainerTop" type="HSplitContainer" parent="Background/VSplitTop"]
+layout_mode = 2
+split_offset = 1000
+
+[node name="TraceTab" type="TabContainer" parent="Background/VSplitTop/myHSplitContainerTop"]
+layout_mode = 2
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_40014")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_mrl6m")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xhfom")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_vo8sc")
+
+[node name="HSplitSrcVars" type="HSplitContainer" parent="Background/VSplitTop/myHSplitContainerTop"]
+layout_mode = 2
+
+[node name="SrcTab" type="TabContainer" parent="Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars"]
+layout_mode = 2
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_tyybl")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_5pex6")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1n3jt")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
+
+[node name="SrcView" type="RichTextLabel" parent="Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars/SrcTab"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 14
+text = "No source tree available
+"
+autowrap_mode = 0
+
+[node name="VarsTab" type="TabContainer" parent="Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars"]
+layout_mode = 2
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_0mv3j")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_rex43")
+theme_override_styles/panel = SubResource("StyleBoxFlat_mnfpc")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_iqdt1")
+
+[node name="VarsView" type="RichTextLabel" parent="Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars/VarsTab"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 14
+text = "
+"
+autowrap_mode = 0
+
+[node name="VSplitBot" type="VSplitContainer" parent="Background/VSplitTop"]
+layout_mode = 2
+split_offset = 400
+
+[node name="FuncTab" type="TabContainer" parent="Background/VSplitTop/VSplitBot"]
+layout_mode = 2
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_tyybl")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_5pex6")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1n3jt")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
+
+[node name="FuncContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/FuncTab"]
+layout_mode = 2
+
+[node name="FuncHBoxContainer" type="HBoxContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer"]
+layout_mode = 2
+
+[node name="HSplitFNameFCHart" type="HSplitContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+split_offset = 300
+
+[node name="FNameText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 14
+scroll_active = false
+autowrap_mode = 0
+
+[node name="FChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_hvjs6")
+
+[node name="FChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart/FChartPanel"]
+script = ExtResource("2_u40rw")
+
+[node name="TitleText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart/FChartPanel/FChart"]
+custom_minimum_size = Vector2(1000, 0)
+offset_right = 40.0
+offset_bottom = 40.0
+bbcode_enabled = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
+
+[node name="FMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart/FChartPanel"]
+z_index = 10
+script = ExtResource("3_1kuvw")
+
+[node name="FuncVScrollBar" type="VScrollBar" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+max_value = 10.0
+step = 1.0
+
+[node name="TChartTab" type="TabContainer" parent="Background/VSplitTop/VSplitBot"]
+layout_mode = 2
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_tyybl")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_5pex6")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1n3jt")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
+
+[node name="TChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TChartTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_a3unn")
+
+[node name="TChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TChartTab/TChartPanel"]
+script = ExtResource("2_m5p0u")
+
+[node name="TMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/TChartTab/TChartPanel"]
+z_index = 10
+script = ExtResource("3_rw642")
+
+[node name="TCoreLabels" type="Node2D" parent="Background/VSplitTop/VSplitBot/TChartTab/TChartPanel"]
+script = ExtResource("6_peopc")
+
+[node name="MenuBar" type="MenuBar" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_right = 438.0
+offset_bottom = 40.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_kt5st")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4hdv6")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_rwee7")
+
+[node name="PopupMenuFile" type="PopupMenu" parent="MenuBar"]
+item_count = 3
+item_0/text = "Open                              "
+item_0/id = 0
+item_1/text = "Options"
+item_1/id = 1
+item_2/text = "Quit"
+item_2/id = 2
+
+[node name="PopupMenuView" type="PopupMenu" parent="MenuBar"]
+item_count = 3
+item_0/text = "Show all cores"
+item_0/id = 0
+item_1/text = "Hide all cores"
+item_1/id = 1
+item_2/text = "Toggle show core grid"
+item_2/id = 2
+
+[node name="PopupMenuSearch" type="PopupMenu" parent="MenuBar"]
+item_count = 4
+item_0/text = "Find"
+item_0/id = 0
+item_1/text = "Find Next"
+item_1/id = 1
+item_2/text = "Find Previous"
+item_2/id = 2
+item_3/text = "Advanced search"
+item_3/id = 3
+
+[node name="PopupMenuHelp" type="PopupMenu" parent="MenuBar"]
+item_count = 2
+item_0/text = "Show help"
+item_0/id = 0
+item_1/text = "About"
+item_1/id = 1
+
+[node name="OpenTraceDialog" type="FileDialog" parent="."]
+title = "Open a File"
+position = Vector2i(100, 100)
+size = Vector2i(800, 800)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+
+[node name="TraceView" type="RichTextLabel" parent="."]
+visible = false
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 81.0
+offset_right = -2.0
+offset_bottom = 30.0
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "No trace loaded"
+autowrap_mode = 0
+meta_underlined = false
+hint_underlined = false
+
+[node name="FindLineEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 800.0
+offset_top = 3.0
+offset_right = 1300.0
+offset_bottom = 34.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_2gb4t")
+placeholder_text = "Enter search"
+clear_button_enabled = true
+
+[node name="FindNextButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Next"
+
+[node name="FindPrevButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Prev"

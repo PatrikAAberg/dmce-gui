@@ -1,0 +1,183 @@
+[gd_scene load_steps=5 format=3 uid="uid://bbpl0u6a7p760"]
+
+[ext_resource type="Script" path="res://windows.gd" id="1_hhts4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_suces"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.105882, 0.105882, 0.105882, 1)
+border_color = Color(0.12549, 0.12549, 0.12549, 0.12549)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85fnc"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.713726, 0.572549, 0.388235, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lhy0e"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hhts4")
+
+[node name="MenuBar" type="MenuBar" parent="."]
+layout_mode = 0
+offset_left = 576.0
+offset_top = 80.0
+offset_right = 1064.0
+offset_bottom = 416.0
+
+[node name="PopupMenu" type="PopupMenu" parent="MenuBar"]
+visible = true
+item_count = 2
+item_0/text = "Open"
+item_0/id = 0
+item_1/text = ""
+item_1/id = 1
+
+[node name="PopupMenu2" type="PopupMenu" parent="MenuBar"]
+visible = true
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 176.0
+offset_right = 424.0
+offset_bottom = 368.0
+text = "Knapp"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+position = Vector2i(100, 100)
+size = Vector2i(516, 800)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+
+[node name="MenuButton" type="MenuButton" parent="."]
+layout_mode = 0
+offset_right = 184.0
+offset_bottom = 32.0
+text = "File"
+flat = false
+alignment = 0
+item_count = 2
+popup/item_0/text = "Open"
+popup/item_0/id = 0
+popup/item_1/text = "Save"
+popup/item_1/id = 1
+
+[node name="MenuButton2" type="MenuButton" parent="."]
+layout_mode = 0
+offset_left = 184.0
+offset_right = 368.0
+offset_bottom = 32.0
+text = "View"
+flat = false
+alignment = 0
+item_count = 2
+popup/item_0/text = "Open"
+popup/item_0/id = 0
+popup/item_1/text = "Save"
+popup/item_1/id = 1
+
+[node name="VScrollBar" type="VScrollBar" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 0
+offset_left = 568.0
+offset_top = 280.0
+offset_right = 608.0
+offset_bottom = 568.0
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+initial_position = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_suces")
+
+[node name="Label" type="Label" parent="AcceptDialog"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "asfdasdfasfd"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 448.0
+offset_right = 480.0
+offset_bottom = 784.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "Hejsan 1"
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "Hejsan 2"
+fit_content = true
+
+[node name="CheckButton" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 814.0
+offset_top = 216.0
+offset_right = 912.0
+offset_bottom = 247.0
+text = "Core 1"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 600.0
+offset_right = 296.0
+offset_bottom = 808.0
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Kalle"
+icon_alignment = 2
+
+[node name="CheckButton2" type="CheckButton" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="myPopupPanel" type="PopupPanel" parent="."]
+borderless = false
+always_on_top = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_85fnc")
+
+[node name="Label" type="Label" parent="myPopupPanel"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 223.0
+offset_bottom = 95.0
+text = "sadgfsadgfasdf popup panel
+"
+
+[node name="Popup" type="Popup" parent="."]
+
+[node name="myWindow" type="Window" parent="."]
+title = "Advanced find"
+visible = false
+theme_override_styles/embedded_border = SubResource("StyleBoxFlat_lhy0e")
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 416.0
+offset_right = 1224.0
+offset_bottom = 464.0
+text = "sadf"
+placeholder_text = "placeholder"
