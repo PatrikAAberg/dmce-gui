@@ -56,9 +56,12 @@ var MenuSearch
 var MenuHelp
 var FindLineEdit
 var OpenTraceDialog
+var ShowCurrentTraceInfoDialog
+var CurrentTraceInfoLabel
 var AllCoresButton
 var FindNextButton
 var FindPrevButton
+var TraceInfoButton
 var re_remove_probe
 var TraceViewStart
 var TraceViewEnd
@@ -212,6 +215,7 @@ func LoadTrace(path):
 	tracetmp = FTreeInit(tracetmp)
 
 	var f = FileAccess.open(file, FileAccess.READ)
+	tracetmp.TraceInfo.append("Filename: " + file)
 	while not f.eof_reached(): # iterate through all lines until the end of file is reached
 		var line = f.get_line()
 		if record and line.count("@") > 5: # make sure all fields are there
@@ -240,6 +244,13 @@ func LoadTrace(path):
 		TraceViewStart = tracetmp.index - TRACE_VIEW_HEIGHT
 	else:
 		TraceViewStart = 0
+
+	# Additional trace info
+	tracetmp.TraceInfo.append("Number of trace entries: " + str(len(tracetmp.tracebuffer)))
+	tracetmp.TraceInfo.append("Earliest timestamp: " + str(tracetmp.TimeStart))
+	tracetmp.TraceInfo.append("Latest timestamp: " + str(tracetmp.TimeEnd))
+	tracetmp.TraceInfo.append("Total time: " + str(tracetmp.TimeEnd - tracetmp.TimeStart))
+
 	Trace.append(tracetmp)
 	TActive = len(Trace) - 1
 	file  = file.replace("/", "\\")
@@ -296,6 +307,9 @@ func _ready():
 	FindLineEdit	= get_node("FindLineEdit")
 	FindNextButton	= get_node("FindNextButton")
 	FindPrevButton	= get_node("FindPrevButton")
+	TraceInfoButton = get_node("TraceInfoButton")
+	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
+	CurrentTraceInfoLabel = get_node("ShowCurrentTraceInfoDialog/CurrentTraceInfoLabel")
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
 	print("Control root started")
@@ -317,6 +331,7 @@ func _ready():
 	FindLineEdit.text_submitted.connect(self._find_text_submitted)
 	FindNextButton.pressed.connect(self._find_next_button_pressed)
 	FindPrevButton.pressed.connect(self._find_prev_button_pressed)
+	TraceInfoButton.pressed.connect(self._trace_info_button_pressed)
 
 	# Initial state
 	print("dmce-wgui: started with args: " + str(OS.get_cmdline_args()))
@@ -345,6 +360,11 @@ func _ready():
 	$MenuBar/PopupMenuView.name = " View "
 	$MenuBar/PopupMenuSearch.name = " Search "
 	$MenuBar/PopupMenuHelp.name = " Help "
+
+func _trace_info_button_pressed():
+	TraceInfoButton.release_focus()
+	CurrentTraceInfoLabel.text = str("\n".join(Trace[TActive].TraceInfo))
+	ShowCurrentTraceInfoDialog.popup_centered()
 
 func _find_next(searchstr):
 	if Trace[TActive].index < Trace[TActive].INDEX_MAX:
@@ -413,6 +433,9 @@ func _resized():
 	FindPrevButton.position.x =  FindNextButton.position.x + FindNextButton.size.x + 5
 	FindNextButton.position.y =  3
 	FindPrevButton.position.y =  3
+
+	TraceInfoButton.position.x = FindLineEdit.position.x - 100
+	TraceInfoButton.position.y = 3
 
 	VSplitCTop.split_offset = VSplitCTop.size.y * VSplitTop
 	HSplitCTop.split_offset = HSplitCTop.size.x * HSplitTop

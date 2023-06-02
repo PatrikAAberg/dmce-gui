@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://haxot671h3c4"]
+[gd_scene load_steps=27 format=3 uid="uid://haxot671h3c4"]
 
 [ext_resource type="Script" path="res://TraceGUI.gd" id="1_rncp3"]
 [ext_resource type="Script" path="res://TChart.gd" id="2_m5p0u"]
@@ -108,6 +108,21 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.235294, 0.235294, 0.235294, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v6g7g"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.0862745, 0.0862745, 0.0862745, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.156863, 0.156863, 0.156863, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
 
 [node name="TraceGui" type="Control"]
 layout_mode = 3
@@ -274,13 +289,15 @@ item_2/text = "Quit"
 item_2/id = 2
 
 [node name="PopupMenuView" type="PopupMenu" parent="MenuBar"]
-item_count = 3
+item_count = 4
 item_0/text = "Show all cores"
 item_0/id = 0
 item_1/text = "Hide all cores"
 item_1/id = 1
 item_2/text = "Toggle show core grid"
 item_2/id = 2
+item_3/text = "Trace information"
+item_3/id = 3
 
 [node name="PopupMenuSearch" type="PopupMenu" parent="MenuBar"]
 item_count = 4
@@ -347,3 +364,19 @@ layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
 text = "Prev"
+
+[node name="TraceInfoButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Trace info"
+
+[node name="ShowCurrentTraceInfoDialog" type="AcceptDialog" parent="."]
+title = "Trace Info"
+theme_override_styles/panel = SubResource("StyleBoxFlat_v6g7g")
+ok_button_text = "Close"
+
+[node name="CurrentTraceInfoLabel" type="Label" parent="ShowCurrentTraceInfoDialog"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "No available trace information"
