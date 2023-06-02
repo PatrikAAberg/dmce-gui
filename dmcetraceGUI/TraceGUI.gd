@@ -341,15 +341,41 @@ func _ready():
 	$MenuBar/PopupMenuSearch.name = " Search "
 	$MenuBar/PopupMenuHelp.name = " Help "
 
+func _find_next(searchstr):
+	if Trace[TActive].index < Trace[TActive].INDEX_MAX:
+		for i in range(Trace[TActive].index + 1, len(Trace[TActive].tracebuffer)):
+			if searchstr in Trace[TActive].tracebuffer[i]:
+				Trace[TActive].index = i
+				if Trace[TActive].index > (TraceViewScrollTop + TraceViewVisibleLines - 2):
+					TraceViewScrollTop = Trace[TActive].index - TraceViewVisibleLines + 2
+				UpdateTimeLine()
+				UpdateMarkers()
+				PopulateViews(TRACE | INFO | SRC)
+				break
+
+func _find_prev(searchstr):
+	if Trace[TActive].index > 0:
+		for i in range(Trace[TActive].index - 1, -1, -1):
+			print(i)
+			if searchstr in Trace[TActive].tracebuffer[i]:
+				Trace[TActive].index = i
+				if Trace[TActive].index < TraceViewScrollTop:
+					TraceViewScrollTop = Trace[TActive].index
+				UpdateTimeLine()
+				UpdateMarkers()
+				PopulateViews(TRACE | INFO | SRC)
+				break
+
 func _find_next_button_pressed():
-	print("Find Next!")
+	_find_next(FindLineEdit.text)
 
 func _find_prev_button_pressed():
-	print("Find Prev!")
+	_find_prev(FindLineEdit.text)
 
 func _find_text_submitted(text):
 	print(text)
 	FindLineEdit.release_focus()
+	_find_next(FindLineEdit.text)
 
 func _show_all_cores(ind):
 	FChart.ClearCores(ind)
@@ -568,27 +594,28 @@ func _input(ev):
 					trace_pup()
 				elif ev.keycode == KEY_PAGEDOWN:
 					trace_pdown()
-
-			if ev.keycode == KEY_ESCAPE:
-				get_tree().quit()
-			elif ev.keycode == KEY_P:
-				if ShowProbes == false:
-					ShowProbes = true
-				else:
-					ShowProbes = false
-				PopulateViews(TRACE | SRC)
-			elif ev.keycode == KEY_G:
-				ToggleShowCoreChartGrid()
-			elif ev.keycode == KEY_Z:
-				_reset_timespan()
-				InitTimeLine()
-				InitMarkers()
-				UpdateTimeLine()
-				UpdateMarkers()
-			elif ev.keycode == KEY_SPACE:
-				print("DEB " + str(debcnt))
-				debcnt += 1
-				deb_func()
+			if FindLineEdit.has_focus():
+				if ev.keycode == KEY_ESCAPE:
+					FindLineEdit.release_focus()
+			else:
+				if ev.keycode == KEY_P:
+					if ShowProbes == false:
+						ShowProbes = true
+					else:
+						ShowProbes = false
+					PopulateViews(TRACE | SRC)
+				if ev.keycode == KEY_G:
+					ToggleShowCoreChartGrid()
+				elif ev.keycode == KEY_Z:
+					_reset_timespan()
+					InitTimeLine()
+					InitMarkers()
+					UpdateTimeLine()
+					UpdateMarkers()
+				elif ev.keycode == KEY_SPACE:
+					print("DEB " + str(debcnt))
+					debcnt += 1
+					deb_func()
 		else:
 			PopulateViews(SRC | INFO)
 			UpdateMarkers()
