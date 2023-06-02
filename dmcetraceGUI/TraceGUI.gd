@@ -361,7 +361,6 @@ func _find_next(searchstr):
 func _find_prev(searchstr):
 	if Trace[TActive].index > 0:
 		for i in range(Trace[TActive].index - 1, -1, -1):
-			print(i)
 			if searchstr in Trace[TActive].tracebuffer[i]:
 				Trace[TActive].index = i
 				if Trace[TActive].index < TraceViewScrollTop:
@@ -372,9 +371,11 @@ func _find_prev(searchstr):
 				break
 
 func _find_next_button_pressed():
+	FindNextButton.release_focus()
 	_find_next(FindLineEdit.text)
 
 func _find_prev_button_pressed():
+	FindPrevButton.release_focus()
 	_find_prev(FindLineEdit.text)
 
 func _find_text_submitted(text):
