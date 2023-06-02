@@ -14,6 +14,7 @@ var ZOOM_SHRINK_MIN = 100
 var CORE_KORV_HEIGHT = 16
 
 # gloabls
+var CurrentTime = 0
 var ShowCoreChartGrid = true
 var TChartXOffset = 50
 var InitDone = false
@@ -58,6 +59,7 @@ var FindLineEdit
 var OpenTraceDialog
 var ShowCurrentTraceInfoDialog
 var CurrentTraceInfoLabel
+var StatusLabel
 var AllCoresButton
 var FindNextButton
 var FindPrevButton
@@ -71,6 +73,7 @@ var SrcViewVisibleLines = 0
 var SrcCache = {}
 var ShowProbes = false
 var PrevSrcView = ""
+var ShowRuler = true
 
 func RemoveProbe(tstr):
 	if ShowProbes:
@@ -239,6 +242,8 @@ func LoadTrace(path):
 	tracetmp.TimeStart = tracetmp.TimeLineTS[0]
 	tracetmp.TimeEnd = tracetmp.TimeLineTS[tracetmp.INDEX_MAX]
 	tracetmp.index = tracetmp.INDEX_MAX
+	tracetmp.rulerstart = 0
+	tracetmp.rulerend = 0
 	TraceViewEnd = tracetmp.index
 	if tracetmp.index > TRACE_VIEW_HEIGHT:
 		TraceViewStart = tracetmp.index - TRACE_VIEW_HEIGHT
@@ -279,7 +284,7 @@ func _reset_timespan():
 func _ready():
 	# Node handles
 	VSplitCTop 		= get_node("Background/VSplitTop")
-	HSplitCTop 		= get_node("Background/VSplitTop/myHSplitContainerTop")
+	HSplitCTop 		= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop")
 	VSplitCBot		= get_node("Background/VSplitTop/VSplitBot")
 	TChart 			= get_node("Background/VSplitTop/VSplitBot/TChartTab/TChartPanel/TChart")
 	TMarkers 		= get_node("Background/VSplitTop/VSplitBot/TChartTab/TChartPanel/TMarkers")
@@ -293,12 +298,12 @@ func _ready():
 	FuncVScrollBar 	= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/FuncVScrollBar")
 	FNameText		= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart/FNameText")
 	Background 		= get_node("Background")
-	TraceTab		= get_node("Background/VSplitTop/myHSplitContainerTop/TraceTab")
+	TraceTab		= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop/TraceTab")
 	TraceView 		= get_node("TraceView")
-	SrcView 		= get_node("Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars/SrcTab/SrcView")
-	VarsView 		= get_node("Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars/VarsTab/VarsView")
-	SrcTab 			= get_node("Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars/SrcTab")
-	VarsTab 		= get_node("Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars/VarsTab")
+	SrcView 		= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars/SrcTab/SrcView")
+	VarsView 		= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars/VarsTab/VarsView")
+	SrcTab 			= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars/SrcTab")
+	VarsTab 		= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars/VarsTab")
 	MenuFile 		= get_node("MenuBar/PopupMenuFile")
 	MenuView 		= get_node("MenuBar/PopupMenuView")
 	MenuSearch 		= get_node("MenuBar/PopupMenuSearch")
@@ -310,6 +315,7 @@ func _ready():
 	TraceInfoButton = get_node("TraceInfoButton")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
 	CurrentTraceInfoLabel = get_node("ShowCurrentTraceInfoDialog/CurrentTraceInfoLabel")
+	StatusLabel = get_node("Background/VSplitTop/VBoxContainer/StatusLabel")
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
 	print("Control root started")
@@ -495,6 +501,13 @@ func _process(_delta):
 	# Periodical update of state
 	if len(TraceViews) > 0:
 		TraceViewVisibleLines  = TraceViews[TActive].get_visible_line_count()
+		var s = "Time: " + str(CurrentTime)
+		s = s + "    Marker1: " + str(Trace[TActive].rulerstart) + "ns"
+		s = s + "    Marker2: " + str(Trace[TActive].rulerend) + "ns"
+		s = s + "    Diff: " + str(Trace[TActive].rulerend - Trace[TActive].rulerstart) + "ns"
+
+		StatusLabel.text = s
+
 	SrcViewVisibleLines  = SrcView.get_visible_line_count()
 
 	if _get_resize_state() == 2:

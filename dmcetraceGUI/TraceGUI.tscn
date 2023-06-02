@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://haxot671h3c4"]
+[gd_scene load_steps=28 format=3 uid="uid://haxot671h3c4"]
 
 [ext_resource type="Script" path="res://TraceGUI.gd" id="1_rncp3"]
 [ext_resource type="Script" path="res://TChart.gd" id="2_m5p0u"]
@@ -81,6 +81,11 @@ border_color = Color(0.27451, 0.27451, 0.27451, 1)
 bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 border_color = Color(0.27451, 0.27451, 0.27451, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_aeo0y"]
+line_spacing = 0.0
+font_size = 14
+font_color = Color(0.784314, 0.784314, 0.784314, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hvjs6"]
 content_margin_left = 0.0
 content_margin_top = 0.0
@@ -143,28 +148,32 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_gplwm")
 layout_mode = 2
 split_offset = 300
 
-[node name="myHSplitContainerTop" type="HSplitContainer" parent="Background/VSplitTop"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/VSplitTop"]
 layout_mode = 2
+
+[node name="myHSplitContainerTop" type="HSplitContainer" parent="Background/VSplitTop/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 split_offset = 1000
 
-[node name="TraceTab" type="TabContainer" parent="Background/VSplitTop/myHSplitContainerTop"]
+[node name="TraceTab" type="TabContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop"]
 layout_mode = 2
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_40014")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_mrl6m")
 theme_override_styles/panel = SubResource("StyleBoxFlat_xhfom")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_vo8sc")
 
-[node name="HSplitSrcVars" type="HSplitContainer" parent="Background/VSplitTop/myHSplitContainerTop"]
+[node name="HSplitSrcVars" type="HSplitContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop"]
 layout_mode = 2
 
-[node name="SrcTab" type="TabContainer" parent="Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars"]
+[node name="SrcTab" type="TabContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars"]
 layout_mode = 2
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_tyybl")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_5pex6")
 theme_override_styles/panel = SubResource("StyleBoxFlat_1n3jt")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
 
-[node name="SrcView" type="RichTextLabel" parent="Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars/SrcTab"]
+[node name="SrcView" type="RichTextLabel" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars/SrcTab"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -173,14 +182,14 @@ text = "No source tree available
 "
 autowrap_mode = 0
 
-[node name="VarsTab" type="TabContainer" parent="Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars"]
+[node name="VarsTab" type="TabContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars"]
 layout_mode = 2
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_0mv3j")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_rex43")
 theme_override_styles/panel = SubResource("StyleBoxFlat_mnfpc")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_iqdt1")
 
-[node name="VarsView" type="RichTextLabel" parent="Background/VSplitTop/myHSplitContainerTop/HSplitSrcVars/VarsTab"]
+[node name="VarsView" type="RichTextLabel" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars/VarsTab"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -188,6 +197,12 @@ theme_override_font_sizes/normal_font_size = 14
 text = "
 "
 autowrap_mode = 0
+
+[node name="StatusLabel" type="Label" parent="Background/VSplitTop/VBoxContainer"]
+layout_mode = 2
+text = "Some status text"
+label_settings = SubResource("LabelSettings_aeo0y")
+vertical_alignment = 2
 
 [node name="VSplitBot" type="VSplitContainer" parent="Background/VSplitTop"]
 layout_mode = 2
@@ -289,15 +304,17 @@ item_2/text = "Quit"
 item_2/id = 2
 
 [node name="PopupMenuView" type="PopupMenu" parent="MenuBar"]
-item_count = 4
+item_count = 5
 item_0/text = "Show all cores"
 item_0/id = 0
 item_1/text = "Hide all cores"
 item_1/id = 1
 item_2/text = "Toggle show core grid"
 item_2/id = 2
-item_3/text = "Trace information"
+item_3/text = "Toggle show ruler"
 item_3/id = 3
+item_4/text = "Show trace information"
+item_4/id = 4
 
 [node name="PopupMenuSearch" type="PopupMenu" parent="MenuBar"]
 item_count = 4
