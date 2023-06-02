@@ -724,6 +724,14 @@ func _menu_file_pressed(id):
 	elif id == 2:
 		get_tree().quit()
 
+func _toggle_show_ruler():
+	if ShowRuler == true:
+		ShowRuler = false
+	else:
+		ShowRuler = true
+	UpdateMarkers()
+	print(ShowRuler)
+
 func _menu_view_pressed(id):
 	if id == 0:
 		_show_all_cores(TActive)
@@ -731,6 +739,10 @@ func _menu_view_pressed(id):
 		_hide_all_cores(TActive)
 	elif id == 2:
 		ToggleShowCoreChartGrid()
+	elif id == 3:
+		_toggle_show_ruler()
+	elif id == 4:
+		print("Show trace info for all traces")
 
 func _menu_search_pressed(id):
 	if id == 0:

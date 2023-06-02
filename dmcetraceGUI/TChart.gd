@@ -60,6 +60,9 @@ func _get_time_from_xpos(xpos):
 	var time = xpos * (tgui.Trace[tgui.TActive].TimeSpan / _box_size_x()) + tgui.Trace[tgui.TActive].TimeSpanStart
 	return  time
 
+func GetXposFromTime(time):
+	return (time - tgui.Trace[tgui.TActive].TimeSpanStart) * (_box_size_x() / tgui.Trace[tgui.TActive].TimeSpan)
+
 func _update_index(xpos):
 	var mtime = _get_time_from_xpos(xpos)
 	tgui.Trace[tgui.TActive].index = _get_index_from_time_left(mtime)
@@ -72,11 +75,16 @@ func _update_index(xpos):
 
 func UpdateMarkers():
 	var xpos
-	xpos = (tgui.Trace[tgui.TActive].TimeLineTS[tgui.Trace[tgui.TActive].index] - tgui.Trace[tgui.TActive].TimeSpanStart) * (_box_size_x() / tgui.Trace[tgui.TActive].TimeSpan)
+	xpos = GetXposFromTime(tgui.Trace[tgui.TActive].TimeLineTS[tgui.Trace[tgui.TActive].index])
 	TMarkers.UpdateMarkers(xpos, tgui.TChartXOffset)
 
 func MouseLeftPressed():
-	_update_index(_box_local_mouse_position().x)
+	if Input.is_physical_key_pressed(KEY_CTRL):
+		tgui.Trace[tgui.TActive].rulerstart = int(_get_time_from_xpos(_box_local_mouse_position().x))
+	elif Input.is_physical_key_pressed(KEY_ALT):
+		tgui.Trace[tgui.TActive].rulerend = int(_get_time_from_xpos(_box_local_mouse_position().x))
+	else:
+		_update_index(_box_local_mouse_position().x)
 	tgui.UpdateMarkers()
 
 func MouseLeftReleased():
@@ -106,6 +114,7 @@ func MouseRightReleased():
 	tgui.UpdateMarkers()
 
 func MouseMoved():
+	tgui.CurrentTime = int(_get_time_from_xpos(_box_local_mouse_position().x))
 	TMarkers.UpdateZoomWindow(_box_local_mouse_position().x)
 	UpdateMarkers()
 
