@@ -674,6 +674,8 @@ func _trace_view_meta_clicked(meta):
 	Trace[TActive].index = int(meta)
 	TraceViewScrollTop = Trace[TActive].index - int(TraceViewVisibleLines / 2)
 	PopulateViews(SRC | INFO | TRACE)
+	UpdateTimeLine()
+	UpdateMarkers()
 
 func _open_trace():
 	OpenTraceDialog.visible = true
