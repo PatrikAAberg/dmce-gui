@@ -252,7 +252,7 @@ func LoadTrace(path):
 	TraceViews.append(tabtmp)
 	TraceTab.add_child(tabtmp)
 	TraceTab.current_tab = TActive
-	print("Loaded view " + str(len(TraceViews) - 1 ))
+	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
 	_reset_timespan()
 	InitTimeLine()
 	InitMarkers()
@@ -320,16 +320,22 @@ func _ready():
 	FindPrevButton.pressed.connect(self._find_prev_button_pressed)
 
 	# Initial state
-	print(OS.get_cmdline_args())
+	print("dmce-wgui: started with args: " + str(OS.get_cmdline_args()))
+
 	if len(OS.get_cmdline_args()) > 0 and OS.get_cmdline_args()[0] != "res://TraceGUI.tscn":
-		LoadTrace(OS.get_cmdline_args()[0])
-		_show_all_cores(0)
+		var file = OS.get_cmdline_args()[0]
+		if not FileAccess.file_exists(file):
+			print("dmce-wgui: Could not open " + str(file))
+		else:
+			LoadTrace(file)
+			_show_all_cores(0)
 	else:
-		print("No trace loaded from args")
-#		LoadTrace('/home/patrik/agtrace/dmce-trace-ag.log')
+		print("dmce-wgui: No trace loaded from args")
 		# dev state, uncomment for release:
-		LoadTrace('/home/patrik/agtrace/dmce-trace-ex.log')
-		_show_all_cores(0)
+		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
+			print("dmce-wgui: development mode")
+			LoadTrace('/home/patrik/agtrace/dmce-trace-ex.log')
+			_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
@@ -681,7 +687,6 @@ func _menu_file_pressed(id):
 		get_tree().quit()
 
 func _menu_view_pressed(id):
-	print("View: " + str(id))
 	if id == 0:
 		_show_all_cores(TActive)
 	elif id == 1:
@@ -690,7 +695,6 @@ func _menu_view_pressed(id):
 		ToggleShowCoreChartGrid()
 
 func _menu_search_pressed(id):
-	print("View: " + str(id))
 	if id == 0:
 		print("Find!")
 	elif id == 1:
