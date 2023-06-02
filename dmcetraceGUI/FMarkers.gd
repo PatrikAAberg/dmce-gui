@@ -11,11 +11,10 @@ var _zoom_end = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	FChart = get_node("../FCHart")
 	print("FMarkers ready")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
 
 func _draw():

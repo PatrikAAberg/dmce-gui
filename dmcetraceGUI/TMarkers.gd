@@ -12,11 +12,10 @@ var _x_offset = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	TChart = get_node("../TCHart")
 	print("TMarkers ready")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
 
 func _draw():

@@ -69,24 +69,24 @@ var SrcCache = {}
 var ShowProbes = false
 var PrevSrcView = ""
 
-func RemoveProbe(str):
+func RemoveProbe(tstr):
 	if ShowProbes:
 		pass
 	else:
-		str = re_remove_probe.sub(str,"")
+		tstr = re_remove_probe.sub(tstr,"")
 		var pcnt = 0
 		var found = -1
-		for pos in range(len(str)):
-			if str[pos] == '(':
+		for pos in range(len(tstr)):
+			if tstr[pos] == '(':
 				pcnt += 1
-			elif str[pos] == ')':
+			elif tstr[pos] == ')':
 				pcnt -=1
 			if pcnt < 0:
 				found = pos
 				break
 		if found != -1:
-			str = str.left(found) + str.right(len(str) - found - 1)
-	return str
+			tstr = tstr.left(found) + tstr.right(len(tstr) - found - 1)
+	return tstr
 
 func ReadSrc(filename):
 	var line
@@ -163,7 +163,7 @@ func PopulateViews(view):
 			else:
 				line = line.replace("[", "[lb]")
 			SrcView.append_text(line + "\n")
-		var srctop = srclnbr - (SrcViewVisibleLines / 2) + 2
+		var srctop = srclnbr - SrcViewVisibleLines / 2 + 2
 		if srctop < 0:
 			srctop = 0
 		SrcView.scroll_to_line(srctop)
@@ -293,7 +293,6 @@ func _ready():
 	MenuSearch 		= get_node("MenuBar/PopupMenuSearch")
 	MenuHelp 		= get_node("MenuBar/PopupMenuHelp")
 	OpenTraceDialog = get_node("OpenTraceDialog")
-	AllCoresButton  = get_node("Background/VSplitTop/VSplitBot/VBoxContainerTchartButtons/HBoxContainerTChartButtons/AllCoresButton")
 	FindLineEdit	= get_node("FindLineEdit")
 	FindNextButton	= get_node("FindNextButton")
 	FindPrevButton	= get_node("FindPrevButton")
@@ -396,7 +395,7 @@ func _hide_all_cores(ind):
 func _trace_tab_changed(tab):
 		SetActiveTrace(tab)
 
-func _dragged(offset):
+func _dragged(_offset):
 	VSplitTop =  VSplitCTop.split_offset / VSplitCTop.size.y
 	HSplitTop = HSplitCTop.split_offset / HSplitCTop.size.x
 	VSplitBot = VSplitCBot.split_offset / VSplitCBot.size.y
@@ -464,7 +463,7 @@ func _get_resize_state():
 		ResizeState = 2
 	return ResizeState
 
-func _process(delta):
+func _process(_delta):
 	# Initial setup
 	if not InitDone:
 		InitDone = true
@@ -560,17 +559,17 @@ func trace_pdown():
 		TraceViewScrollTop = Trace[TActive].index - int(TraceViewVisibleLines / 2)
 		PopulateViews(TRACE)
 
-func _in_tchart(pos):
+func _in_tchart(_pos):
 	if TChart.get_local_mouse_position().y  > 0 and TChart.get_local_mouse_position().x >= TChartXOffset:
 		return true
 	return false
 
-func _in_corelist(pos):
+func _in_corelist(_pos):
 	if TChartBox.get_local_mouse_position().y  > 0 and TChartBox.get_local_mouse_position().x < TChartXOffset:
 		return true
 	return false
 
-func _in_fchart(pos):
+func _in_fchart(_pos):
 	if FChartBox.get_local_mouse_position().y  > 0 and FChartBox.get_local_mouse_position().y < FChartBox.size.y:
 		return true
 	return false
