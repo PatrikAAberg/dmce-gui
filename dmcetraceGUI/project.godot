@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="dmcetraceGUI"
+config/name="dmce-wgui"
 run/main_scene="res://TraceGUI.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="/tmp"
@@ -21,6 +21,10 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=1600
 window/size/viewport_height=1024
+
+[editor]
+
+run/main_run_args="--dev"
 
 [rendering]
 
