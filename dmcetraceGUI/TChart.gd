@@ -50,26 +50,18 @@ func _get_index_from_time_left(time):
 	return tgui.Trace[tgui.TActive].INDEX_MAX
 
 func _get_index_from_time_right(time):
-	print("Searching for " + str(time) + " from the right")
-	print("Starting at " +str(tgui.Trace[tgui.TActive].TimeLineTS[tgui.Trace[tgui.TActive].INDEX_MAX - 0]))
 	# replace with interval halfing if it gets too slow
 	for i in range(tgui.Trace[tgui.TActive].INDEX_MAX):
 		if tgui.Trace[tgui.TActive].TimeLineTS[tgui.Trace[tgui.TActive].INDEX_MAX - i] <= time:
-			print("...found it at: " + str(tgui.Trace[tgui.TActive].INDEX_MAX - i))
 			return tgui.Trace[tgui.TActive].INDEX_MAX - i
-	print("did not find it, returning 0")
 	return 0
 
 func _get_time_from_xpos(xpos):
 	var time = xpos * (tgui.Trace[tgui.TActive].TimeSpan / _box_size_x()) + tgui.Trace[tgui.TActive].TimeSpanStart
-	print("_box_size_x: " + str(_box_size_x()))
-	print("Span: " + str(tgui.Trace[tgui.TActive].TimeSpan) + " xpos: " + str(xpos) + " SpanStart: " + str(tgui.Trace[tgui.TActive].TimeSpanStart))
-	print("rerturned time: " + str(time))
 	return  time
 
 func _update_index(xpos):
 	var mtime = _get_time_from_xpos(xpos)
-	print("mtime: " + str(mtime) + "   xpos: " + str(xpos))
 	tgui.Trace[tgui.TActive].index = _get_index_from_time_left(mtime)
 	if tgui.Trace[tgui.TActive].index < 0:
 		tgui.Trace[tgui.TActive].index = 0
@@ -147,7 +139,6 @@ func MouseWheelUp():
 		tgui.Trace[tgui.TActive].TimeSpan = int(tmpspan)
 	else:
 		return
-	print("zoom in, start: " + str(tmpstart) + "  end: " + str(tmpend) + "  span:" + str(tmpspan))
 	tgui.UpdateTimeLine()
 	tgui.UpdateMarkers()
 
@@ -186,8 +177,6 @@ func MouseWheelDown():
 	tgui.Trace[tgui.TActive].TimeSpanStart = int(tmpstart)
 	tgui.Trace[tgui.TActive].TimeSpanEnd = int(tmpend)
 	tgui.Trace[tgui.TActive].TimeSpan = int(tmpspan)
-
-	print("grow: " + str(grow) + "  zoom out, start: " + str(tmpstart) + "  end: " + str(tmpend) + "  span:" + str(tmpspan) + " curtime: " + str(curtime))
 
 	tgui.UpdateTimeLine()
 	tgui.UpdateMarkers()

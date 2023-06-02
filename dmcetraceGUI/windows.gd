@@ -19,7 +19,7 @@ func _find_text_submitted(text):
 	print(text)
 
 func _my_pressed():
-	print("KALLE! ")
+	print("Button pressed ")
 #	$AcceptDialog.popup_centered()
 	$myWindow.popup_centered()
 

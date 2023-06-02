@@ -13,4 +13,4 @@ func _process(delta):
 
 
 func on_button_pressed():
-	print("HEJ!")
+	print("Button pressed!")
