@@ -58,6 +58,7 @@ var MenuHelp
 var FindLineEdit
 var OpenTraceDialog
 var ShowCurrentTraceInfoDialog
+var AskForConfirmationDialog
 var CurrentTraceInfoLabel
 var StatusLabel
 var AllCoresButton
@@ -314,6 +315,7 @@ func _ready():
 	FindPrevButton	= get_node("FindPrevButton")
 	TraceInfoButton = get_node("TraceInfoButton")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
+	AskForConfirmationDialog = get_node("AskForConfirmationDialog")
 	CurrentTraceInfoLabel = get_node("ShowCurrentTraceInfoDialog/CurrentTraceInfoLabel")
 	StatusLabel = get_node("Background/VSplitTop/VBoxContainer/StatusLabel")
 	re_remove_probe = RegEx.new()
@@ -716,11 +718,34 @@ func _trace_view_meta_clicked(meta):
 func _open_trace():
 	OpenTraceDialog.visible = true
 
+func _close_trace():
+	if len(Trace) > 0:
+		var tmpTActive = TActive
+		if TActive > 0:
+			TActive -= 1
+		_hide_all_cores(tmpTActive)
+		TraceViews[tmpTActive].free()
+		Trace.remove_at(tmpTActive)
+		TraceViews.remove_at(tmpTActive)
+		SrcView.text = "No source code available"
+		VarsView.text = ""
+		FNameText.text = ""
+		for n in TCoreLabels.get_children():
+			n.queue_free()
+		if len(Trace) > 0:
+			TCoreLabels.Init(self)
+			SetActiveTrace(TActive)
+
+func _confirm_close_trace():
+	_close_trace()
+
 func _menu_file_pressed(id):
 	if id == 0:
 		_open_trace()
 	elif id == 1:
-		print("File: Options" + str(id))
+		AskForConfirmationDialog.dialog_text = "Do you really want to close active trace?"
+		AskForConfirmationDialog.confirmed.connect(self._confirm_close_trace)
+		AskForConfirmationDialog.popup_centered()
 	elif id == 2:
 		get_tree().quit()
 

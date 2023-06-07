@@ -298,7 +298,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_rwee7")
 item_count = 3
 item_0/text = "Open                              "
 item_0/id = 0
-item_1/text = "Options"
+item_1/text = "Close"
 item_1/id = 1
 item_2/text = "Quit"
 item_2/id = 2
@@ -397,3 +397,6 @@ ok_button_text = "Close"
 offset_right = 40.0
 offset_bottom = 23.0
 text = "No available trace information"
+
+[node name="AskForConfirmationDialog" type="ConfirmationDialog" parent="."]
+initial_position = 2

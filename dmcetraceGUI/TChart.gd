@@ -16,7 +16,7 @@ func _process(_delta):
 	pass
 
 func _draw():
-	if _timeline_inited:
+	if _timeline_inited and len(tgui.Trace) > 0:
 		var Width = _box_size_x()
 		for i in range(len(tgui.Trace[tgui.TActive].TimeLineTS)):
 			if tgui.Trace[tgui.TActive].TimeLineTS[i] >= tgui.Trace[tgui.TActive].TimeSpanStart and tgui.Trace[tgui.TActive].TimeLineTS[i] <= tgui.Trace[tgui.TActive].TimeSpanEnd:
