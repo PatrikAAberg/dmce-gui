@@ -249,8 +249,10 @@ func LoadTrace(path):
 		elif not record:
 			tracetmp.TraceInfo.append(line)
 	f.close()
+	clist.sort()
 	tracetmp.NumCores = len(clist)
 	tracetmp.CoreMax = clist.max()
+	tracetmp.CoreList = clist
 	tracetmp.INDEX_MAX = len(tracetmp.tracebuffer) - 1
 	tracetmp.TimeStart = tracetmp.TimeLineTS[0]
 	tracetmp.TimeEnd = tracetmp.TimeLineTS[tracetmp.INDEX_MAX]
@@ -420,14 +422,13 @@ func _find_prev_button_pressed():
 	_find_prev(FindLineEdit.text)
 
 func _find_text_submitted(text):
-	print(text)
 	FindLineEdit.release_focus()
 	_find_next(FindLineEdit.text)
 
 func _show_all_cores(ind):
 	FChart.ClearCores(ind)
-	for i in range(Trace[TActive].CoreMax + 1):
-		FChart.AddCore(i, ind)
+	for core in Trace[TActive].CoreList:
+		FChart.AddCore(core, ind)
 	UpdateTimeLine()
 
 func _hide_all_cores(ind):
@@ -756,10 +757,7 @@ func _close_trace():
 		SrcView.text = "No source code available"
 		VarsView.text = ""
 		FNameText.text = ""
-		for n in TCoreLabels.get_children():
-			n.queue_free()
 		if len(Trace) > 0:
-			TCoreLabels.Init(self)
 			SetActiveTrace(TActive)
 
 func _confirm_close_trace():
@@ -781,7 +779,6 @@ func _toggle_show_ruler():
 	else:
 		ShowRuler = true
 	UpdateMarkers()
-	print(ShowRuler)
 
 func _menu_view_pressed(id):
 	if id == 0:
@@ -826,6 +823,7 @@ func SetActiveTrace(trace):
 	UpdateTimeLine()
 	UpdateMarkers()
 	PopulateViews(SRC | INFO | TRACE)
+	TCoreLabels.Init(self)
 
 ##########################
 # Scratch space

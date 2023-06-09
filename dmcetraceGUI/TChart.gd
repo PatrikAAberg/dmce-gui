@@ -21,10 +21,10 @@ func _draw():
 		for i in range(len(tgui.Trace[tgui.TActive].TimeLineTS)):
 			if tgui.Trace[tgui.TActive].TimeLineTS[i] >= tgui.Trace[tgui.TActive].TimeSpanStart and tgui.Trace[tgui.TActive].TimeLineTS[i] <= tgui.Trace[tgui.TActive].TimeSpanEnd:
 				var x =  tgui.TChartXOffset + (tgui.Trace[tgui.TActive].TimeLineTS[i] - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan)
-				var y = tgui.CORE_KORV_HEIGHT * tgui.Trace[tgui.TActive].TimeLineCore[i]
+				var y = tgui.CORE_KORV_HEIGHT * tgui.Trace[tgui.TActive].CoreList.find(tgui.Trace[tgui.TActive].TimeLineCore[i], 0)
 				draw_line(Vector2(x, y + 0), Vector2(x, y + tgui.CORE_KORV_HEIGHT), Color.DARK_OLIVE_GREEN, 1)
 		if tgui.ShowCoreChartGrid:
-			for i in range(tgui.Trace[tgui.TActive].CoreMax + 1):
+			for i in range(len(tgui.Trace[tgui.TActive].CoreList)):
 				draw_rect(Rect2(0, tgui.CORE_KORV_HEIGHT * i, Box.size.x, tgui.CORE_KORV_HEIGHT), Color.DARK_SEA_GREEN / 2, false)
 
 func _box_size_x():
@@ -95,7 +95,6 @@ func MouseRightPressed():
 
 # This happens when a new zoom window is created
 func MouseRightReleased():
-	print("TCHart set zoom")
 	TMarkers.DeactivateDrawZoom()
 	var tmpstart = _get_time_from_xpos(TMarkers.GetZoomWindow().start)
 	var tmpend = _get_time_from_xpos(TMarkers.GetZoomWindow().end)
@@ -120,7 +119,6 @@ func MouseMoved():
 
 # Zoom in
 func MouseWheelUp():
-
 	var ts = tgui.Trace[tgui.TActive].TimeSpan
 	var curtime = tgui.Trace[tgui.TActive].TimeLineTS[tgui.Trace[tgui.TActive].index]
 	var shrink = tgui.ZOOM_SHRINK * ts
