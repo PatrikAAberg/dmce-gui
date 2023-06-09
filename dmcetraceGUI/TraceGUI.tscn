@@ -221,29 +221,29 @@ layout_mode = 2
 [node name="FuncHBoxContainer" type="HBoxContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer"]
 layout_mode = 2
 
-[node name="HSplitFNameFCHart" type="HSplitContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer"]
+[node name="HSplitFNameFChart" type="HSplitContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 split_offset = 300
 
-[node name="FNameText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart"]
+[node name="FNameText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 14
 scroll_active = false
 autowrap_mode = 0
 
-[node name="FChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart"]
+[node name="FChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_hvjs6")
 
-[node name="FChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart/FChartPanel"]
+[node name="FChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanel"]
 script = ExtResource("2_u40rw")
 
-[node name="TitleText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart/FChartPanel/FChart"]
+[node name="TitleText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanel/FChart"]
 custom_minimum_size = Vector2(1000, 0)
 offset_right = 40.0
 offset_bottom = 40.0
@@ -252,7 +252,7 @@ scroll_active = false
 autowrap_mode = 0
 shortcut_keys_enabled = false
 
-[node name="FMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFCHart/FChartPanel"]
+[node name="FMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanel"]
 z_index = 10
 script = ExtResource("3_1kuvw")
 
