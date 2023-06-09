@@ -344,7 +344,7 @@ func _ready():
 	MenuView.id_pressed.connect(self._menu_view_pressed)
 	MenuSearch.id_pressed.connect(self._menu_search_pressed)
 	MenuHelp.id_pressed.connect(self._menu_help_pressed)
-	FuncVScrollBar.scrolling.connect(self._funcvscrollbar_scrolling)
+	FuncVScrollBar.value_changed.connect(self._funcvscrollbar_value_changed)
 	TraceTab.tab_changed.connect(self._trace_tab_changed)
 	OpenTraceDialog.file_selected.connect(self._open_trace_selected)
 	FindLineEdit.text_submitted.connect(self._find_text_submitted)
@@ -793,10 +793,9 @@ func _menu_search_pressed(id):
 func _menu_help_pressed(id):
 	print("Help: " + str(id))
 
-func _funcvscrollbar_scrolling():
-	if FuncVScrollBarIndex != FuncVScrollBar.value:
-		FuncVScrollBarIndex = FuncVScrollBar.value
-	UpdateTimeLine()
+func _funcvscrollbar_value_changed(val):
+	FuncVScrollBarIndex = FuncVScrollBar.value
+	FChart.UpdateTimeLine()
 
 func _open_trace_selected(file):
 	print("Open: " + str(file))
