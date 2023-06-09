@@ -621,7 +621,8 @@ func _in_corelist(_pos):
 
 func _in_fchart(_pos):
 	if FChartBox.get_local_mouse_position().y  > 0 and FChartBox.get_local_mouse_position().y < FChartBox.size.y:
-		return true
+		if FChartBox.get_local_mouse_position().x > 0 and FChartBox.get_local_mouse_position().x < FChartBox.size.x:
+			return true
 	return false
 
 var KEY_CTRL = 4194326
