@@ -76,6 +76,17 @@ var ShowProbes = false
 var PrevSrcView = ""
 var ShowRuler = true
 
+var time_start
+var timercnt = 0
+
+func TimerStart():
+	time_start = Time.get_ticks_msec()
+
+func TimerEnd():
+	var total_time = Time.get_ticks_msec() - time_start
+	print(str(timercnt) + " Time elapsed: " + str(total_time))
+	timercnt +=1
+
 func RemoveProbe(tstr):
 	if ShowProbes:
 		pass
