@@ -627,6 +627,12 @@ func _in_fchart(_pos):
 			return true
 	return false
 
+func _in_fnames(_pos):
+	if FChartBox.get_local_mouse_position().y  > 0 and FChartBox.get_local_mouse_position().y < FChartBox.size.y:
+		if FChartBox.get_local_mouse_position().x < 0:
+			return true
+	return false
+
 var KEY_CTRL = 4194326
 
 func _input(ev):
@@ -683,6 +689,12 @@ func _input(ev):
 			TChart.MouseWheelUp()
 		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN and ev.pressed:
 			TChart.MouseWheelDown()
+
+	if ev is InputEventMouseButton and (_in_fnames(ev.position)):
+		if ev.button_index == MOUSE_BUTTON_WHEEL_UP and ev.pressed:
+			FChart.MouseWheelUp()
+		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN and ev.pressed:
+			FChart.MouseWheelDown()
 
 	if ev is InputEventMouseButton and _in_tchart(ev.position):
 		if ev.button_index == MOUSE_BUTTON_LEFT and ev.pressed:

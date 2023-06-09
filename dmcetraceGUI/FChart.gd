@@ -184,3 +184,10 @@ func MouseMoved():
 	FMarkers.UpdateZoomWindow(get_local_mouse_position().x)
 	UpdateMarkers()
 
+func MouseWheelUp():
+	if tgui.FuncVScrollBar.value > tgui.FuncVScrollBar.min_value:
+		tgui.FuncVScrollBar.value -= 1
+
+func MouseWheelDown():
+	if tgui.FuncVScrollBar.value < tgui.FuncVScrollBar.max_value:
+		tgui.FuncVScrollBar.value += 1
