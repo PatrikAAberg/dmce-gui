@@ -59,6 +59,7 @@ var MenuHelp
 var FindLineEdit
 var OpenTraceDialog
 var ShowCurrentTraceInfoDialog
+var SettingsConfirmationDialog
 var AskForConfirmationDialog
 var CurrentTraceInfoLabel
 var StatusLabel
@@ -79,6 +80,9 @@ var ShowRuler = true
 
 var time_start
 var timercnt = 0
+var	LineEditBasePath
+var	LineEditPathFind
+var	LineEditPathReplace
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -219,6 +223,9 @@ func FTreeInsert(trace, core, ts, pathfunc):
 			trace.FTree[core].append({"tstart"=ts, "tend"=ts, "pathfunc"=pathfunc, "index"=ind})
 	return trace
 
+func TransformPath(path):
+	return Trace[TActive].base_path + path.replace(Trace[TActive].path_find, Trace[TActive].path_replace)
+
 func LoadTrace(path):
 	var file = path
 	var clist = []
@@ -259,6 +266,9 @@ func LoadTrace(path):
 	tracetmp.index = tracetmp.INDEX_MAX
 	tracetmp.rulerstart = 0
 	tracetmp.rulerend = 0
+	tracetmp.base_path = ""
+	tracetmp.path_find = ""
+	tracetmp.path_replace = ""
 	TraceViewEnd = tracetmp.index
 	if tracetmp.index > TRACE_VIEW_HEIGHT:
 		TraceViewStart = tracetmp.index - TRACE_VIEW_HEIGHT
@@ -331,8 +341,13 @@ func _ready():
 	TraceInfoButton 	= get_node("TraceInfoButton")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
 	AskForConfirmationDialog = get_node("AskForConfirmationDialog")
+	SettingsConfirmationDialog = get_node("SettingsConfirmationDialog")
 	CurrentTraceInfoLabel = get_node("ShowCurrentTraceInfoDialog/CurrentTraceInfoLabel")
 	StatusLabel = get_node("Background/VSplitTop/VBoxContainer/StatusLabel")
+	LineEditBasePath = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditBasePath")
+	LineEditPathFind = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditPathFind")
+	LineEditPathReplace = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditPathReplace")
+
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
 	print("Control root started")
@@ -355,6 +370,7 @@ func _ready():
 	FindNextButton.pressed.connect(self._find_next_button_pressed)
 	FindPrevButton.pressed.connect(self._find_prev_button_pressed)
 	TraceInfoButton.pressed.connect(self._trace_info_button_pressed)
+	SettingsConfirmationDialog.confirmed.connect(self._settings_confirmation_dialog_confirmed)
 
 	# Initial state
 	print("dmce-wgui: started with args: " + str(OS.get_cmdline_args()))
@@ -424,6 +440,12 @@ func _find_prev_button_pressed():
 func _find_text_submitted(text):
 	FindLineEdit.release_focus()
 	_find_next(FindLineEdit.text)
+
+func _settings_confirmation_dialog_confirmed():
+	Trace[TActive].base_path = LineEditBasePath.text
+	Trace[TActive].path_find = LineEditPathFind.text
+	Trace[TActive].path_replace = LineEditPathReplace.text
+	SetActiveTrace(TActive)
 
 func _show_all_cores(ind):
 	FChart.ClearCores(ind)
@@ -774,7 +796,8 @@ func _menu_file_pressed(id):
 		AskForConfirmationDialog.confirmed.connect(self._confirm_close_trace)
 		AskForConfirmationDialog.popup_centered()
 	elif id == 2:
-		print("Settings")
+		SettingsConfirmationDialog.dialog_text = ""
+		SettingsConfirmationDialog.popup_centered()
 	elif id == 3:
 		AskForConfirmationDialog.dialog_text = "Do you really want to quit?"
 		AskForConfirmationDialog.confirmed.connect(self._confirm_quit)

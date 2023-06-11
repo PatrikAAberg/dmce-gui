@@ -177,10 +177,12 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 2
 theme_override_font_sizes/normal_font_size = 14
 text = "No source tree available
 "
 autowrap_mode = 0
+selection_enabled = true
 
 [node name="VarsTab" type="TabContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars"]
 layout_mode = 2
@@ -306,7 +308,7 @@ item_3/text = "Quit"
 item_3/id = 3
 
 [node name="PopupMenuView" type="PopupMenu" parent="MenuBar"]
-item_count = 5
+item_count = 6
 item_0/text = "Show all cores"
 item_0/id = 0
 item_1/text = "Hide all cores"
@@ -317,6 +319,8 @@ item_3/text = "Toggle show ruler"
 item_3/id = 3
 item_4/text = "Show trace information"
 item_4/id = 4
+item_5/text = "Toggle show full source code path"
+item_5/id = 5
 
 [node name="PopupMenuSearch" type="PopupMenu" parent="MenuBar"]
 item_count = 4
@@ -402,3 +406,44 @@ text = "No available trace information"
 
 [node name="AskForConfirmationDialog" type="ConfirmationDialog" parent="."]
 initial_position = 2
+
+[node name="SettingsConfirmationDialog" type="ConfirmationDialog" parent="."]
+title = "Settings"
+
+[node name="HBoxContainerSettings" type="HBoxContainer" parent="SettingsConfirmationDialog"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainerLeft" type="VBoxContainer" parent="SettingsConfirmationDialog/HBoxContainerSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LabelBasePath" type="Label" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
+layout_mode = 2
+text = "Prefix source code path with:"
+
+[node name="LineEditBasePath" type="LineEdit" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
+layout_mode = 2
+placeholder_text = "Enter path"
+
+[node name="LabelSourceBasePath" type="Label" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
+layout_mode = 2
+text = "
+Part of source code path to be replaced:"
+
+[node name="LineEditPathFind" type="LineEdit" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
+layout_mode = 2
+placeholder_text = "Enter path"
+
+[node name="LabelReplaceBasePathWith" type="Label" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
+layout_mode = 2
+text = "
+Replace with:"
+
+[node name="LineEditPathReplace" type="LineEdit" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
+layout_mode = 2
+placeholder_text = "Enter path"
+
+[node name="VBoxContainerRight" type="VBoxContainer" parent="SettingsConfirmationDialog/HBoxContainerSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
