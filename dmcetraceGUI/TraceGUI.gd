@@ -763,6 +763,9 @@ func _close_trace():
 func _confirm_close_trace():
 	_close_trace()
 
+func _confirm_quit():
+	get_tree().quit()
+
 func _menu_file_pressed(id):
 	if id == 0:
 		_open_trace()
@@ -771,7 +774,11 @@ func _menu_file_pressed(id):
 		AskForConfirmationDialog.confirmed.connect(self._confirm_close_trace)
 		AskForConfirmationDialog.popup_centered()
 	elif id == 2:
-		get_tree().quit()
+		print("Settings")
+	elif id == 3:
+		AskForConfirmationDialog.dialog_text = "Do you really want to quit?"
+		AskForConfirmationDialog.confirmed.connect(self._confirm_quit)
+		AskForConfirmationDialog.popup_centered()
 
 func _toggle_show_ruler():
 	if ShowRuler == true:
@@ -796,9 +803,9 @@ func _menu_search_pressed(id):
 	if id == 0:
 		print("Find!")
 	elif id == 1:
-		print("Find Next!")
+		_find_next(FindLineEdit.text)
 	elif id == 2:
-		print("Find Prev!")
+		_find_prev(FindLineEdit.text)
 	elif id == 3:
 		print("Advanced search!")
 
