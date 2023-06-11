@@ -77,7 +77,7 @@ var SrcCache = {}
 var ShowProbes = false
 var PrevSrcView = ""
 var ShowRuler = true
-
+var ShowFullPath = true
 var time_start
 var timercnt = 0
 var	LineEditBasePath
@@ -158,8 +158,11 @@ func PopulateViews(view):
 		TraceViews[TActive].clear()
 		var tracetext = ""
 		for i in range(TraceViewStart, TraceViewEnd + 1):
-			#TraceView.append_text(tracebuffer[i] + "\n")
+			#TraceView.append_text(tracebuffer[i]_trace_info_button_pressed + "\n")
 			D = SplitTraceLine(Trace[TActive].tracebuffer[i])
+			D.path = TransformPath(D.path)
+			if not ShowFullPath:
+				D.path = D.path.replace(Trace[TActive].CommonSourcePath, "")
 			var out = str(i) + " " + D.core + " " + D.ts + " " + D.path + " " + D.fun + " " + D.line + " " + D.src
 			if i == Trace[TActive].index:
 				#TraceView.append_text("[bgcolor=#208bb5][url={\"data\"=\"" + str(i) + "\"}]" + out + "[/url][/bgcolor]\n")
@@ -239,24 +242,35 @@ func LoadTrace(path):
 
 	var f = FileAccess.open(file, FileAccess.READ)
 	tracetmp.TraceInfo.append("Filename: " + file)
+	var prefix
+	var first = true
 	while not f.eof_reached(): # iterate through all lines until the end of file is reached
 		var line = f.get_line()
 		if record and line.count("@") > 5: # make sure all fields are there
 			var core = int(line.split("@")[0])
 			var ts = int(line.split("@")[1])
-			var pathfunc = line.split("@")[2] + ":" + line.split("@")[4]
+			var srcpath = line.split("@")[2]
+			var pathfunc = srcpath + ":" + line.split("@")[4]
 			tracetmp.tracebuffer.append(line.replace("[", "[lb]")) # escape bbcode on the fly
 			tracetmp.TimeLineCore.append(core)
 			tracetmp.TimeLineTS.append(ts)
 			tracetmp = FTreeInsert(tracetmp, core, ts, pathfunc)
 			if core not in clist:
 				clist.append(core)
+			if first:
+				first = false
+				prefix = srcpath
+			else:
+				while not srcpath.begins_with(prefix):
+					prefix = prefix.left(-1)
 		if "- - - - -" in line:
 			record = 1
 		elif not record:
 			tracetmp.TraceInfo.append(line)
 	f.close()
+	print("Largest common src path: " + prefix)
 	clist.sort()
+	tracetmp.CommonSourcePath = prefix
 	tracetmp.NumCores = len(clist)
 	tracetmp.CoreMax = clist.max()
 	tracetmp.CoreList = clist
@@ -810,6 +824,13 @@ func _toggle_show_ruler():
 		ShowRuler = true
 	UpdateMarkers()
 
+func _toggle_show_original_src_path():
+	if ShowFullPath == true:
+		ShowFullPath = false
+	else:
+		ShowFullPath = true
+	PopulateViews(TRACE)
+
 func _menu_view_pressed(id):
 	if id == 0:
 		_show_all_cores(TActive)
@@ -820,7 +841,9 @@ func _menu_view_pressed(id):
 	elif id == 3:
 		_toggle_show_ruler()
 	elif id == 4:
-		print("Show trace info for all traces")
+		_trace_info_button_pressed()
+	elif id == 5:
+		_toggle_show_original_src_path()
 
 func _menu_search_pressed(id):
 	if id == 0:
