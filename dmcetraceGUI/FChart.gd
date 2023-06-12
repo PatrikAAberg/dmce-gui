@@ -37,7 +37,7 @@ func _ready():
 		Colors.append(Color(colstr))
 		TextColor.append("[color=#" + colstr + "]")
 
-	TitleText = get_node("./TitleText")
+	TitleText = get_node("../../FChartBar/TitleText")
 	TitleText.position.x = 0
 	TitleText.position.y = -40
 	FMarkers = get_node("../FMarkers")

@@ -236,28 +236,33 @@ theme_override_font_sizes/normal_font_size = 14
 scroll_active = false
 autowrap_mode = 0
 
-[node name="FChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart"]
+[node name="FChartPanelTop" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart"]
+layout_mode = 2
+
+[node name="FChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop"]
 clip_contents = true
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_hvjs6")
 
-[node name="FChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanel"]
+[node name="FChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel"]
 script = ExtResource("2_u40rw")
 
-[node name="TitleText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanel/FChart"]
+[node name="FMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel"]
+z_index = 10
+script = ExtResource("3_1kuvw")
+
+[node name="FChartBar" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop"]
+
+[node name="TitleText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartBar"]
 custom_minimum_size = Vector2(1000, 0)
-offset_right = 40.0
+offset_right = 1000.0
 offset_bottom = 40.0
 bbcode_enabled = true
 scroll_active = false
 autowrap_mode = 0
 shortcut_keys_enabled = false
-
-[node name="FMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanel"]
-z_index = 10
-script = ExtResource("3_1kuvw")
 
 [node name="FuncVScrollBar" type="VScrollBar" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer"]
 custom_minimum_size = Vector2(12, 0)
