@@ -50,7 +50,6 @@ var FChartBox
 var FMarkers
 var FTab
 var FuncVScrollBar
-var FuncVScrollBarIndex = 0
 var FNameText
 var MenuFile
 var MenuView
@@ -283,6 +282,7 @@ func LoadTrace(path):
 	tracetmp.base_path = ""
 	tracetmp.path_find = ""
 	tracetmp.path_replace = ""
+	tracetmp.FuncVScrollBarIndex = 0
 	TraceViewEnd = tracetmp.index
 	if tracetmp.index > TRACE_VIEW_HEIGHT:
 		TraceViewStart = tracetmp.index - TRACE_VIEW_HEIGHT
@@ -857,7 +857,7 @@ func _menu_help_pressed(id):
 	print("Help: " + str(id))
 
 func _funcvscrollbar_value_changed(val):
-	FuncVScrollBarIndex = FuncVScrollBar.value
+	Trace[TActive].FuncVScrollBarIndex = FuncVScrollBar.value
 	FChart.UpdateScrollPosition()
 
 func _open_trace_selected(file):
@@ -875,6 +875,7 @@ func SetActiveTrace(trace):
 	UpdateMarkers()
 	PopulateViews(SRC | INFO | TRACE)
 	TCoreLabels.Init(self)
+	FuncVScrollBar.value = Trace[TActive].FuncVScrollBarIndex
 
 ##########################
 # Scratch space

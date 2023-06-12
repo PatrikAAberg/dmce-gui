@@ -100,7 +100,7 @@ func InitTimeLine(node, box):
 
 func UpdateTimeLine():
 	if _timeline_inited:
-		tgui.FNameText.scroll_to_line(tgui.FuncVScrollBarIndex)
+		tgui.FNameText.scroll_to_line(tgui.Trace[tgui.TActive].FuncVScrollBarIndex)
 		var title = "Cores: "
 		for i in len(Cores[tgui.TActive]):
 			title = title + "  " + TextColor[Cores[tgui.TActive][i]] + str(Cores[tgui.TActive][i])
@@ -110,9 +110,9 @@ func UpdateTimeLine():
 func UpdateScrollPosition():
 	if _timeline_inited:
 		var line_height = tgui.FNameText.get_line_offset(1)
-		tgui.FNameText.scroll_to_line(tgui.FuncVScrollBarIndex)
-		if len(tgui.Trace[tgui.TActive].FList) >= (tgui.FuncVScrollBarIndex + tgui.FNameText.get_visible_line_count()):
-			tgui.FChart.position.y = 0 - tgui.FuncVScrollBarIndex * line_height
+		tgui.FNameText.scroll_to_line(tgui.Trace[tgui.TActive].FuncVScrollBarIndex)
+		if len(tgui.Trace[tgui.TActive].FList) >= (tgui.Trace[tgui.TActive].FuncVScrollBarIndex + tgui.FNameText.get_visible_line_count()):
+			tgui.FChart.position.y = 0 - tgui.Trace[tgui.TActive].FuncVScrollBarIndex * line_height
 
 func UpdateMarkers():
 	var xpos
