@@ -714,8 +714,6 @@ func _input(ev):
 					UpdateTimeLine()
 					UpdateMarkers()
 				elif ev.keycode == KEY_SPACE:
-					print("DEB " + str(debcnt))
-					debcnt += 1
 					deb_func()
 		else:
 			PopulateViews(SRC | INFO)
@@ -860,7 +858,7 @@ func _menu_help_pressed(id):
 
 func _funcvscrollbar_value_changed(val):
 	FuncVScrollBarIndex = FuncVScrollBar.value
-	FChart.UpdateTimeLine()
+	FChart.UpdateScrollPosition()
 
 func _open_trace_selected(file):
 	print("Open: " + str(file))
@@ -881,8 +879,7 @@ func SetActiveTrace(trace):
 ##########################
 # Scratch space
 func deb_func():
-	var tabtmp = TraceView.duplicate()
-	tabtmp.set_name("Kalle" + str(debcnt))
-	TraceTab.add_child(tabtmp)
-
+	print("DEB " + str(debcnt))
+	debcnt += 1
+	FChart.position.y -= 10
 ##########################

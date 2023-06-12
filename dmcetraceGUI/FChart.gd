@@ -81,30 +81,12 @@ func _draw():
 						if _in_sight(korv):
 							var x_start = (korv.tstart - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan)
 							var width = (korv.tend - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan) - x_start
-
 							if x_start < 0:
 								x_start = 0
 							if width > Width:
 								width = Width
-
-							if (tgui.FNameText.get_visible_line_count() >= len(tgui.Trace[tgui.TActive].FList)):
-								var y_start = line_height * (korv.index) + 3
-#								draw_rect(Rect2(x_start, y_start, width, line_height - 6), Color.DARK_SEA_GREEN, false)
-								draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
-							else:
-								var top_index
-								var bot_index
-								if tgui.FuncVScrollBarIndex > (len(tgui.Trace[tgui.TActive].FList) - tgui.FNameText.get_visible_line_count()):
-									top_index = (len(tgui.Trace[tgui.TActive].FList) - tgui.FNameText.get_visible_line_count())
-									bot_index = len(tgui.Trace[tgui.TActive].FList) - 1
-								else:
-									top_index = tgui.FuncVScrollBarIndex
-									bot_index = top_index + tgui.FNameText.get_visible_line_count()
-
-								var y_start = line_height * (korv.index - top_index) + 3
-								if korv.index >= top_index and korv.index < bot_index:
-#									draw_rect(Rect2(x_start, y_start, width, line_height - 6), Color.DARK_SEA_GREEN, false)
-									draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
+							var y_start = line_height * (korv.index) + 3
+							draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
 
 func InitTimeLine(node, box):
 	print("FCHart init timeline")
@@ -124,6 +106,13 @@ func UpdateTimeLine():
 			title = title + "  " + TextColor[Cores[tgui.TActive][i]] + str(Cores[tgui.TActive][i])
 		TitleText.text = title
 		queue_redraw()
+
+func UpdateScrollPosition():
+	if _timeline_inited:
+		var line_height = tgui.FNameText.get_line_offset(1)
+		tgui.FNameText.scroll_to_line(tgui.FuncVScrollBarIndex)
+		if len(tgui.Trace[tgui.TActive].FList) >= (tgui.FuncVScrollBarIndex + tgui.FNameText.get_visible_line_count()):
+			tgui.FChart.position.y = 0 - tgui.FuncVScrollBarIndex * line_height
 
 func UpdateMarkers():
 	var xpos
