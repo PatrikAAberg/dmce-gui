@@ -228,7 +228,7 @@ func FTreeInsert(trace, core, ts, pathfunc):
 func TransformPath(path):
 	return Trace[TActive].base_path + path.replace(Trace[TActive].path_find, Trace[TActive].path_replace)
 
-func LoadTrace(path):
+func LoadTrace(path, mode):
 	var file = path
 	var clist = []
 	var record = 0
@@ -394,14 +394,14 @@ func _ready():
 		if not FileAccess.file_exists(file):
 			print("dmce-wgui: Could not open " + str(file))
 		else:
-			LoadTrace(file)
+			LoadTrace(file, "file")
 			_show_all_cores(0)
 	else:
 		print("dmce-wgui: No trace loaded from args")
 		# dev state, uncomment for release:
 		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
 			print("dmce-wgui: development mode")
-			LoadTrace('/home/patrik/agtrace/dmce-trace-ex.log')
+			LoadTrace('/home/pat/agtrace/ag-trace-19369.log', "file")
 			_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
@@ -776,7 +776,16 @@ func _trace_view_meta_clicked(meta):
 	UpdateTimeLine()
 	UpdateMarkers()
 
+var _open_trace_mode
+
 func _open_trace():
+	_open_trace_mode = "file"
+	OpenTraceDialog.title = "Open trace file"
+	OpenTraceDialog.visible = true
+
+func _import_trace_bundle():
+	_open_trace_mode = "bundle"
+	OpenTraceDialog.title = "Import trace bundle"
 	OpenTraceDialog.visible = true
 
 func _close_trace():
@@ -814,6 +823,8 @@ func _menu_file_pressed(id):
 		AskForConfirmationDialog.dialog_text = "Do you really want to quit?"
 		AskForConfirmationDialog.confirmed.connect(self._confirm_quit)
 		AskForConfirmationDialog.popup_centered()
+	elif id == 4:
+		_import_trace_bundle()
 
 func _toggle_show_ruler():
 	if ShowRuler == true:
@@ -861,9 +872,14 @@ func _funcvscrollbar_value_changed(val):
 	FChart.UpdateScrollPosition()
 
 func _open_trace_selected(file):
-	print("Open: " + str(file))
-	LoadTrace(file)
-	SetActiveTrace(TActive)
+	print("Open trace file: " + str(file))
+	if _open_trace_mode == "file":
+		LoadTrace(file, _open_trace_mode)
+		SetActiveTrace(TActive)
+	elif _open_trace_mode == "bundle":
+		print("Open trace bundle: " + str(file))
+		LoadTrace(file, _open_trace_mode)
+		SetActiveTrace(TActive)
 
 func SetActiveTrace(trace):
 	TActive = trace
