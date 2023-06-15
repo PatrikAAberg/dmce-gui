@@ -24,7 +24,7 @@ func _draw():
 			if tgui.Trace[tgui.TActive].TimeLineTS[i] >= tgui.Trace[tgui.TActive].TimeSpanStart and tgui.Trace[tgui.TActive].TimeLineTS[i] <= tgui.Trace[tgui.TActive].TimeSpanEnd:
 				var x =  tgui.TChartXOffset + (tgui.Trace[tgui.TActive].TimeLineTS[i] - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan)
 				var y = tgui.CORE_KORV_HEIGHT * tgui.Trace[tgui.TActive].CoreList.find(tgui.Trace[tgui.TActive].TimeLineCore[i], 0)
-				if x != oldx or y != oldy:
+				if int(x) != int(oldx) or int(y) != int(oldy):
 					draw_line(Vector2(x, y + 0), Vector2(x, y + tgui.CORE_KORV_HEIGHT), Color.DARK_OLIVE_GREEN, 1)
 					oldx = x
 					oldy = y
