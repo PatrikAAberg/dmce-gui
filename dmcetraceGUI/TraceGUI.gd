@@ -131,7 +131,7 @@ func ReadSrc(filename):
 		var err = reader.open(Trace[TActive].filename)
 		if err == OK:
 			var rawfile = reader.read_file(filename)
-			sourcelines = rawfile.get_string_from_ascii().split("\n")
+			sourcelines = rawfile.get_string_from_ascii().replace("[", "[lb]").split("\n")
 		reader.close()
 		if len(sourcelines) == 1 and sourcelines[0] == "":
 			sourcelines[0] = "Unable to load " + filename + " from bundle " + Trace[TActive].filename
