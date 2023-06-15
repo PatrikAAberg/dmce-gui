@@ -228,23 +228,55 @@ func FTreeInsert(trace, core, ts, pathfunc):
 func TransformPath(path):
 	return Trace[TActive].base_path + path.replace(Trace[TActive].path_find, Trace[TActive].path_replace)
 
+func _read_trace_from_file(file):
+	var f = FileAccess.open(file, FileAccess.READ)
+	var trace = []
+	while not f.eof_reached():
+		trace.append(f.get_line())
+	f.close()
+	return trace
+
+func _read_trace_from_bundle(bundle):
+		var reader = ZIPReader.new()
+		var err = reader.open(bundle)
+		var rawtrace = null
+		if err != OK:
+			return
+		var zippedfiles = reader.get_files()
+		for f in zippedfiles:
+			if f.ends_with(".trace"):
+				print("Opening bundle:" + f)
+				rawtrace = reader.read_file(f)
+				break
+		reader.close()
+		return rawtrace.get_string_from_ascii().split("\n")
+
 func LoadTrace(path, mode):
 	var file = path
 	var clist = []
 	var record = 0
 	var tracetmp = {}
+	var filebuf = []
+
 	tracetmp.TraceInfo = PackedStringArray([])
 	tracetmp.tracebuffer = PackedStringArray([])
 	tracetmp.TimeLineCore = []
 	tracetmp.TimeLineTS = []
 	tracetmp = FTreeInit(tracetmp)
 
-	var f = FileAccess.open(file, FileAccess.READ)
+	if mode == "bundle":
+		filebuf = _read_trace_from_bundle(file)
+		print("LEN: " + str(len(filebuf)))
+		for i in range(3):
+			print ("entry: " + str(len(filebuf) - i - 1))
+			print(filebuf[len(filebuf) - i - 1])
+	elif mode == "file":
+		filebuf = _read_trace_from_file(file)
+
 	tracetmp.TraceInfo.append("Filename: " + file)
 	var prefix
 	var first = true
-	while not f.eof_reached(): # iterate through all lines until the end of file is reached
-		var line = f.get_line()
+	for line in filebuf:
 		if record and line.count("@") > 5: # make sure all fields are there
 			var core = int(line.split("@")[0])
 			var ts = int(line.split("@")[1])
@@ -266,7 +298,6 @@ func LoadTrace(path, mode):
 			record = 1
 		elif not record:
 			tracetmp.TraceInfo.append(line)
-	f.close()
 	print("Largest common src path: " + prefix)
 	clist.sort()
 	tracetmp.CommonSourcePath = prefix
@@ -401,7 +432,7 @@ func _ready():
 		# dev state, uncomment for release:
 		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
 			print("dmce-wgui: development mode")
-			LoadTrace('/home/pat/agtrace/ag-trace-19369.log', "file")
+			LoadTrace('/home/pat/agtrace/dmce-trace-ag.7649.zip', "bundle")
 			_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
@@ -872,12 +903,10 @@ func _funcvscrollbar_value_changed(val):
 	FChart.UpdateScrollPosition()
 
 func _open_trace_selected(file):
-	print("Open trace file: " + str(file))
 	if _open_trace_mode == "file":
 		LoadTrace(file, _open_trace_mode)
 		SetActiveTrace(TActive)
 	elif _open_trace_mode == "bundle":
-		print("Open trace bundle: " + str(file))
 		LoadTrace(file, _open_trace_mode)
 		SetActiveTrace(TActive)
 
