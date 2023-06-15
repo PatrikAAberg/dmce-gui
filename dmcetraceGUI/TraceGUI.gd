@@ -117,14 +117,24 @@ func ReadSrc(filename):
 	if filename in SrcCache:
 		return SrcCache[filename]
 
-	f = FileAccess.open(filename, FileAccess.READ)
-	if f == null:
-		sourcelines.append("Unable to load " + filename)
-	else:
-		while not f.eof_reached(): # iterate through all lines until the end of file is reached
-			line = f.get_line()
-			sourcelines.append(line.replace("[", "[lb]")) # escape bbcode on the fly
-		f.close()
+	if Trace[TActive].load_mode == "file":
+		f = FileAccess.open(filename, FileAccess.READ)
+		if f == null:
+			sourcelines.append("Unable to load " + filename + " from host filesystem")
+		else:
+			while not f.eof_reached(): # iterate through all lines until the end of file is reached
+				line = f.get_line()
+				sourcelines.append(line.replace("[", "[lb]")) # escape bbcode on the fly
+			f.close()
+	elif Trace[TActive].load_mode == "bundle":
+		var reader = ZIPReader.new()
+		var err = reader.open(Trace[TActive].filename)
+		if err == OK:
+			var rawfile = reader.read_file(filename)
+			sourcelines = rawfile.get_string_from_ascii().split("\n")
+		reader.close()
+		if len(sourcelines) == 1 and sourcelines[0] == "":
+			sourcelines[0] = "Unable to load " + filename + " from bundle " + Trace[TActive].filename
 	SrcCache["filename"] = sourcelines
 	return sourcelines
 
@@ -266,14 +276,13 @@ func LoadTrace(path, mode):
 
 	if mode == "bundle":
 		filebuf = _read_trace_from_bundle(file)
-		print("LEN: " + str(len(filebuf)))
-		for i in range(3):
-			print ("entry: " + str(len(filebuf) - i - 1))
-			print(filebuf[len(filebuf) - i - 1])
 	elif mode == "file":
 		filebuf = _read_trace_from_file(file)
 
+	tracetmp.load_mode = mode
+	tracetmp.filename = file
 	tracetmp.TraceInfo.append("Filename: " + file)
+
 	var prefix
 	var first = true
 	for line in filebuf:
