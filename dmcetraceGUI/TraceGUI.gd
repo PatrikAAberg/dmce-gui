@@ -82,6 +82,9 @@ var timercnt = 0
 var	LineEditBasePath
 var	LineEditPathFind
 var	LineEditPathReplace
+var Dragged = false
+var DraggedFrameCount = 0
+var DraggedOffsetAll = ""
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -515,12 +518,7 @@ func _trace_tab_changed(tab):
 		SetActiveTrace(tab)
 
 func _dragged(_offset):
-	VSplitTop =  VSplitCTop.split_offset / VSplitCTop.size.y
-	HSplitTop = HSplitCTop.split_offset / HSplitCTop.size.x
-	VSplitBot = VSplitCBot.split_offset / VSplitCBot.size.y
-	if len(Trace) > 0:
-		UpdateTimeLine()
-		UpdateMarkers()
+	Dragged = true
 
 func _resized():
 	# Top "pane"
@@ -591,6 +589,23 @@ func _process(_delta):
 		InitDone = true
 
 	# Periodical update of state
+
+	if Dragged:
+		var DraggedOffsetAllNow = str(VSplitCTop.split_offset) + str(HSplitCTop.split_offset) + str(VSplitCBot.split_offset)
+		if DraggedOffsetAll == DraggedOffsetAllNow:
+			DraggedFrameCount += 1
+			if DraggedFrameCount > 60:
+				VSplitTop =  VSplitCTop.split_offset / VSplitCTop.size.y
+				HSplitTop = HSplitCTop.split_offset / HSplitCTop.size.x
+				VSplitBot = VSplitCBot.split_offset / VSplitCBot.size.y
+				if len(Trace) > 0:
+					UpdateTimeLine()
+					UpdateMarkers()
+				Dragged = false
+		else:
+			DraggedFrameCount = 0
+		DraggedOffsetAll = DraggedOffsetAllNow
+
 	if len(TraceViews) > 0:
 		TraceViewVisibleLines  = TraceViews[TActive].get_visible_line_count()
 		var s = "Time: " + str(CurrentTime)
@@ -602,7 +617,7 @@ func _process(_delta):
 
 	SrcViewVisibleLines  = SrcView.get_visible_line_count()
 
-	if _get_resize_state() == 2:
+	if _get_resize_state() == 2 and not Dragged:
 		_resized()
 
 func InitTimeLine():
