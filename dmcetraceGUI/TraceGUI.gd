@@ -183,6 +183,9 @@ func PopulateViews(view):
 			else:
 #				tracetext += "[url={\"data\"=\"" + str(i) + "\"}]" + out + "[/url]\n"
 				tracetext += "[url=" + str(i) + "]" + out + "[/url]\n"
+
+		if CurrentSearchString in tracetext:
+			tracetext = tracetext.replace(CurrentSearchString, "[bgcolor=#546358]" + CurrentSearchString + "[/bgcolor]")
 		TraceViews[TActive].append_text(tracetext)
 		TraceViews[TActive].scroll_to_line(TraceViewScrollTop - TraceViewStart)
 
@@ -489,14 +492,26 @@ func _find_prev(searchstr):
 func _find_next_button_pressed():
 	FindNextButton.release_focus()
 	_find_next(FindLineEdit.text)
+	PopulateViews(SRC | INFO | TRACE)
+	UpdateTimeLine()
+	UpdateMarkers()
 
 func _find_prev_button_pressed():
 	FindPrevButton.release_focus()
 	_find_prev(FindLineEdit.text)
+	PopulateViews(SRC | INFO | TRACE)
+	UpdateTimeLine()
+	UpdateMarkers()
 
+var CurrentSearchString = ""
 func _find_text_submitted(text):
 	FindLineEdit.release_focus()
+	CurrentSearchString = FindLineEdit.text
 	_find_next(FindLineEdit.text)
+	PopulateViews(SRC | INFO | TRACE)
+	UpdateTimeLine()
+	UpdateMarkers()
+
 
 func _settings_confirmation_dialog_confirmed():
 	Trace[TActive].base_path = LineEditBasePath.text
