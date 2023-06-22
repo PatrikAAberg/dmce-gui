@@ -31,5 +31,7 @@ func Init(node):
 	print("TCorelabels for trace " + str(tgui.TActive) + " init done")
 
 func MouseLeftPressed():
-	tgui.FChart.AddCore(int(get_local_mouse_position().y / tgui.CORE_KORV_HEIGHT), tgui.TActive)
+	var ind = int(get_local_mouse_position().y / tgui.CORE_KORV_HEIGHT)
+	if ind < len(tgui.Trace[tgui.TActive].CoreList):
+		tgui.FChart.AddCore(tgui.Trace[tgui.TActive].CoreList[ind], tgui.TActive)
 	tgui.UpdateTimeLine()
