@@ -9,6 +9,8 @@ var Colors = []
 var TextColor = [] #["[color=#ff0000]", "[color=#00ff00]", "[color=#0000ff]"]
 var FMarkers
 var TitleText
+var ZoomStart = 0
+var ZoomEnd = 0
 
 func ClearCores(ind):
 	Cores[ind] = []
@@ -148,6 +150,8 @@ func MouseLeftReleased():
 
 func MouseRightPressed():
 	FMarkers.ActivateDrawZoom(get_local_mouse_position().x)
+	ZoomStart = _get_time_from_xpos(FMarkers.GetZoomWindow().start)
+	ZoomEnd = ZoomStart
 
 # This happens when a new zoom window is created
 func MouseRightReleased():
@@ -170,7 +174,9 @@ func MouseRightReleased():
 	tgui.UpdateMarkers()
 
 func MouseMoved():
-	FMarkers.UpdateZoomWindow(get_local_mouse_position().x)
+	var pos = get_local_mouse_position().x
+	FMarkers.UpdateZoomWindow(pos)
+	ZoomEnd = _get_time_from_xpos(pos)
 	UpdateMarkers()
 
 func MouseWheelUp():

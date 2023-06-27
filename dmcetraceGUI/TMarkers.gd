@@ -51,6 +51,9 @@ func ActivateDrawZoom(start):
 	_zoom_start = start
 	_draw_zoom_active = true
 
+func ZoomActive():
+	return _draw_zoom_active
+
 func SetZoomEnd(end):
 	_zoom_end = end
 

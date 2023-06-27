@@ -5,6 +5,8 @@ var _timeline_inited = false
 var Box
 var TMarkers
 var debug = 0
+var ZoomStart = 0
+var ZoomEnd = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -84,25 +86,31 @@ func UpdateMarkers():
 	TMarkers.UpdateMarkers(xpos, tgui.TChartXOffset)
 
 func MouseLeftPressed():
-	if Input.is_physical_key_pressed(KEY_CTRL):
-		tgui.Trace[tgui.TActive].rulerstart = int(_get_time_from_xpos(_box_local_mouse_position().x))
-	elif Input.is_physical_key_pressed(KEY_ALT):
-		tgui.Trace[tgui.TActive].rulerend = int(_get_time_from_xpos(_box_local_mouse_position().x))
-	else:
-		_update_index(_box_local_mouse_position().x)
+#	if Input.is_physical_key_pressed(KEY_CTRL):
+#		tgui.Trace[tgui.TActive].rulerstart = int(_get_time_from_xpos(_box_local_mouse_position().x))
+#	elif Input.is_physical_key_pressed(KEY_ALT):
+#		tgui.Trace[tgui.TActive].rulerend = int(_get_time_from_xpos(_box_local_mouse_position().x))
+#	else:
+	_update_index(_box_local_mouse_position().x)
 	tgui.UpdateMarkers()
 
 func MouseLeftReleased():
 	pass
 
 func MouseRightPressed():
-	TMarkers.ActivateDrawZoom(_box_local_mouse_position().x)
+	var start = _box_local_mouse_position().x
+	TMarkers.ActivateDrawZoom(start)
+	ZoomStart = _get_time_from_xpos(start)
+	ZoomEnd = _get_time_from_xpos(start)
 
 # This happens when a new zoom window is created
 func MouseRightReleased():
 	TMarkers.DeactivateDrawZoom()
 	var tmpstart = _get_time_from_xpos(TMarkers.GetZoomWindow().start)
 	var tmpend = _get_time_from_xpos(TMarkers.GetZoomWindow().end)
+
+	ZoomStart = tmpstart
+	ZoomEnd = tmpend
 
 	if tmpstart < tgui.Trace[tgui.TActive].TimeStart:
 		tmpstart = tgui.Trace[tgui.TActive].TimeStart
@@ -120,6 +128,7 @@ func MouseRightReleased():
 func MouseMoved():
 	tgui.CurrentTime = int(_get_time_from_xpos(_box_local_mouse_position().x))
 	TMarkers.UpdateZoomWindow(_box_local_mouse_position().x)
+	ZoomEnd = tgui.CurrentTime
 	UpdateMarkers()
 
 # Zoom in

@@ -33,6 +33,9 @@ func InitMarkers(node, box):
 	Box = box
 	_markers_inited = true
 
+func ZoomActive():
+	return _draw_zoom_active
+
 func ActivateDrawZoom(start):
 	_zoom_start = start
 	_draw_zoom_active = true

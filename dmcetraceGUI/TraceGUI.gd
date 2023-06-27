@@ -624,10 +624,18 @@ func _process(_delta):
 	if len(TraceViews) > 0:
 		TraceViewVisibleLines  = TraceViews[TActive].get_visible_line_count()
 		var s = "Time: " + str(CurrentTime)
-		s = s + "    Marker1: " + str(Trace[TActive].rulerstart) + "ns"
-		s = s + "    Marker2: " + str(Trace[TActive].rulerend) + "ns"
-		s = s + "    Diff: " + str(Trace[TActive].rulerend - Trace[TActive].rulerstart) + "ns"
-
+		if TMarkers.ZoomActive():
+			s = s + "    Start: " + str(int(TChart.ZoomStart)) + "ns"
+			s = s + "    End: " + str(int(TChart.ZoomEnd)) + "ns"
+			s = s + "    Diff: " + str(int(TChart.ZoomEnd - TChart.ZoomStart)) + "ns"
+		elif FMarkers.ZoomActive():
+			s = s + "    Start: " + str(int(FChart.ZoomStart)) + "ns"
+			s = s + "    End: " + str(int(FChart.ZoomEnd)) + "ns"
+			s = s + "    Diff: " + str(int(FChart.ZoomEnd - FChart.ZoomStart)) + "ns"
+		else:
+			s = s + "    Start: " + str(int(Trace[TActive].TimeSpanStart)) + "ns"
+			s = s + "    End: " + str(int(Trace[TActive].TimeSpanEnd)) + "ns"
+			s = s + "    Diff: " + str(int(Trace[TActive].TimeSpan)) + "ns"
 		StatusLabel.text = s
 
 	SrcViewVisibleLines  = SrcView.get_visible_line_count()
