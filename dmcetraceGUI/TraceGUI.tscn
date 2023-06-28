@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://haxot671h3c4"]
+[gd_scene load_steps=29 format=3 uid="uid://haxot671h3c4"]
 
 [ext_resource type="Script" path="res://TraceGUI.gd" id="1_rncp3"]
 [ext_resource type="Script" path="res://TChart.gd" id="2_m5p0u"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://FMarkers.gd" id="3_1kuvw"]
 [ext_resource type="Script" path="res://TMarkers.gd" id="3_rw642"]
 [ext_resource type="Script" path="res://TCoreLabels.gd" id="6_peopc"]
+[ext_resource type="Script" path="res://MovieChart.gd" id="7_qhf0k"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gplwm"]
 content_margin_left = 8.0
@@ -274,27 +275,38 @@ size_flags_horizontal = 8
 max_value = 10.0
 step = 1.0
 
-[node name="TChartTab" type="TabContainer" parent="Background/VSplitTop/VSplitBot"]
+[node name="TCMovieHSplitContainer" type="HSplitContainer" parent="Background/VSplitTop/VSplitBot"]
 layout_mode = 2
+
+[node name="TChartTab" type="TabContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_tyybl")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_5pex6")
 theme_override_styles/panel = SubResource("StyleBoxFlat_1n3jt")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
 
-[node name="TChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TChartTab"]
+[node name="TChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_a3unn")
 
-[node name="TChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TChartTab/TChartPanel"]
+[node name="TChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel"]
 script = ExtResource("2_m5p0u")
 
-[node name="TMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/TChartTab/TChartPanel"]
+[node name="TMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel"]
 z_index = 10
 script = ExtResource("3_rw642")
 
-[node name="TCoreLabels" type="Node2D" parent="Background/VSplitTop/VSplitBot/TChartTab/TChartPanel"]
+[node name="TCoreLabels" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel"]
 script = ExtResource("6_peopc")
+
+[node name="MovieContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MovieChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
+script = ExtResource("7_qhf0k")
 
 [node name="MenuBar" type="MenuBar" parent="."]
 layout_mode = 0

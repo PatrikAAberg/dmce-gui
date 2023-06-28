@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bbpl0u6a7p760"]
+[gd_scene load_steps=4 format=3 uid="uid://bbpl0u6a7p760"]
 
 [ext_resource type="Script" path="res://windows.gd" id="1_hhts4"]
 
@@ -21,9 +21,8 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lhy0e"]
-
 [node name="Control" type="Control"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -167,11 +166,6 @@ text = "sadgfsadgfasdf popup panel
 "
 
 [node name="Popup" type="Popup" parent="."]
-
-[node name="myWindow" type="Window" parent="."]
-title = "Advanced find"
-visible = false
-theme_override_styles/embedded_border = SubResource("StyleBoxFlat_lhy0e")
 
 [node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 0
