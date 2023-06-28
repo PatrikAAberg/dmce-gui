@@ -405,6 +405,12 @@ offset_right = 8.0
 offset_bottom = 8.0
 text = "Trace info"
 
+[node name="ShowSrcButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Toggle src"
+
 [node name="ShowCurrentTraceInfoDialog" type="AcceptDialog" parent="."]
 title = "Trace Info"
 theme_override_styles/panel = SubResource("StyleBoxFlat_v6g7g")

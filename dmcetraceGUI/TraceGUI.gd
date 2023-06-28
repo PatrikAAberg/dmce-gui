@@ -67,6 +67,7 @@ var AllCoresButton
 var FindNextButton
 var FindPrevButton
 var TraceInfoButton
+var ShowSrcButton
 var re_remove_probe
 var TraceViewStart
 var TraceViewEnd
@@ -401,6 +402,7 @@ func _ready():
 	FindNextButton		= get_node("FindNextButton")
 	FindPrevButton		= get_node("FindPrevButton")
 	TraceInfoButton 	= get_node("TraceInfoButton")
+	ShowSrcButton		= get_node("ShowSrcButton")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
 	AskForConfirmationDialog = get_node("AskForConfirmationDialog")
 	SettingsConfirmationDialog = get_node("SettingsConfirmationDialog")
@@ -432,6 +434,7 @@ func _ready():
 	FindNextButton.pressed.connect(self._find_next_button_pressed)
 	FindPrevButton.pressed.connect(self._find_prev_button_pressed)
 	TraceInfoButton.pressed.connect(self._trace_info_button_pressed)
+	ShowSrcButton.pressed.connect(self._show_src_button_pressed)
 	SettingsConfirmationDialog.confirmed.connect(self._settings_confirmation_dialog_confirmed)
 
 	# Initial state
@@ -461,6 +464,14 @@ func _ready():
 	$MenuBar/PopupMenuView.name = " View "
 	$MenuBar/PopupMenuSearch.name = " Search "
 	$MenuBar/PopupMenuHelp.name = " Help "
+
+func _show_src_button_pressed():
+	ShowSrcButton.release_focus()
+	if TopVBoxContainer.visible == false:
+		TopVBoxContainer.visible = true
+	else:
+		TopVBoxContainer.visible = false
+
 
 func _trace_info_button_pressed():
 	TraceInfoButton.release_focus()
@@ -549,6 +560,9 @@ func _resized():
 
 	TraceInfoButton.position.x = FindLineEdit.position.x - 100
 	TraceInfoButton.position.y = 3
+
+	ShowSrcButton.position.x = TraceInfoButton.position.x - 100
+	ShowSrcButton.position.y = 3
 
 	VSplitCTop.split_offset = VSplitCTop.size.y * VSplitTop
 	HSplitCTop.split_offset = HSplitCTop.size.x * HSplitTop
@@ -986,6 +1000,4 @@ func SetActiveTrace(trace):
 func deb_func():
 	print("DEB " + str(debcnt))
 	debcnt += 1
-	FChart.position.y -= 10
-	TopVBoxContainer.visible = false
 ##########################
