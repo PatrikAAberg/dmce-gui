@@ -31,6 +31,7 @@ var VSplitCTop
 var HSplitCTop
 var HSplitCBot
 var VSplitCBot
+var TopVBoxContainer
 var Background
 var TraceTab
 var TraceView
@@ -371,6 +372,7 @@ func _ready():
 	VSplitCTop 			= get_node("Background/VSplitTop")
 	HSplitCTop 			= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop")
 	VSplitCBot			= get_node("Background/VSplitTop/VSplitBot")
+	TopVBoxContainer 	= get_node("Background/VSplitTop/VBoxContainer")
 	TChart 				= get_node("Background/VSplitTop/VSplitBot/TChartTab/TChartPanel/TChart")
 	TMarkers 			= get_node("Background/VSplitTop/VSplitBot/TChartTab/TChartPanel/TMarkers")
 	TChartBox 			= get_node("Background/VSplitTop/VSplitBot/TChartTab/TChartPanel")
@@ -598,6 +600,16 @@ func _get_resize_state():
 		ResizeState = 2
 	return ResizeState
 
+func val2commastr(val):
+	var s = str(int(val))
+	if len(s) > 3:
+		s = s.insert(len(s) - 3, ",")
+	if len(s) > 7:
+		s = s.insert(len(s) - 7, ",")
+	if len(s) > 11:
+		s = s.insert(len(s) - 11, ",")
+	return s
+
 func _process(_delta):
 	# Initial setup
 	if not InitDone:
@@ -623,19 +635,19 @@ func _process(_delta):
 
 	if len(TraceViews) > 0:
 		TraceViewVisibleLines  = TraceViews[TActive].get_visible_line_count()
-		var s = "Time: " + str(CurrentTime)
+		var s = "Time: " + val2commastr(CurrentTime) + "ns"
 		if TMarkers.ZoomActive():
-			s = s + "    Start: " + str(int(TChart.ZoomStart)) + "ns"
-			s = s + "    End: " + str(int(TChart.ZoomEnd)) + "ns"
-			s = s + "    Diff: " + str(int(TChart.ZoomEnd - TChart.ZoomStart)) + "ns"
+			s = s + "    Start: " + val2commastr(TChart.ZoomStart) + "ns"
+			s = s + "    End: " + val2commastr(TChart.ZoomEnd) + "ns"
+			s = s + "    Diff: " + val2commastr(TChart.ZoomEnd - TChart.ZoomStart) + "ns"
 		elif FMarkers.ZoomActive():
-			s = s + "    Start: " + str(int(FChart.ZoomStart)) + "ns"
-			s = s + "    End: " + str(int(FChart.ZoomEnd)) + "ns"
-			s = s + "    Diff: " + str(int(FChart.ZoomEnd - FChart.ZoomStart)) + "ns"
+			s = s + "    Start: " + val2commastr(FChart.ZoomStart) + "ns"
+			s = s + "    End: " + val2commastr(FChart.ZoomEnd) + "ns"
+			s = s + "    Diff: " + val2commastr(FChart.ZoomEnd - FChart.ZoomStart) + "ns"
 		else:
-			s = s + "    Start: " + str(int(Trace[TActive].TimeSpanStart)) + "ns"
-			s = s + "    End: " + str(int(Trace[TActive].TimeSpanEnd)) + "ns"
-			s = s + "    Diff: " + str(int(Trace[TActive].TimeSpan)) + "ns"
+			s = s + "    Start: " + val2commastr(Trace[TActive].TimeSpanStart) + "ns"
+			s = s + "    End: " + val2commastr(Trace[TActive].TimeSpanEnd) + "ns"
+			s = s + "    Diff: " + val2commastr(Trace[TActive].TimeSpan) + "ns"
 		StatusLabel.text = s
 
 	SrcViewVisibleLines  = SrcView.get_visible_line_count()
@@ -975,4 +987,5 @@ func deb_func():
 	print("DEB " + str(debcnt))
 	debcnt += 1
 	FChart.position.y -= 10
+	TopVBoxContainer.visible = false
 ##########################
