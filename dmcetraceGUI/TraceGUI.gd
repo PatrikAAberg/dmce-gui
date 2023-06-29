@@ -69,6 +69,7 @@ var FindPrevButton
 var TraceInfoButton
 var ShowSrcButton
 var re_remove_probe
+var re_get_probenbr
 var TraceViewStart
 var TraceViewEnd
 var TraceViewScrollTop = 999999999
@@ -280,6 +281,9 @@ func LoadTrace(path, mode):
 	tracetmp.tracebuffer = PackedStringArray([])
 	tracetmp.TimeLineCore = []
 	tracetmp.TimeLineTS = []
+	tracetmp.TraceEntry2ProbeListIndex = []
+	tracetmp.ProbeListNumber = []
+	tracetmp.ProbeListPathFunc = []
 	tracetmp = FTreeInit(tracetmp)
 
 	if mode == "bundle":
@@ -299,6 +303,7 @@ func LoadTrace(path, mode):
 			var ts = int(line.split("@")[1])
 			var srcpath = line.split("@")[2]
 			var pathfunc = srcpath + ":" + line.split("@")[4]
+
 			tracetmp.tracebuffer.append(line.replace("[", "[lb]")) # escape bbcode on the fly
 			tracetmp.TimeLineCore.append(core)
 			tracetmp.TimeLineTS.append(ts)
@@ -414,6 +419,9 @@ func _ready():
 
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
+	re_get_probenbr = RegEx.new()
+	re_get_probenbr.compile("DMCE_PROBE\\d*\\((\\d*)")
+
 	print("Control root started")
 
 	# Debug
