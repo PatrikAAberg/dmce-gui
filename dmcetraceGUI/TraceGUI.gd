@@ -89,6 +89,8 @@ var	LineEditPathReplace
 var Dragged = false
 var DraggedFrameCount = 0
 var DraggedOffsetAll = ""
+var MovieChartContainer
+var TCMovieHSplitContainer
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -386,6 +388,7 @@ func _ready():
 	TCoreLabels			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel/TCoreLabels")
 	TChartTab			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab")
 	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer/MovieChart")
+	MovieChartContainer	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer")
 	FChart 				= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FChart")
 	FMarkers 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FMarkers")
 	FChartBox 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel")
@@ -418,6 +421,7 @@ func _ready():
 	LineEditBasePath = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditBasePath")
 	LineEditPathFind = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditPathFind")
 	LineEditPathReplace = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditPathReplace")
+	TCMovieHSplitContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer")
 
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
@@ -432,6 +436,7 @@ func _ready():
 	VSplitCTop.dragged.connect(self._dragged)
 	HSplitCTop.dragged.connect(self._dragged)
 	VSplitCBot.dragged.connect(self._dragged)
+	TCMovieHSplitContainer.dragged.connect(self._dragged)
 #	Background.resized.connect(self._resized)
 	MenuFile.id_pressed.connect(self._menu_file_pressed)
 	MenuView.id_pressed.connect(self._menu_view_pressed)
@@ -583,6 +588,7 @@ func _resized():
 	if len(Trace) > 0:
 		UpdateTimeLine()
 		UpdateMarkers()
+		MovieChart.Update()
 		PopulateViews(TRACE | INFO | SRC)
 	ResizeState = 0
 
@@ -644,7 +650,7 @@ func _process(_delta):
 	# Periodical update of state
 
 	if Dragged:
-		var DraggedOffsetAllNow = str(VSplitCTop.split_offset) + str(HSplitCTop.split_offset) + str(VSplitCBot.split_offset)
+		var DraggedOffsetAllNow = str(VSplitCTop.split_offset) + str(HSplitCTop.split_offset) + str(VSplitCBot.split_offset) + str(TCMovieHSplitContainer.split_offset)
 		if DraggedOffsetAll == DraggedOffsetAllNow:
 			DraggedFrameCount += 1
 			if DraggedFrameCount > 60:
@@ -654,6 +660,7 @@ func _process(_delta):
 				if len(Trace) > 0:
 					UpdateTimeLine()
 					UpdateMarkers()
+					MovieChart.Update()
 				Dragged = false
 		else:
 			DraggedFrameCount = 0

@@ -6,7 +6,7 @@ func Init(node):
 	tgui = node
 
 func Update():
-	print("Movie update")
+	queue_redraw()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -18,4 +18,9 @@ func _process(delta):
 	pass
 
 func _draw():
-	draw_line(Vector2(0, 0), Vector2(100, 100), Color.GREEN_YELLOW, 1)
+	var Width = tgui.MovieChartContainer.size.x
+	var Height = tgui.MovieChartContainer.size.y
+	var width = Width / 2
+
+	for i in range (10):
+		draw_rect(Rect2(i * 15, Height, 10, -i * 5), Color.CADET_BLUE, true)
