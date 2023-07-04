@@ -82,9 +82,9 @@ func _draw():
 					for korv in tgui.Trace[tgui.TActive].FTree[core]:
 						if _in_sight(korv):
 							var x_start = (korv.tstart - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan)
-							var width = (korv.tend - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan) - x_start
 							if x_start < 0:
 								x_start = 0
+							var width = (korv.tend - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan) - x_start
 							if width > Width:
 								width = Width
 							var y_start = line_height * (korv.index) + 3
