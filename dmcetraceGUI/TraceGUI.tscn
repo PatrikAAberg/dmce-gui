@@ -247,7 +247,6 @@ layout_mode = 2
 clip_contents = true
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_hvjs6")
 
 [node name="FChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel"]
@@ -305,8 +304,16 @@ script = ExtResource("6_peopc")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MovieChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
+[node name="MovieChartContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MovieChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer"]
 script = ExtResource("7_qhf0k")
+
+[node name="MovieHScrollBar" type="HScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
 
 [node name="MenuBar" type="MenuBar" parent="."]
 layout_mode = 0

@@ -385,7 +385,7 @@ func _ready():
 	TChartBox 			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel")
 	TCoreLabels			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel/TCoreLabels")
 	TChartTab			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab")
-	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChart")
+	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer/MovieChart")
 	FChart 				= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FChart")
 	FMarkers 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FMarkers")
 	FChartBox 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel")
