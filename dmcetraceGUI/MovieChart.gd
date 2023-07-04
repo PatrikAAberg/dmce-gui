@@ -1,5 +1,12 @@
 extends Node2D
 
+var tgui
+
+func Init(node):
+	tgui = node
+
+func Update():
+	print("Movie update")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

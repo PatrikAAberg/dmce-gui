@@ -45,6 +45,7 @@ var TChartBox
 var TMarkers
 var TCoreLabels
 var TChartTab
+var MovieChart
 var FChart
 var HSplitFNameFChart
 var FChartBox
@@ -384,6 +385,7 @@ func _ready():
 	TChartBox 			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel")
 	TCoreLabels			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel/TCoreLabels")
 	TChartTab			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab")
+	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChart")
 	FChart 				= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FChart")
 	FMarkers 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FMarkers")
 	FChartBox 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel")
@@ -468,6 +470,9 @@ func _ready():
 	SrcTab.set_tab_title(0, "Source")
 	VarsTab.set_tab_title(0, "Variables")
 
+	MovieChart.Init(self)
+	MovieChart.Update()
+
 	$MenuBar/PopupMenuFile.name = " File "
 	$MenuBar/PopupMenuView.name = " View "
 	$MenuBar/PopupMenuSearch.name = " Search "
@@ -479,7 +484,6 @@ func _show_src_button_pressed():
 		TopVBoxContainer.visible = true
 	else:
 		TopVBoxContainer.visible = false
-
 
 func _trace_info_button_pressed():
 	TraceInfoButton.release_focus()
@@ -999,6 +1003,7 @@ func SetActiveTrace(trace):
 	InitMarkers()
 	UpdateTimeLine()
 	UpdateMarkers()
+	MovieChart.Update()
 	PopulateViews(SRC | INFO | TRACE)
 	TCoreLabels.Init(self)
 	FuncVScrollBar.value = Trace[TActive].FuncVScrollBarIndex

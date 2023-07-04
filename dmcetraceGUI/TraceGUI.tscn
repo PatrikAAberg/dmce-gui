@@ -301,7 +301,7 @@ script = ExtResource("3_rw642")
 [node name="TCoreLabels" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel"]
 script = ExtResource("6_peopc")
 
-[node name="MovieContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
+[node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
