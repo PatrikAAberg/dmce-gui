@@ -285,8 +285,8 @@ func LoadTrace(path, mode):
 	tracetmp.TimeLineCore = []
 	tracetmp.TimeLineTS = []
 	tracetmp.TraceEntry2ProbeListIndex = []
-	tracetmp.ProbeListNumber = []
-	tracetmp.ProbeListPathFunc = []
+	tracetmp.UniqueProbeList = [] 			# probe numbers found in the trace
+	tracetmp.ProbeHistogram = []			# Number of hits per unique probe above
 	tracetmp = FTreeInit(tracetmp)
 
 	if mode == "bundle":
@@ -306,6 +306,15 @@ func LoadTrace(path, mode):
 			var ts = int(line.split("@")[1])
 			var srcpath = line.split("@")[2]
 			var pathfunc = srcpath + ":" + line.split("@")[4]
+			var m = re_get_probenbr.search(line)
+			if m:
+				var pnum = int(m.get_string(1))
+				var index = tracetmp.UniqueProbeList.find(pnum)
+				if index == -1:
+					tracetmp.UniqueProbeList.append(pnum)
+					tracetmp.ProbeHistogram.append(1)
+				else:
+					tracetmp.ProbeHistogram[index] += 1
 
 			tracetmp.tracebuffer.append(line.replace("[", "[lb]")) # escape bbcode on the fly
 			tracetmp.TimeLineCore.append(core)
@@ -429,6 +438,7 @@ func _ready():
 	re_get_probenbr.compile("DMCE_PROBE\\d*\\((\\d*)")
 
 	print("Control root started")
+	MovieChart.Init(self)
 
 	# Debug
 	# get_tree().quit()
@@ -475,7 +485,6 @@ func _ready():
 	SrcTab.set_tab_title(0, "Source")
 	VarsTab.set_tab_title(0, "Variables")
 
-	MovieChart.Init(self)
 	MovieChart.Update()
 
 	$MenuBar/PopupMenuFile.name = " File "

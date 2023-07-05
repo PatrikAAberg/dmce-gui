@@ -305,6 +305,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="MovieChartContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
+clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -314,6 +315,7 @@ script = ExtResource("7_qhf0k")
 [node name="MovieHScrollBar" type="HScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
+step = 1.0
 
 [node name="MenuBar" type="MenuBar" parent="."]
 layout_mode = 0
