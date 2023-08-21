@@ -40,13 +40,16 @@ func _ready():
 func _process(delta):
 	pass
 
+var _infolabelsearch = ""
+
 func SetActiveProbe(probenbr):
 	var ind = tgui.Trace[tgui.TActive].UniqueProbeList.find(probenbr)
 	if ind != -1:
-		infolabel.text = tgui.Trace[tgui.TActive].LinePathFunc[ind] + "    count: " + str(tgui.Trace[tgui.TActive].ProbeHistogram[ind])
+		_infolabelsearch = tgui.Trace[tgui.TActive].LinePathFunc[ind]
+		infolabel.text = _infolabelsearch + "    count: " + str(tgui.Trace[tgui.TActive].ProbeHistogram[ind])
 
 func MouseLeftPressed():
-	tgui.FindLineEdit.text = infolabel.text
+	tgui.FindLineEdit.text = _infolabelsearch
 	var tmpindex = tgui.Trace[tgui.TActive].index
 	tgui._find_next_button_pressed()
 	if tmpindex == tgui.Trace[tgui.TActive].index:
