@@ -52,6 +52,7 @@ var FChartBox
 var FMarkers
 var FTab
 var FuncVScrollBar
+var TChartVScrollBar
 var FNameText
 var MenuFile
 var MenuView
@@ -352,6 +353,7 @@ func LoadTrace(path, mode):
 	tracetmp.path_find = ""
 	tracetmp.path_replace = ""
 	tracetmp.FuncVScrollBarIndex = 0
+	tracetmp.TChartVScrollBarIndex = 0
 	TraceViewEnd = tracetmp.index
 	if tracetmp.index > TRACE_VIEW_HEIGHT:
 		TraceViewStart = tracetmp.index - TRACE_VIEW_HEIGHT
@@ -395,10 +397,11 @@ func _ready():
 	HSplitCTop 			= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop")
 	VSplitCBot			= get_node("Background/VSplitTop/VSplitBot")
 	TopVBoxContainer 	= get_node("Background/VSplitTop/VBoxContainer")
-	TChart 				= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel/TChart")
-	TMarkers 			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel/TMarkers")
-	TChartBox 			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel")
-	TCoreLabels			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel/TCoreLabels")
+	TChart 				= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartPanel/TChart")
+	TMarkers 			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartPanel/TMarkers")
+	TChartBox 			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartPanel")
+	TCoreLabels			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartPanel/TCoreLabels")
+	TChartVScrollBar	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartVScrollBar")
 	TChartTab			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab")
 	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer/MovieChart")
 	MovieChartContainer	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer")
@@ -457,6 +460,7 @@ func _ready():
 	MenuSearch.id_pressed.connect(self._menu_search_pressed)
 	MenuHelp.id_pressed.connect(self._menu_help_pressed)
 	FuncVScrollBar.value_changed.connect(self._funcvscrollbar_value_changed)
+	TChartVScrollBar.value_changed.connect(self._tchartvscrollbar_value_changed)
 	TraceTab.tab_changed.connect(self._trace_tab_changed)
 	OpenTraceDialog.file_selected.connect(self._open_trace_selected)
 	FindLineEdit.text_submitted.connect(self._find_text_submitted)
@@ -1020,6 +1024,10 @@ func _menu_help_pressed(id):
 func _funcvscrollbar_value_changed(val):
 	Trace[TActive].FuncVScrollBarIndex = FuncVScrollBar.value
 	FChart.UpdateScrollPosition()
+
+func _tchartvscrollbar_value_changed(val):
+	Trace[TActive].TCHartVScrollBarIndex = TChartVScrollBar.value
+	TChart.UpdateScrollPosition()
 
 func _open_trace_selected(file):
 	if _open_trace_mode == "file":

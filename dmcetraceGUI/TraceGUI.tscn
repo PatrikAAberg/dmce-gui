@@ -278,6 +278,7 @@ step = 1.0
 layout_mode = 2
 
 [node name="TChartTab" type="TabContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
+custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_tyybl")
@@ -285,20 +286,26 @@ theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_5pex6")
 theme_override_styles/panel = SubResource("StyleBoxFlat_1n3jt")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
 
-[node name="TChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab"]
+[node name="TChartHBoxContainer" type="HBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab"]
+layout_mode = 2
+
+[node name="TChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_a3unn")
 
-[node name="TChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel"]
+[node name="TChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartPanel"]
 script = ExtResource("2_m5p0u")
 
-[node name="TMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel"]
+[node name="TMarkers" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartPanel"]
 z_index = 10
 script = ExtResource("3_rw642")
 
-[node name="TCoreLabels" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartPanel"]
+[node name="TCoreLabels" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartPanel"]
 script = ExtResource("6_peopc")
+
+[node name="TChartVScrollBar" type="VScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer"]
+layout_mode = 2
 
 [node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
 layout_mode = 2
