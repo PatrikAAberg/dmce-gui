@@ -43,7 +43,7 @@ func _process(delta):
 func SetActiveProbe(probenbr):
 	var ind = tgui.Trace[tgui.TActive].UniqueProbeList.find(probenbr)
 	if ind != -1:
-		infolabel.text = tgui.Trace[tgui.TActive].LinePathFunc[ind]
+		infolabel.text = tgui.Trace[tgui.TActive].LinePathFunc[ind] + "    count: " + str(tgui.Trace[tgui.TActive].ProbeHistogram[ind])
 
 func MouseLeftPressed():
 	tgui.FindLineEdit.text = infolabel.text
