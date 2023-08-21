@@ -287,6 +287,7 @@ func LoadTrace(path, mode):
 	tracetmp.TraceEntry2ProbeListIndex = []
 	tracetmp.UniqueProbeList = [] 			# probe numbers found in the trace
 	tracetmp.ProbeHistogram = []			# Number of hits per unique probe above
+	tracetmp.LinePathFunc = []
 	tracetmp = FTreeInit(tracetmp)
 
 	if mode == "bundle":
@@ -305,7 +306,9 @@ func LoadTrace(path, mode):
 			var core = int(line.split("@")[0])
 			var ts = int(line.split("@")[1])
 			var srcpath = line.split("@")[2]
-			var pathfunc = srcpath + ":" + line.split("@")[4]
+			var function = line.split("@")[4]
+			var pathfunc = srcpath + ":" + function
+			var linenbr = line.split("@")[3]
 			var m = re_get_probenbr.search(line)
 			if m:
 				var pnum = int(m.get_string(1))
@@ -313,6 +316,7 @@ func LoadTrace(path, mode):
 				if index == -1:
 					tracetmp.UniqueProbeList.append(pnum)
 					tracetmp.ProbeHistogram.append(1)
+					tracetmp.LinePathFunc.append(srcpath + "@" + linenbr + "@" + function)
 				else:
 					tracetmp.ProbeHistogram[index] += 1
 
@@ -781,8 +785,15 @@ func trace_pdown():
 		PopulateViews(TRACE)
 
 func _in_tchart(_pos):
-	if TChart.get_local_mouse_position().y  > 0 and TChart.get_local_mouse_position().x >= TChartXOffset:
-		return true
+	if TChartBox.get_local_mouse_position().y  > 0 and TChartBox.get_local_mouse_position().y < TChartBox.size.y:
+		if TChartBox.get_local_mouse_position().x > 0 and TChartBox.get_local_mouse_position().x < TChartBox.size.x:
+			return true
+	return false
+
+func _in_moviebox():
+	if MovieChartContainer.get_local_mouse_position().y  > 0 and MovieChartContainer.get_local_mouse_position().y < MovieChartContainer.size.y:
+		if MovieChartContainer.get_local_mouse_position().x > 0 and MovieChartContainer.get_local_mouse_position().x < MovieChartContainer.size.x:
+			return true
 	return false
 
 func _in_corelist(_pos):
@@ -875,6 +886,13 @@ func _input(ev):
 
 	if ev is InputEventMouseMotion and _in_tchart(ev.position):
 		TChart.MouseMoved()
+
+	if ev is InputEventMouseMotion and _in_moviebox():
+		MovieChart.MouseMoved()
+
+	if ev is InputEventMouseButton and _in_moviebox():
+		if ev.button_index == MOUSE_BUTTON_LEFT and ev.pressed:
+			MovieChart.MouseLeftPressed()
 
 	if ev is InputEventMouseButton and _in_corelist(ev.position):
 		if ev.button_index == MOUSE_BUTTON_LEFT and ev.pressed:
