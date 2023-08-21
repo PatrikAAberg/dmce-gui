@@ -1,6 +1,5 @@
 extends Node2D
 
-var FChart
 var tgui
 
 # Called when the node enters the scene tree for the first time.
@@ -21,7 +20,7 @@ func Init(node):
 	var i = 0
 	for core in tgui.Trace[tgui.TActive].CoreList:
 		var clab = Label.new()
-		clab.position.y = i * tgui.CORE_KORV_HEIGHT
+		clab.position.y = (i - tgui.Trace[tgui.TActive].TChartVScrollBarIndex) * tgui.CORE_KORV_HEIGHT
 		clab.text = "Core " + str(core)
 		var lsettings = LabelSettings.new()
 		lsettings.font_size = tgui.CORE_KORV_HEIGHT - 2

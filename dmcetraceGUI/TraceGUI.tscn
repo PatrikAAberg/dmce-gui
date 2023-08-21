@@ -290,6 +290,7 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
 layout_mode = 2
 
 [node name="TChartPanel" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_a3unn")
@@ -305,7 +306,11 @@ script = ExtResource("3_rw642")
 script = ExtResource("6_peopc")
 
 [node name="TChartVScrollBar" type="VScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer"]
+custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
+size_flags_horizontal = 8
+max_value = 10.0
+step = 1.0
 
 [node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
 layout_mode = 2

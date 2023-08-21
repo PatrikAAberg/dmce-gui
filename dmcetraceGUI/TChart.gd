@@ -44,6 +44,7 @@ func InitTimeLine(node, box):
 	tgui = node
 	Box = box
 	_timeline_inited = true
+	tgui.TChartVScrollBar.max_value = len(tgui.Trace[tgui.TActive].CoreList)
 
 func UpdateTimeLine():
 	if _timeline_inited:
@@ -84,6 +85,12 @@ func UpdateMarkers():
 	var xpos
 	xpos = GetXposFromTime(tgui.Trace[tgui.TActive].TimeLineTS[tgui.Trace[tgui.TActive].index])
 	TMarkers.UpdateMarkers(xpos, tgui.TChartXOffset)
+
+func UpdateScrollPosition():
+	if _timeline_inited:
+		var line_height = tgui.CORE_KORV_HEIGHT
+		tgui.TChart.position.y = 0 - tgui.Trace[tgui.TActive].TChartVScrollBarIndex * line_height
+
 
 func MouseLeftPressed():
 #	if Input.is_physical_key_pressed(KEY_CTRL):
