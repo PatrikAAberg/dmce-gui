@@ -9,11 +9,16 @@ var numprobes = 0
 var visibleprobes = 0
 var Height = 0
 var Width = 0
+var inited = false
 
 func Init(node):
 	tgui = node
+	inited = true
 
 func Update():
+	if not inited || len(tgui.Trace) == 0:
+		return
+
 	Height = tgui.MovieChartContainer.size.y
 	Width = tgui.MovieChartContainer.size.x
 	numprobes = len(tgui.Trace[tgui.TActive].ProbeHistogram)
@@ -59,6 +64,9 @@ func log10(value):
 	return log(value) / log(10)
 
 func _draw():
+	if not inited || len(tgui.Trace) == 0:
+		return
+
 	var height
 	var hmax = log10(tgui.Trace[tgui.TActive].ProbeHistogram.max())
 
