@@ -485,8 +485,8 @@ func _ready():
 		# dev state, uncomment for release:
 		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
 			print("dmce-wgui: development mode")
-			LoadTrace('/home/pat/agtrace/dmce-trace-ag.7649.zip', "bundle")
-			_show_all_cores(0)
+#			LoadTrace('/home/pat/agtrace/dmce-trace-ag.7649.zip', "bundle")
+#			_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
@@ -994,21 +994,33 @@ func _toggle_show_original_src_path():
 		ShowFullPath = true
 	PopulateViews(TRACE)
 
+func _toggle_show_histogram():
+	if MovieContainer.visible == true:
+		MovieContainer.visible = false
+	else:
+		MovieContainer.visible = true
+
 func _menu_view_pressed(id):
+	if len(Trace) == 0:
+		return
 	if id == 0:
 		_show_all_cores(TActive)
 	elif id == 1:
 		_hide_all_cores(TActive)
 	elif id == 2:
 		ToggleShowCoreChartGrid()
+		MenuView.set_item_checked( 2, not MenuView.is_item_checked(2))
 	elif id == 3:
-		_toggle_show_ruler()
+		_toggle_show_histogram()
+		MenuView.set_item_checked( 3, not MenuView.is_item_checked(3))
 	elif id == 4:
 		_trace_info_button_pressed()
 	elif id == 5:
 		_toggle_show_original_src_path()
 
 func _menu_search_pressed(id):
+	if len(Trace) == 0:
+		return
 	if id == 0:
 		print("Find!")
 	elif id == 1:
