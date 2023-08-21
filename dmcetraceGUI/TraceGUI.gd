@@ -481,8 +481,8 @@ func _ready():
 		# dev state, uncomment for release:
 		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
 			print("dmce-wgui: development mode")
-			LoadTrace('/home/pat/agtrace/dmce-trace-ag.7649.zip', "bundle")
-			_show_all_cores(0)
+#			LoadTrace('/home/pat/agtrace/dmce-trace-ag.7649.zip', "bundle")
+#			_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
