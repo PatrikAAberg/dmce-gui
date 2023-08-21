@@ -53,8 +53,10 @@ func MouseLeftPressed():
 		tgui._find_prev_button_pressed()
 
 func MouseMoved():
-	var probenbr = tgui.Trace[tgui.TActive].UniqueProbeList[int( self.get_local_mouse_position().x / width) + chartoffset]
-	SetActiveProbe(probenbr)
+	var pos = int( self.get_local_mouse_position().x / width) + chartoffset
+	if pos < len(tgui.Trace[tgui.TActive].UniqueProbeList):
+		var probenbr = tgui.Trace[tgui.TActive].UniqueProbeList[pos]
+		SetActiveProbe(probenbr)
 
 func _value_changed(val):
 	chartoffset = val
