@@ -307,7 +307,6 @@ size_flags_horizontal = 3
 [node name="ProbeInfoLabel" type="Label" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
-text = "asdfasd"
 clip_text = true
 
 [node name="MovieChartContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]

@@ -73,6 +73,7 @@ func _in_sight(korv):
 
 func _draw():
 	if _timeline_inited:
+		var box_list = []
 		var Width = Box.size.x
 		var line_height = tgui.FNameText.get_line_offset(1)
 		for i in len(Cores[tgui.TActive]):
@@ -88,7 +89,13 @@ func _draw():
 							if width > Width:
 								width = Width
 							var y_start = line_height * (korv.index) + 3
-							draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
+							x_start = int(x_start)
+							y_start = int(y_start)
+							width = int(width)
+							var box_id = x_start + 1000000 * y_start + 2000000 * width
+							if not box_id in box_list:
+								draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
+								box_list.append(box_id)
 
 func InitTimeLine(node, box):
 	print("FCHart init timeline")
