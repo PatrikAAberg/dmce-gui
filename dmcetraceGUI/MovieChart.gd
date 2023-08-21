@@ -74,4 +74,4 @@ func _draw():
 		height = (log10(tgui.Trace[tgui.TActive].ProbeHistogram[i]) / hmax) * Height
 		if height < 2:
 			height = 2
-		draw_rect(Rect2((i - chartoffset) * width, Height, width - 2, - height), Color.DARK_BLUE, true)
+		draw_rect(Rect2((i - chartoffset) * width, Height, width - 2, - height), Color.DARK_SLATE_BLUE, true)
