@@ -290,6 +290,7 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
 layout_mode = 2
 
 [node name="TCoreLabelsPanelContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer"]
+clip_contents = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 

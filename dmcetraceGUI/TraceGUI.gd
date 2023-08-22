@@ -262,19 +262,32 @@ func _read_trace_from_file(file):
 	return trace
 
 func _read_trace_from_bundle(bundle):
+		print("Extracting .zip file: " + bundle)
 		var reader = ZIPReader.new()
 		var err = reader.open(bundle)
 		var rawtrace = null
 		if err != OK:
+			print("Error " + str(err) + " when opening .zip file!")
 			return
+
 		var zippedfiles = reader.get_files()
+
 		for f in zippedfiles:
 			if f.ends_with(".trace"):
-				print("Opening bundle:" + f)
+				print("Reading file:" + f)
 				rawtrace = reader.read_file(f)
 				break
 		reader.close()
-		return rawtrace.get_string_from_ascii().split("\n")
+
+		var fulltrace
+		var TRACE_LIMIT = 1024 * 1024 * 1024
+		if rawtrace.size() > TRACE_LIMIT:
+			var cut_at = rawtrace.rfind(10, rawtrace.size() - TRACE_LIMIT) + 1
+			fulltrace = rawtrace.slice(rawtrace.size() - TRACE_LIMIT, rawtrace.size() + 1).get_string_from_ascii().split("\n")
+		else:
+			fulltrace = rawtrace.get_string_from_ascii().split("\n")
+		return fulltrace
+
 
 func LoadTrace(path, mode):
 	var file = path
@@ -292,6 +305,7 @@ func LoadTrace(path, mode):
 	tracetmp.ProbeHistogram = []			# Number of hits per unique probe above
 	tracetmp.LinePathFunc = []
 	tracetmp = FTreeInit(tracetmp)
+	print("Loading trace, mode: " + mode)
 
 	if mode == "bundle":
 		filebuf = _read_trace_from_bundle(file)
