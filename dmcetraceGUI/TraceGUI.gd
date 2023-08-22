@@ -63,6 +63,7 @@ var FindLineEdit
 var OpenTraceDialog
 var ShowCurrentTraceInfoDialog
 var SettingsConfirmationDialog
+var GenericAcceptDialog
 var AskForConfirmationDialog
 var CurrentTraceInfoLabel
 var StatusLabel
@@ -437,6 +438,7 @@ func _ready():
 	FindPrevButton		= get_node("FindPrevButton")
 	TraceInfoButton 	= get_node("TraceInfoButton")
 	ShowSrcButton		= get_node("ShowSrcButton")
+	GenericAcceptDialog	= get_node("GenericAcceptDialog")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
 	AskForConfirmationDialog = get_node("AskForConfirmationDialog")
 	SettingsConfirmationDialog = get_node("SettingsConfirmationDialog")
@@ -1019,6 +1021,10 @@ func _menu_view_pressed(id):
 		ToggleShowCoreChartGrid()
 		MenuView.set_item_checked( 2, not MenuView.is_item_checked(2))
 	elif id == 3:
+		if not Trace[TActive].ProbedTree:
+			GenericAcceptDialog.dialog_text = "No histogram view available for non-probed code tree bundles!"
+			GenericAcceptDialog.popup_centered()
+			return
 		_toggle_show_histogram()
 		MenuView.set_item_checked( 3, not MenuView.is_item_checked(3))
 	elif id == 4:

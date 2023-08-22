@@ -510,3 +510,6 @@ placeholder_text = "Enter path"
 [node name="VBoxContainerRight" type="VBoxContainer" parent="SettingsConfirmationDialog/HBoxContainerSettings"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="GenericAcceptDialog" type="AcceptDialog" parent="."]
+title = "Ooops..."
