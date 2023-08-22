@@ -376,8 +376,7 @@ func LoadTrace(path, mode):
 
 	Trace.append(tracetmp)
 	TActive = len(Trace) - 1
-	file  = file.replace("/", "\\")
-	file  = file.replace(".", ",")
+	file  = file.get_file().get_basename()
 	file = file + "  "
 	var tabtmp = TraceView.duplicate()
 	tabtmp.name = file
