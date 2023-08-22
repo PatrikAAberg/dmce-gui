@@ -16,7 +16,7 @@ var CORE_KORV_HEIGHT = 16
 # gloabls
 var CurrentTime = 0
 var ShowCoreChartGrid = true
-var TChartXOffset = 50
+var TChartXOffset = 20
 var InitDone = false
 var VSplitTop = 0.25
 var HSplitTop = 0.8
@@ -803,7 +803,7 @@ func _in_moviebox():
 	return false
 
 func _in_corelist(_pos):
-	if TChartBox.get_local_mouse_position().y  > 0 and TChartBox.get_local_mouse_position().x < TChartXOffset:
+	if TChartBox.get_local_mouse_position().y  > 0 and TChartBox.get_local_mouse_position().x < TChartXOffset - 10:
 		return true
 	return false
 

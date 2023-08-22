@@ -22,7 +22,7 @@ func Init(node):
 		var clab = Label.new()
 		clab.position.y = (i - tgui.Trace[tgui.TActive].TChartVScrollBarIndex) * tgui.CORE_KORV_HEIGHT
 		clab.text = "Core " + str(core)
-		clab.custom_minimum_size.x = 80
+		clab.custom_minimum_size.x = 60
 		var lsettings = LabelSettings.new()
 		lsettings.font_size = tgui.CORE_KORV_HEIGHT - 2
 		clab.label_settings = lsettings

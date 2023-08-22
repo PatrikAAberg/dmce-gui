@@ -234,7 +234,7 @@ theme_override_constants/separation = 0
 split_offset = 300
 
 [node name="FNameText" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart"]
-custom_minimum_size = Vector2(80, 100)
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 14
 scroll_active = false
