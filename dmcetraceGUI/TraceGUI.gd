@@ -338,6 +338,13 @@ func LoadTrace(path, mode):
 			record = 1
 		elif not record:
 			tracetmp.TraceInfo.append(line)
+
+	tracetmp.ProbedTree = false
+	for info in tracetmp.TraceInfo:
+		if "Probed code tree: yes" in info:
+			tracetmp.ProbedTree = true
+			break
+
 	print("Largest common src path: " + prefix)
 	clist.sort()
 	tracetmp.CommonSourcePath = prefix

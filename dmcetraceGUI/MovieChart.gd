@@ -72,6 +72,11 @@ func _draw():
 	if not inited || len(tgui.Trace) == 0:
 		return
 
+	if not tgui.Trace[tgui.TActive].ProbedTree:
+		tgui.MenuView.set_item_checked( 3, false)
+		tgui.MovieContainer.visible = false
+		return
+
 	var height
 	var hmax = log10(tgui.Trace[tgui.TActive].ProbeHistogram.max())
 
