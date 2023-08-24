@@ -20,16 +20,25 @@ func _process(_delta):
 func _draw():
 	if _timeline_inited and len(tgui.Trace) > 0:
 		var Width = _box_size_x()
+		var ratio =  Width / tgui.Trace[tgui.TActive].TimeSpan
 		var oldx = 0
-		var oldy = 0
-		for i in range(len(tgui.Trace[tgui.TActive].TimeLineTS)):
-			if tgui.Trace[tgui.TActive].TimeLineTS[i] >= tgui.Trace[tgui.TActive].TimeSpanStart and tgui.Trace[tgui.TActive].TimeLineTS[i] <= tgui.Trace[tgui.TActive].TimeSpanEnd:
-				var x =  tgui.TChartXOffset + (tgui.Trace[tgui.TActive].TimeLineTS[i] - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan)
-				var y = tgui.CORE_KORV_HEIGHT * tgui.Trace[tgui.TActive].CoreList.find(tgui.Trace[tgui.TActive].TimeLineCore[i], 0)
-				if int(x) != int(oldx) or int(y) != int(oldy):
-					draw_line(Vector2(x, y + 0), Vector2(x, y + tgui.CORE_KORV_HEIGHT), Color.DARK_OLIVE_GREEN, 1)
+		for i in range(len(tgui.Trace[tgui.TActive].CoreList)):
+			var y = int(tgui.CORE_KORV_HEIGHT * i)
+			var j = 0
+			var core = tgui.Trace[tgui.TActive].CoreList[i]
+			while j < len(tgui.Trace[tgui.TActive].TimestampsPerCore[core]):
+				var x =  int((tgui.Trace[tgui.TActive].TimestampsPerCore[core][j] - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio)
+				if x != oldx:
+					draw_line(Vector2(x + int(tgui.TChartXOffset), y + 0), Vector2(int(tgui.TChartXOffset + x), y + tgui.CORE_KORV_HEIGHT), Color.DARK_OLIVE_GREEN, 1)
 					oldx = x
-					oldy = y
+					# time border to next pixel
+					var fictive = (x + 1) / ratio + tgui.Trace[tgui.TActive].TimeSpanStart
+					var fictive_index = tgui.Trace[tgui.TActive].TimestampsPerCore[core].bsearch(fictive)
+					j = fictive_index
+				else:
+					# if we end up with next timestamp being the same as the last, lets look at next entry
+					j = j + 1
+
 		if tgui.ShowCoreChartGrid:
 			for i in range(len(tgui.Trace[tgui.TActive].CoreList)):
 				draw_rect(Rect2(0, tgui.CORE_KORV_HEIGHT * i, Box.size.x, tgui.CORE_KORV_HEIGHT), Color.DARK_SEA_GREEN / 2, false)

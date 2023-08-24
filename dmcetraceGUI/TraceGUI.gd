@@ -12,6 +12,7 @@ var VARS = 8
 var ZOOM_SHRINK = 0.1
 var ZOOM_SHRINK_MIN = 100
 var CORE_KORV_HEIGHT = 16
+var MAX_NUM_CORES = 512
 
 # gloabls
 var CurrentTime = 0
@@ -288,7 +289,6 @@ func _read_trace_from_bundle(bundle):
 			fulltrace = rawtrace.get_string_from_ascii().split("\n")
 		return fulltrace
 
-
 func LoadTrace(path, mode):
 	var file = path
 	var clist = []
@@ -298,7 +298,11 @@ func LoadTrace(path, mode):
 
 	tracetmp.TraceInfo = PackedStringArray([])
 	tracetmp.tracebuffer = PackedStringArray([])
-	tracetmp.TimeLineCore = []
+	tracetmp.TimestampsPerCore = []
+
+	for i in range(MAX_NUM_CORES):
+		tracetmp.TimestampsPerCore.append([])
+
 	tracetmp.TimeLineTS = []
 	tracetmp.TraceEntry2ProbeListIndex = []
 	tracetmp.UniqueProbeList = [] 			# probe numbers found in the trace
@@ -316,6 +320,7 @@ func LoadTrace(path, mode):
 	tracetmp.filename = file
 	tracetmp.TraceInfo.append("Filename: " + file)
 
+	print("Creating data structures...")
 	var prefix
 	var first = true
 	for line in filebuf:
@@ -327,6 +332,9 @@ func LoadTrace(path, mode):
 			var pathfunc = srcpath + ":" + function
 			var linenbr = line.split("@")[3]
 			var m = re_get_probenbr.search(line)
+
+			tracetmp.TimestampsPerCore[core].append(ts)
+
 			if m:
 				var pnum = int(m.get_string(1))
 				var index = tracetmp.UniqueProbeList.find(pnum)
@@ -338,7 +346,6 @@ func LoadTrace(path, mode):
 					tracetmp.ProbeHistogram[index] += 1
 
 			tracetmp.tracebuffer.append(line.replace("[", "[lb]")) # escape bbcode on the fly
-			tracetmp.TimeLineCore.append(core)
 			tracetmp.TimeLineTS.append(ts)
 			tracetmp = FTreeInsert(tracetmp, core, ts, pathfunc)
 			if core not in clist:
@@ -390,6 +397,8 @@ func LoadTrace(path, mode):
 	tracetmp.TraceInfo.append("Total time: " + str(tracetmp.TimeEnd - tracetmp.TimeStart))
 
 	Trace.append(tracetmp)
+	print("...done")
+
 	TActive = len(Trace) - 1
 	file  = file.get_file().get_basename()
 	file = file + "  "
@@ -414,6 +423,7 @@ func _reset_timespan():
 	Trace[TActive].TimeSpan = Trace[TActive].TimeSpanEnd - Trace[TActive].TimeSpanStart
 
 func _ready():
+
 	# Node handles
 	VSplitCTop 			= get_node("Background/VSplitTop")
 	HSplitCTop 			= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop")
