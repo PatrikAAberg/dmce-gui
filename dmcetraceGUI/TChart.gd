@@ -24,9 +24,9 @@ func _draw():
 		var oldx = 0
 		for i in range(len(tgui.Trace[tgui.TActive].CoreList)):
 			var y = int(tgui.CORE_KORV_HEIGHT * i)
-			var j = 0
 			var core = tgui.Trace[tgui.TActive].CoreList[i]
-			while j < len(tgui.Trace[tgui.TActive].TimestampsPerCore[core]):
+			var j = tgui.Trace[tgui.TActive].TimestampsPerCore[core].bsearch(tgui.Trace[tgui.TActive].TimeSpanStart)
+			while j < len(tgui.Trace[tgui.TActive].TimestampsPerCore[core]) && tgui.Trace[tgui.TActive].TimestampsPerCore[core][j] < tgui.Trace[tgui.TActive].TimeSpanEnd:
 				var x =  int((tgui.Trace[tgui.TActive].TimestampsPerCore[core][j] - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio)
 				if x != oldx:
 					draw_line(Vector2(x + int(tgui.TChartXOffset), y + 0), Vector2(int(tgui.TChartXOffset + x), y + tgui.CORE_KORV_HEIGHT), Color.DARK_OLIVE_GREEN, 1)
