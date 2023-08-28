@@ -890,7 +890,15 @@ func _input(ev):
 						ShowProbes = false
 					PopulateViews(TRACE | SRC)
 				if ev.keycode == KEY_G:
-					ToggleShowCoreChartGrid()
+					if Input.is_physical_key_pressed(KEY_SHIFT):
+						Trace[TActive].index = Trace[TActive].INDEX_MAX
+					else:
+						Trace[TActive].index = 0
+					_reset_timespan()
+					InitTimeLine()
+					InitMarkers()
+					UpdateTimeLine()
+					UpdateMarkers()
 				elif ev.keycode == KEY_Z:
 					_reset_timespan()
 					InitTimeLine()
