@@ -1035,6 +1035,12 @@ func _toggle_show_histogram():
 	else:
 		MovieContainer.visible = true
 
+func _toggle_lossless():
+	if LossLess == false:
+		LossLess = true
+	else:
+		LossLess = false
+
 func _menu_view_pressed(id):
 	if len(Trace) == 0:
 		return
@@ -1056,6 +1062,9 @@ func _menu_view_pressed(id):
 		_trace_info_button_pressed()
 	elif id == 5:
 		_toggle_show_original_src_path()
+	elif id == 6:
+		_toggle_lossless()
+		MenuView.set_item_checked( 6, not MenuView.is_item_checked(6))
 
 func _menu_search_pressed(id):
 	if len(Trace) == 0:
