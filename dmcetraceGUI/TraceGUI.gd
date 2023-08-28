@@ -95,6 +95,7 @@ var DraggedFrameCount = 0
 var DraggedOffsetAll = ""
 var MovieChartContainer
 var TCMovieHSplitContainer
+var LossLess = true
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()

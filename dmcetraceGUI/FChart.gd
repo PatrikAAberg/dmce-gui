@@ -71,6 +71,9 @@ func _in_sight(korv):
 
 	return false
 
+func _compare_end(a,b):
+	return a.tend < b.tend
+
 func _draw():
 	if _timeline_inited:
 		var box_list = []
@@ -80,7 +83,25 @@ func _draw():
 			var core = Cores[tgui.TActive][i]
 			var color = Colors[Cores[tgui.TActive][i]]
 			if tgui.Trace[tgui.TActive].FTree[core] != null:
-					for korv in tgui.Trace[tgui.TActive].FTree[core]:
+					var length = len (tgui.Trace[tgui.TActive].FTree[core])
+					var step
+					if tgui.LossLess:
+						step = 1
+					else:
+						# Downsampling for large traces
+						var zoom = float(tgui.Trace[tgui.TActive].TimeSpan) /  (tgui.Trace[tgui.TActive].TimeEnd - tgui.Trace[tgui.TActive].TimeStart)
+						step = int((length * zoom * 10) / (Width))
+						if step < 1:
+							step = 1
+					# Skip entries to the left
+					var j = 0
+					var fictive = {tend = tgui.Trace[tgui.TActive].TimeSpanStart}
+					j = tgui.Trace[tgui.TActive].FTree[core].bsearch_custom(fictive, _compare_end)
+					while j < length:
+						var korv = tgui.Trace[tgui.TActive].FTree[core][j]
+						# skip entries to the right
+						if korv.tstart > tgui.Trace[tgui.TActive].TimeSpanEnd:
+							break
 						if _in_sight(korv):
 							var x_start = (korv.tstart - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan)
 							if x_start < 0:
@@ -96,6 +117,7 @@ func _draw():
 							if not box_id in box_list:
 								draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
 								box_list.append(box_id)
+						j += step
 
 func InitTimeLine(node, box):
 	print("FCHart init timeline")
