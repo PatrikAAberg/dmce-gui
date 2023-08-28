@@ -830,6 +830,8 @@ func _in_tchart(_pos):
 	return false
 
 func _in_moviebox():
+	if MovieContainer.visible == false:
+		return false
 	if MovieChartContainer.get_local_mouse_position().y  > 0 and MovieChartContainer.get_local_mouse_position().y < MovieChartContainer.size.y:
 		if MovieChartContainer.get_local_mouse_position().x > 0 and MovieChartContainer.get_local_mouse_position().x < MovieChartContainer.size.x:
 			return true
