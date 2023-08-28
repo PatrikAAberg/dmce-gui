@@ -102,11 +102,6 @@ func UpdateScrollPosition():
 
 
 func MouseLeftPressed():
-#	if Input.is_physical_key_pressed(KEY_CTRL):
-#		tgui.Trace[tgui.TActive].rulerstart = int(_get_time_from_xpos(_box_local_mouse_position().x))
-#	elif Input.is_physical_key_pressed(KEY_ALT):
-#		tgui.Trace[tgui.TActive].rulerend = int(_get_time_from_xpos(_box_local_mouse_position().x))
-#	else:
 	_update_index(_box_local_mouse_position().x)
 	tgui.UpdateMarkers()
 
