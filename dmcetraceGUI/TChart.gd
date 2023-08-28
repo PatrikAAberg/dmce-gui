@@ -137,10 +137,11 @@ func MouseRightReleased():
 	tgui.UpdateMarkers()
 
 func MouseMoved():
-	tgui.CurrentTime = int(_get_time_from_xpos(_box_local_mouse_position().x))
-	TMarkers.UpdateZoomWindow(_box_local_mouse_position().x)
-	ZoomEnd = tgui.CurrentTime
-	UpdateMarkers()
+	if TMarkers.ZoomActive():
+		tgui.CurrentTime = int(_get_time_from_xpos(_box_local_mouse_position().x))
+		TMarkers.UpdateZoomWindow(_box_local_mouse_position().x)
+		ZoomEnd = tgui.CurrentTime
+		UpdateMarkers()
 
 # Zoom in
 func MouseWheelUp():
