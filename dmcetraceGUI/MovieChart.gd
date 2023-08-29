@@ -16,7 +16,7 @@ func Init(node):
 	inited = true
 
 func Update():
-	if not inited || len(tgui.Trace) == 0:
+	if not inited || len(tgui.Trace) == 0 || tgui.MovieContainer.visible == false:
 		return
 
 	Height = tgui.MovieChartContainer.size.y
