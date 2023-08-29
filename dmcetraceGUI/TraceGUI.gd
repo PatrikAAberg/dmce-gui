@@ -280,14 +280,7 @@ func _read_trace_from_bundle(bundle):
 				rawtrace = reader.read_file(f)
 				break
 		reader.close()
-
-		var fulltrace
-		var TRACE_LIMIT = 1024 * 1024 * 1024
-		if rawtrace.size() > TRACE_LIMIT:
-			var cut_at = rawtrace.rfind(10, rawtrace.size() - TRACE_LIMIT) + 1
-			fulltrace = rawtrace.slice(rawtrace.size() - TRACE_LIMIT, rawtrace.size() + 1).get_string_from_ascii().split("\n")
-		else:
-			fulltrace = rawtrace.get_string_from_ascii().split("\n")
+		var fulltrace = rawtrace.get_string_from_ascii().split("\n")
 		return fulltrace
 
 func LoadTrace(path, mode):
