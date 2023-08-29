@@ -97,6 +97,7 @@ var MovieChartContainer
 var TCMovieHSplitContainer
 var LossLess = true
 var CoreActivity
+var MainExtas
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -434,6 +435,7 @@ func _ready():
 	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer/MovieChart")
 	MovieChartContainer	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer")
 	CoreActivity		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/CoreActivityRichTextLabel")
+	MainExtas			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer")
 	FChart 				= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FChart")
 	FMarkers 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FMarkers")
 	FChartBox 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel")
@@ -1044,6 +1046,12 @@ func _toggle_show_histogram():
 	else:
 		MovieContainer.visible = true
 
+func _toggle_core_activity():
+	if CoreActivity.visible == true:
+		CoreActivity.visible = false
+	else:
+		CoreActivity.visible = true
+
 func _toggle_lossless():
 	if LossLess == false:
 		LossLess = true
@@ -1074,6 +1082,15 @@ func _menu_view_pressed(id):
 	elif id == 6:
 		_toggle_lossless()
 		MenuView.set_item_checked( 6, not MenuView.is_item_checked(6))
+	elif id == 7:
+		_toggle_core_activity()
+		MenuView.set_item_checked( 7, not MenuView.is_item_checked(7))
+
+	# Some final common stuff
+	if CoreActivity.visible || MovieContainer.visible:
+		MainExtas.visible = true
+	else:
+		MainExtas.visible = false
 
 func _menu_search_pressed(id):
 	if len(Trace) == 0:
