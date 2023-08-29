@@ -325,7 +325,9 @@ size_flags_horizontal = 3
 [node name="CoreActivityRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+bbcode_enabled = true
 autowrap_mode = 0
+meta_underlined = false
 script = ExtResource("7_nh6xr")
 
 [node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
