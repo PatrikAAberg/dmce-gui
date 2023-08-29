@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://haxot671h3c4"]
+[gd_scene load_steps=30 format=3 uid="uid://haxot671h3c4"]
 
 [ext_resource type="Script" path="res://TraceGUI.gd" id="1_rncp3"]
 [ext_resource type="Script" path="res://TChart.gd" id="2_m5p0u"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://FMarkers.gd" id="3_1kuvw"]
 [ext_resource type="Script" path="res://TMarkers.gd" id="3_rw642"]
 [ext_resource type="Script" path="res://TCoreLabels.gd" id="6_peopc"]
+[ext_resource type="Script" path="res://CoreActivityRichTextLabel.gd" id="7_nh6xr"]
 [ext_resource type="Script" path="res://MovieChart.gd" id="7_qhf0k"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gplwm"]
@@ -317,24 +318,34 @@ size_flags_horizontal = 8
 max_value = 10.0
 step = 1.0
 
-[node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
+[node name="HistoCoreActivityHSplitContainer" type="HSplitContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ProbeInfoLabel" type="Label" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
+[node name="CoreActivityRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 0
+script = ExtResource("7_nh6xr")
+
+[node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ProbeInfoLabel" type="Label" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 clip_text = true
 
-[node name="MovieChartContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
+[node name="MovieChartContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer"]
 clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MovieChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer"]
+[node name="MovieChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer"]
 script = ExtResource("7_qhf0k")
 
-[node name="MovieHScrollBar" type="HScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer"]
+[node name="MovieHScrollBar" type="HScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 step = 1.0

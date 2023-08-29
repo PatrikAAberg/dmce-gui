@@ -96,6 +96,7 @@ var DraggedOffsetAll = ""
 var MovieChartContainer
 var TCMovieHSplitContainer
 var LossLess = true
+var CoreActivity
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -232,7 +233,7 @@ func FTreeInit(trace):
 		trace.FTree.append(null)
 	return trace
 
-func FTreeInsert(trace, core, ts, pathfunc):
+func FTreeInsert(trace, core, ts, pathfunc, linenbr):
 	# Keep global index for all functions
 	var ind
 	if not pathfunc in trace.FList:
@@ -243,13 +244,13 @@ func FTreeInsert(trace, core, ts, pathfunc):
 
 	if trace.FTree[core] == null:
 		# First entry
-		trace.FTree[core] = [{"tstart"=ts, "tend"=ts, "pathfunc"=pathfunc, "index"=ind}]
+		trace.FTree[core] = [{"tstart"=ts, "tend"=ts, "pathfunc"=pathfunc, "index"=ind, "linenbr"=linenbr}]
 	else:
 		# Check if we switch function
 		if trace.FTree[core][len(trace.FTree[core]) - 1].pathfunc == pathfunc:
 			trace.FTree[core][len(trace.FTree[core]) - 1].tend = ts
 		else:
-			trace.FTree[core].append({"tstart"=ts, "tend"=ts, "pathfunc"=pathfunc, "index"=ind})
+			trace.FTree[core].append({"tstart"=ts, "tend"=ts, "pathfunc"=pathfunc, "index"=ind, "linenbr"=linenbr})
 	return trace
 
 func TransformPath(path):
@@ -341,7 +342,7 @@ func LoadTrace(path, mode):
 
 			tracetmp.tracebuffer.append(line.replace("[", "[lb]")) # escape bbcode on the fly
 			tracetmp.TimeLineTS.append(ts)
-			tracetmp = FTreeInsert(tracetmp, core, ts, pathfunc)
+			tracetmp = FTreeInsert(tracetmp, core, ts, pathfunc, linenbr)
 			if core not in clist:
 				clist.append(core)
 			if first:
@@ -429,9 +430,10 @@ func _ready():
 	TCoreLabels			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TCoreLabelsPanelContainer/TCoreLabels")
 	TChartVScrollBar	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartVScrollBar")
 	TChartTab			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab")
-	MovieContainer		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer")
-	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer/MovieChart")
-	MovieChartContainer	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/MovieContainer/MovieChartContainer")
+	MovieContainer		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer")
+	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer/MovieChart")
+	MovieChartContainer	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer")
+	CoreActivity		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/CoreActivityRichTextLabel")
 	FChart 				= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FChart")
 	FMarkers 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FMarkers")
 	FChartBox 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel")
@@ -474,6 +476,7 @@ func _ready():
 
 	print("Control root started")
 	MovieChart.Init(self)
+	CoreActivity.Init(self)
 
 	# Debug
 	# get_tree().quit()
@@ -748,6 +751,7 @@ func UpdateTimeLine():
 func UpdateMarkers():
 	TChart.UpdateMarkers()
 	FChart.UpdateMarkers()
+	CoreActivity.Update()
 
 func trace_up():
 	if Trace[TActive].index > 0:
@@ -1112,6 +1116,7 @@ func SetActiveTrace(trace):
 	UpdateTimeLine()
 	UpdateMarkers()
 	MovieChart.Update()
+	CoreActivity.Update()
 	PopulateViews(SRC | INFO | TRACE)
 	TCoreLabels.Init(self)
 	FuncVScrollBar.value = Trace[TActive].FuncVScrollBarIndex
