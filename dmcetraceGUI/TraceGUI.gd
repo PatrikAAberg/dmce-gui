@@ -891,12 +891,14 @@ func _input(ev):
 					InitTimeLine()
 					InitMarkers()
 					UpdateTimeLine()
+					PopulateViews(TRACE | SRC | INFO)
 					UpdateMarkers()
 				elif ev.keycode == KEY_Z:
 					_reset_timespan()
 					InitTimeLine()
 					InitMarkers()
 					UpdateTimeLine()
+					PopulateViews(TRACE | SRC | INFO)
 					UpdateMarkers()
 				elif ev.keycode == KEY_SPACE:
 					deb_func()
