@@ -406,14 +406,14 @@ func LoadTrace(path, mode):
 	TraceTab.add_child(tabtmp)
 	TraceTab.current_tab = TActive
 	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
-	_reset_timespan()
+	ResetTimespan()
 	InitTimeLine()
 	InitMarkers()
 	PopulateViews(TRACE | INFO | SRC)
 	TCoreLabels.Init(self)
 	_show_all_cores(TActive)
 
-func _reset_timespan():
+func ResetTimespan():
 	Trace[TActive].TimeSpanStart = Trace[TActive].TimeStart
 	Trace[TActive].TimeSpanEnd = Trace[TActive].TimeLineTS[len(Trace[TActive].TimeLineTS) - 1]
 	Trace[TActive].TimeSpan = Trace[TActive].TimeSpanEnd - Trace[TActive].TimeSpanStart
@@ -893,14 +893,14 @@ func _input(ev):
 						Trace[TActive].index = Trace[TActive].INDEX_MAX
 					else:
 						Trace[TActive].index = 0
-					_reset_timespan()
+					ResetTimespan()
 					InitTimeLine()
 					InitMarkers()
 					UpdateTimeLine()
 					PopulateViews(TRACE | SRC | INFO)
 					UpdateMarkers()
 				elif ev.keycode == KEY_Z:
-					_reset_timespan()
+					ResetTimespan()
 					InitTimeLine()
 					InitMarkers()
 					UpdateTimeLine()
@@ -1127,7 +1127,7 @@ func _open_trace_selected(file):
 func SetActiveTrace(trace):
 	TActive = trace
 	print("Active trace set to " + str(TActive))
-	_reset_timespan()
+	ResetTimespan()
 	InitTimeLine()
 	InitMarkers()
 	UpdateTimeLine()

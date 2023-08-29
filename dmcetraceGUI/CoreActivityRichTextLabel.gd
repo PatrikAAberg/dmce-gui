@@ -6,13 +6,15 @@ var tgui = null
 func _ready():
 	pass # Replace with function body.
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
 
 func _meta_clicked(meta):
-	tgui.Trace[tgui.TActive].index = int(meta)
+	meta = int(meta)
+	if int(tgui.Trace[tgui.TActive].TimeLineTS[meta]) < tgui.Trace[tgui.TActive].TimeSpanStart or int(tgui.Trace[tgui.TActive].TimeLineTS[meta]) > tgui.Trace[tgui.TActive].TimeSpanEnd:
+		tgui.ResetTimespan()
+	tgui.Trace[tgui.TActive].index = meta
 	tgui.TraceViewScrollTop = tgui.Trace[tgui.TActive].index - int(tgui.TraceViewVisibleLines / 2)
 	tgui.PopulateViews(tgui.SRC | tgui.INFO | tgui.TRACE)
 	tgui.UpdateTimeLine()
@@ -28,7 +30,6 @@ func Init(node):
 func _compare_start(a,b):
 	return a.tstart < b.tstart
 
-
 func Update():
 	if tgui != null:
 		var index = tgui.Trace[tgui.TActive].index
@@ -38,15 +39,20 @@ func Update():
 		for core in range(len(tgui.Trace[tgui.TActive].FTree)):
 			if tgui.Trace[tgui.TActive].FTree[core] != null:
 				var findex = tgui.Trace[tgui.TActive].FTree[core].bsearch_custom(timenow, _compare_start)
-				var funcname = "Core: " + str(core) + "    [ No entry ]\n"
+				var fname = "Core: " + str(core) + "    [ No entry ]\n"
 				var glob_index = -1
 				if findex > 0:
 					if findex >= len(tgui.Trace[tgui.TActive].FTree[core]) || ts != tgui.Trace[tgui.TActive].FTree[core][findex].tstart:
 						findex -= 1
-					funcname = tgui.Trace[tgui.TActive].FTree[core][findex].pathfunc + " " + tgui.Trace[tgui.TActive].FTree[core][findex].linenbr
 					glob_index = tgui.Trace[tgui.TActive].TimeLineTS.bsearch(tgui.Trace[tgui.TActive].FTree[core][findex].tstart)
+					# Check for special case where there are several entries with same timestamp, we always seem to get the top one.
+					while tgui.Trace[tgui.TActive].TimeLineTS[glob_index] == tgui.Trace[tgui.TActive].TimeLineTS[glob_index + 1] && core != int(tgui.Trace[tgui.TActive].tracebuffer[glob_index].split("@")[0]):
+						glob_index += 1
+					fname = tgui.Trace[tgui.TActive].tracebuffer[glob_index]
+					fname = fname.split("@")[2] + " " + fname.split("@")[3] + " " + fname.split("@")[4]
 				if glob_index == -1:
-					buf += funcname
+					buf += fname
 				else:
-					buf += "[url=" + str(glob_index) + "]Core: " + str(core) + "    " + str(glob_index) + " " + funcname + "[/url]\n"
+					var timediff = tgui.Trace[tgui.TActive].FTree[core][findex].tstart - ts
+					buf += "[url=" + str(glob_index) + "]Core: " + str(core) + "  Index: " + str(glob_index) + "  Distance(ns): " + str(timediff) + "  " + fname + "[/url]\n"
 		self.text = buf
