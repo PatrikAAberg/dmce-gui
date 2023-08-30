@@ -524,7 +524,10 @@ func _ready():
 		if not FileAccess.file_exists(file):
 			print("dmce-wgui: Could not open " + str(file))
 		else:
-			LoadTrace(file, "file")
+			if file.ends_with(".zip"):
+				LoadTrace(file, "bundle")
+			else:
+				LoadTrace(file, "file")
 			_show_all_cores(0)
 	else:
 		print("dmce-wgui: No trace loaded from args")
