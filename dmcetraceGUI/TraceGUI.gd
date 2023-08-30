@@ -275,14 +275,20 @@ func _read_trace_from_bundle(bundle):
 			return
 
 		var zippedfiles = reader.get_files()
+		print(zippedfiles)
 
+		var fulltrace = PackedStringArray([])
+		var fragcount = 0
 		for f in zippedfiles:
-			if f.ends_with(".trace"):
+			if ".dmcetracefrag-" in f:
 				print("Reading file:" + f)
 				rawtrace = reader.read_file(f)
-				break
+				var nexttrace = rawtrace.get_string_from_ascii().split("\n")
+				print("Trace fragment " + str(fragcount) + ": Read " + str(len(nexttrace)) + " entries")
+				fulltrace += nexttrace
+				fragcount += 1
 		reader.close()
-		var fulltrace = rawtrace.get_string_from_ascii().split("\n")
+		print("Total number of trace entries found: " + str(len(fulltrace)))
 		return fulltrace
 
 func LoadTrace(path, mode):
@@ -319,7 +325,11 @@ func LoadTrace(path, mode):
 	print("Creating data structures...")
 	var prefix
 	var first = true
+	var count = 0
 	for line in filebuf:
+		count += 1
+		if count % 100000 == 0:
+			print("Processed trace lines: " + str(count) + " ( " +  str(100 * (float(count) / len(filebuf))) + "% )")
 		if record and line.count("@") > 5: # make sure all fields are there
 			var core = int(line.split("@")[0])
 			var ts = int(line.split("@")[1])
@@ -352,6 +362,7 @@ func LoadTrace(path, mode):
 			else:
 				while not srcpath.begins_with(prefix):
 					prefix = prefix.left(-1)
+
 		if "- - - - -" in line:
 			record = 1
 		elif not record:
@@ -363,6 +374,7 @@ func LoadTrace(path, mode):
 			tracetmp.ProbedTree = true
 			break
 
+	print("Processed trace lines: " + str(count) + " ( 100% )")
 	print("Largest common src path: " + prefix)
 	clist.sort()
 	tracetmp.CommonSourcePath = prefix
@@ -393,7 +405,7 @@ func LoadTrace(path, mode):
 	tracetmp.TraceInfo.append("Total time: " + str(tracetmp.TimeEnd - tracetmp.TimeStart))
 
 	Trace.append(tracetmp)
-	print("...done")
+	print("...finnished creating data structures")
 
 	TActive = len(Trace) - 1
 	file  = file.get_file().get_basename()
@@ -406,12 +418,14 @@ func LoadTrace(path, mode):
 	TraceTab.add_child(tabtmp)
 	TraceTab.current_tab = TActive
 	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
+	print("Initial gfx setup...")
 	ResetTimespan()
 	InitTimeLine()
 	InitMarkers()
 	PopulateViews(TRACE | INFO | SRC)
 	TCoreLabels.Init(self)
 	_show_all_cores(TActive)
+	print("...Initial gfx setup done")
 
 func ResetTimespan():
 	Trace[TActive].TimeSpanStart = Trace[TActive].TimeStart
