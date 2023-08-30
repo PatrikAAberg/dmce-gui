@@ -46,7 +46,7 @@ func Update():
 						findex -= 1
 					glob_index = tgui.Trace[tgui.TActive].TimeLineTS.bsearch(tgui.Trace[tgui.TActive].FTree[core][findex].tstart)
 					# Check for special case where there are several entries with same timestamp, we always seem to get the top one.
-					while tgui.Trace[tgui.TActive].TimeLineTS[glob_index] == tgui.Trace[tgui.TActive].TimeLineTS[glob_index + 1] && core != int(tgui.Trace[tgui.TActive].tracebuffer[glob_index].split("@")[0]):
+					while glob_index + 1  < len(tgui.Trace[tgui.TActive].TimeLineTS) && tgui.Trace[tgui.TActive].TimeLineTS[glob_index] == tgui.Trace[tgui.TActive].TimeLineTS[glob_index + 1] && core != int(tgui.Trace[tgui.TActive].tracebuffer[glob_index].split("@")[0]):
 						glob_index += 1
 					fname = tgui.Trace[tgui.TActive].tracebuffer[glob_index]
 					fname = fname.split("@")[2] + " " + fname.split("@")[3] + " " + fname.split("@")[4]
