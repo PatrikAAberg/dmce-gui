@@ -275,7 +275,6 @@ func _read_trace_from_bundle(bundle):
 			return
 
 		var zippedfiles = reader.get_files()
-		print(zippedfiles)
 
 		var fulltrace = PackedStringArray([])
 		var fragcount = 0
@@ -405,7 +404,7 @@ func LoadTrace(path, mode):
 	tracetmp.TraceInfo.append("Total time: " + str(tracetmp.TimeEnd - tracetmp.TimeStart))
 
 	Trace.append(tracetmp)
-	print("...finnished creating data structures")
+	print("...finished creating data structures")
 
 	TActive = len(Trace) - 1
 	file  = file.get_file().get_basename()

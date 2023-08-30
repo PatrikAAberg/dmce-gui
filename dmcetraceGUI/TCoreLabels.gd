@@ -28,7 +28,7 @@ func Init(node):
 		clab.label_settings = lsettings
 		add_child(clab)
 		i += 1
-	print("TCorelabels for trace " + str(tgui.TActive) + " init done")
+#	print("TCorelabels for trace " + str(tgui.TActive) + " init done")
 
 func MouseLeftPressed():
 	var ind = int(get_local_mouse_position().y / tgui.CORE_KORV_HEIGHT)

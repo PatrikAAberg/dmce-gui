@@ -128,6 +128,7 @@ func InitTimeLine(node, box):
 		tgui.FNameText.text += tgui.Trace[tgui.TActive].FList[i] + "\n"
 	_timeline_inited = true
 	tgui.FuncVScrollBar.max_value = len(tgui.Trace[tgui.TActive].FList)
+	print("FCHart init timeline done")
 
 func UpdateTimeLine():
 	if _timeline_inited:

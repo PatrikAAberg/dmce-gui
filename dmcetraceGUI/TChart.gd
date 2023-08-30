@@ -50,6 +50,7 @@ func _box_local_mouse_position():
 	return {"x":get_local_mouse_position().x - tgui.TChartXOffset}
 
 func InitTimeLine(node, box):
+	print("TChart init timeline")
 	tgui = node
 	Box = box
 	_timeline_inited = true
