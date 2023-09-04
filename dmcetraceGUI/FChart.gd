@@ -72,7 +72,7 @@ func _in_sight(korv):
 	return false
 
 func _compare_end(a,b):
-	return a.tend < b.tend
+	return a.tend <= b.tend
 
 func _draw_from_func_list():
 	if _timeline_inited:
@@ -106,36 +106,25 @@ func _draw_from_func_list():
 						if korv.tstart > tgui.Trace[tgui.TActive].TimeSpanEnd:
 							break
 						if _in_sight(korv):
-							var ratio = Width / tgui.Trace[tgui.TActive].TimeSpan
-							var x_start = (korv.tstart - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio
+							var ratio = float(Width / tgui.Trace[tgui.TActive].TimeSpan)
+							var x_start = int((korv.tstart - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio)
 							if x_start < 0:
 								x_start = 0
-							var width = (korv.tend - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio - x_start
+							var width = int((korv.tend - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio - x_start)
 							if width > Width:
 								width = Width
-							var y_start = line_height * func_count + 3
-							x_start = int(x_start)
-							y_start = int(y_start)
-							width = int(width)
-							var box_id = x_start + 1000000 * y_start + 2000000 * width
-							if not box_id in box_list:
-								box_list.append(box_id)
-								draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
-								rect_count += 1
-								# Find next entry for this function that shall be drawn in next x position
-								var next_pix_time = int((float(x_start) + 1) / ratio + tgui.Trace[tgui.TActive].TimeSpanStart)
-								fictive = {tend = next_pix_time}
-								var tmpj = klist.bsearch_custom(fictive, _compare_end)
-								if tmpj > j:
-									j = tmpj
-									continue
-							else:
-								dubbla += 1
+							var y_start = int(line_height * func_count + 3)
+							draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
+							rect_count += 1
+							# Find next entry for this function that shall be drawn in next x position
+							var next_pix_time = int((float(x_start) + 1) / ratio + tgui.Trace[tgui.TActive].TimeSpanStart)
+							fictive = {tend = next_pix_time}
+							var tmpj = klist.bsearch_custom(fictive, _compare_end)
+							if tmpj > j:
+								j = tmpj
+								continue
 						j += 1
 			func_count += 1
-
-		print(str(rect_count) + " : " + str(korv_count))
-		print("Dubletter: " + str(dubbla))
 
 func _draw_from_core_list():
 	if _timeline_inited:
@@ -183,8 +172,10 @@ func _draw_from_core_list():
 						j += step
 
 func _draw():
-#	_draw_from_func_list()
-	_draw_from_core_list()
+#	tgui.TimerStart()
+	_draw_from_func_list()
+#_draw_from_core_list()
+#	tgui.TimerEnd()
 
 func InitTimeLine(node, box):
 	print("FCHart init timeline")

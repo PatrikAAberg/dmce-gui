@@ -549,9 +549,9 @@ func _ready():
 		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
 			print("dmce-wgui: development mode")
 #			LoadTrace('C:/Users/epatabe/frag/dmce-trace-ag.437312.zip', "bundle")
-#			LoadTrace('C:/Users/epatabe/frag/dmce-trace-graph_tst.3293043.zip', "bundle")
+			LoadTrace('C:/Users/epatabe/frag/dmce-trace-graph_tst.3293043.zip', "bundle")
 #			LoadTrace('C:/Users/epatabe/frag/dmce-trace-ag.3918767.zip', "bundle")
-#			_show_all_cores(0)
+			_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")

@@ -2,7 +2,15 @@ extends Control
 
 var VScroll
 # Called when the node enters the scene tree for the first time.
+func _compare(a, b):
+	return a <= b
+
 func _ready():
+	var a = [1,2,3,4,5,6,7,8,8,8,8,8,9,9,9,10,10]
+	var ind = a.bsearch_custom(8, _compare)
+	print(a)
+	print(ind)
+
 	$Button.pressed.connect(self._my_pressed)
 	$MenuBar/PopupMenu.id_pressed.connect(self._my_id_pressed)
 	$LineEdit.text_submitted.connect(self._find_text_submitted)
