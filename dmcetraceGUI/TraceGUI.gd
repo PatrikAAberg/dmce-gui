@@ -339,19 +339,20 @@ func LoadTrace(path, mode):
 	var prefix
 	var first = true
 	var count = 0
-	for line in filebuf:
-		count += 1
+	while count < len(filebuf):
+		var line = filebuf[count]
 		if count % 100000 == 0:
 			print("Processed trace lines: " + str(count) + " ( " +  str(100 * (float(count) / len(filebuf))) + "% )")
 		if record and line.count("@") > 5: # make sure all fields are there
-			var core = int(line.split("@")[0])
-			var ts = int(line.split("@")[1])
-			var srcpath = line.split("@")[2]
-			var function = line.split("@")[4]
+			var sline = line.split("@")
+			var core = int(sline[0])
+			var ts = int(sline[1])
+			var srcpath = sline[2]
+			var function = sline[4]
 			var pathfunc = srcpath + ":" + function
-			var linenbr = line.split("@")[3]
-			var m = re_get_probenbr.search(line)
+			var linenbr = sline[3]
 
+			var m = re_get_probenbr.search(line)
 			tracetmp.TimestampsPerCore[core].append(ts)
 
 			if m:
@@ -375,8 +376,9 @@ func LoadTrace(path, mode):
 			else:
 				while not srcpath.begins_with(prefix):
 					prefix = prefix.left(-1)
+		count += 1
 
-		if "- - - - -" in line:
+		if not record and "- - - - -" in line:
 			record = 1
 		elif not record:
 			tracetmp.TraceInfo.append(line)
