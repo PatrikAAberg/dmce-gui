@@ -76,6 +76,15 @@ func _compare_end(a,b):
 
 func _draw_from_func_list():
 	if _timeline_inited:
+
+		# Prevent from getting to a state we cant zoom out from
+		if tgui.Trace[tgui.TActive].TimeSpan < 10:
+			tgui.Trace[tgui.TActive].TimeSpanStart = tgui.Trace[tgui.TActive].TimeSpanEnd - 10
+			if tgui.Trace[tgui.TActive].TimeSpanStart < tgui.Trace[tgui.TActive].TimeStart:
+				tgui.Trace[tgui.TActive].TimeSpanStart += 10
+				tgui.Trace[tgui.TActive].TimeSpanEnd += 10
+			tgui.Trace[tgui.TActive].TimeSpan = 10
+
 		var Width = float(Box.size.x)
 		var line_height = tgui.FNameText.get_line_offset(1)
 		var func_count = 0
