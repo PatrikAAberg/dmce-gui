@@ -74,7 +74,70 @@ func _in_sight(korv):
 func _compare_end(a,b):
 	return a.tend < b.tend
 
-func _draw():
+func _draw_from_func_list():
+	if _timeline_inited:
+		var Width = float(Box.size.x)
+		var line_height = tgui.FNameText.get_line_offset(1)
+		var func_count = 0
+		var rect_count = 0
+		var korv_count = 0
+		var box_list = []
+		var dubbla = 0
+		for klist in tgui.Trace[tgui.TActive].FDrawList:
+			korv_count += len(klist)
+			if len(klist) > 0:
+					var length = len (klist)
+					# Skip entries to the left
+					var j = 0
+					var fictive = {tend = tgui.Trace[tgui.TActive].TimeSpanStart}
+					j = klist.bsearch_custom(fictive, _compare_end)
+					while j < length:
+						var korv = klist[j]
+						var core = int(korv.core)
+						var color
+						# Show this core?
+						if core not in Cores[tgui.TActive]:
+							j += 1
+							continue
+						else:
+							color = Colors[core]
+
+						# skip entries to the right
+						if korv.tstart > tgui.Trace[tgui.TActive].TimeSpanEnd:
+							break
+						if _in_sight(korv):
+							var ratio = Width / tgui.Trace[tgui.TActive].TimeSpan
+							var x_start = (korv.tstart - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio
+							if x_start < 0:
+								x_start = 0
+							var width = (korv.tend - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio - x_start
+							if width > Width:
+								width = Width
+							var y_start = line_height * func_count + 3
+							x_start = int(x_start)
+							y_start = int(y_start)
+							width = int(width)
+							var box_id = x_start + 1000000 * y_start + 2000000 * width
+							if not box_id in box_list:
+								box_list.append(box_id)
+								draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
+								rect_count += 1
+								# Find next entry for this function that shall be drawn in next x position
+								var next_pix_time = int((float(x_start) + 1) / ratio + tgui.Trace[tgui.TActive].TimeSpanStart)
+								fictive = {tend = next_pix_time}
+								var tmpj = klist.bsearch_custom(fictive, _compare_end)
+								if tmpj > j:
+									j = tmpj
+									continue
+							else:
+								dubbla += 1
+						j += 1
+			func_count += 1
+
+		print(str(rect_count) + " : " + str(korv_count))
+		print("Dubletter: " + str(dubbla))
+
+func _draw_from_core_list():
 	if _timeline_inited:
 		var box_list = []
 		var Width = Box.size.x
@@ -118,6 +181,10 @@ func _draw():
 								draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
 								box_list.append(box_id)
 						j += step
+
+func _draw():
+#	_draw_from_func_list()
+	_draw_from_core_list()
 
 func InitTimeLine(node, box):
 	print("FCHart init timeline")

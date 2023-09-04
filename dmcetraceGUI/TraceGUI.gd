@@ -230,15 +230,21 @@ func PopulateViews(view):
 func FTreeInit(trace):
 	trace.FTree = []
 	trace.FList = []
+	trace.FDrawList = []
+
 	for i in range(512):
 		trace.FTree.append(null)
 	return trace
+
+func _compare_end(a,b):
+	return a.tend < b.tend
 
 func FTreeInsert(trace, core, ts, pathfunc, linenbr):
 	# Keep global index for all functions
 	var ind
 	if not pathfunc in trace.FList:
 		trace.FList.append(pathfunc)
+		trace.FDrawList.append([])
 		ind = len(trace.FList) - 1
 	else:
 		ind = trace.FList.find(pathfunc,0)
@@ -251,7 +257,12 @@ func FTreeInsert(trace, core, ts, pathfunc, linenbr):
 		if trace.FTree[core][len(trace.FTree[core]) - 1].pathfunc == pathfunc:
 			trace.FTree[core][len(trace.FTree[core]) - 1].tend = ts
 		else:
+			# Save the old one in draw list, init the new one
+			# Place it sorted
+			var sind = trace.FDrawList[trace.FTree[core][len(trace.FTree[core]) - 1].index].bsearch_custom(trace.FTree[core][len(trace.FTree[core]) - 1], _compare_end)
+			trace.FDrawList[trace.FTree[core][len(trace.FTree[core]) - 1].index].insert(sind, {"tstart"=trace.FTree[core][len(trace.FTree[core]) - 1].tstart, "tend"=trace.FTree[core][len(trace.FTree[core]) - 1].tend, "core"=core})
 			trace.FTree[core].append({"tstart"=ts, "tend"=ts, "pathfunc"=pathfunc, "index"=ind, "linenbr"=linenbr})
+
 	return trace
 
 func TransformPath(path):
@@ -537,7 +548,9 @@ func _ready():
 		# dev state, uncomment for release:
 		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
 			print("dmce-wgui: development mode")
-#			LoadTrace('/home/pat/agtrace/dmce-trace-ag.7649.zip', "bundle")
+#			LoadTrace('C:/Users/epatabe/frag/dmce-trace-ag.437312.zip', "bundle")
+#			LoadTrace('C:/Users/epatabe/frag/dmce-trace-graph_tst.3293043.zip', "bundle")
+#			LoadTrace('C:/Users/epatabe/frag/dmce-trace-ag.3918767.zip', "bundle")
 #			_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
