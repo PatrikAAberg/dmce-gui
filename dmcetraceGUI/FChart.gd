@@ -11,6 +11,7 @@ var FMarkers
 var TitleText
 var ZoomStart = 0
 var ZoomEnd = 0
+var mutex
 
 func ClearCores(ind):
 	Cores[ind] = []
@@ -43,6 +44,7 @@ func _ready():
 	TitleText.position.x = 0
 	TitleText.position.y = -40
 	FMarkers = get_node("../FMarkers")
+	mutex = Mutex.new()
 	print("FChart ready")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -74,9 +76,34 @@ func _in_sight(korv):
 func _compare_end(a,b):
 	return a.tend <= b.tend
 
+func _worker(thread_id, indstart, indend):
+	print("Starting thread " + str(thread_id) + "  Interval: " + str(indstart) + "-" + str(indend))
+	_draw_from_func_list_interval(indstart, indend)
+
 func _draw_from_func_list():
 	if _timeline_inited:
+		var num_cores = OS.get_processor_count() - 2
+		var num_funcs = len(tgui.Trace[tgui.TActive].FDrawList)
+		var funcs_per_core =  num_funcs / num_cores
+		var thread_count = 0
+		var threadlist = []
+		var func_count = 0
+		while func_count < num_funcs:
+			var thread = Thread.new()
+			if (num_funcs - func_count) < funcs_per_core:
+				thread.start(_worker.bind(thread_count, func_count, num_funcs ))
+#				_worker(thread_count, func_count, num_funcs )
+			else:
+				thread.start(_worker.bind(thread_count, func_count, func_count + funcs_per_core))
+#				_worker(thread_count, func_count, func_count + funcs_per_core)
+			thread_count += 1
+			func_count += funcs_per_core
+			threadlist.append(thread)
+		for t in threadlist:
+			t.wait_to_finish()
 
+func _draw_from_func_list_interval(indstart, indend):
+	if _timeline_inited:
 		# Prevent from getting to a state we cant zoom out from
 		if tgui.Trace[tgui.TActive].TimeSpan < 10:
 			tgui.Trace[tgui.TActive].TimeSpanStart = tgui.Trace[tgui.TActive].TimeSpanEnd - 10
@@ -87,12 +114,15 @@ func _draw_from_func_list():
 
 		var Width = float(Box.size.x)
 		var line_height = tgui.FNameText.get_line_offset(1)
-		var func_count = 0
+		var func_count = indstart
 		var rect_count = 0
 		var korv_count = 0
 		var box_list = []
 		var dubbla = 0
-		for klist in tgui.Trace[tgui.TActive].FDrawList:
+		for klistindex in range(indstart, indend):
+			if klistindex > len(tgui.Trace[tgui.TActive].FDrawList) - 1:
+				break
+			var klist = tgui.Trace[tgui.TActive].FDrawList[klistindex]
 			korv_count += len(klist)
 			if len(klist) > 0:
 					var length = len (klist)
@@ -123,7 +153,9 @@ func _draw_from_func_list():
 							if width > Width:
 								width = Width
 							var y_start = int(line_height * func_count + 3)
+							mutex.lock()
 							draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
+							mutex.unlock()
 							rect_count += 1
 							# Find next entry for this function that shall be drawn in next x position
 							var next_pix_time = int((float(x_start) + 1) / ratio + tgui.Trace[tgui.TActive].TimeSpanStart)
@@ -181,10 +213,13 @@ func _draw_from_core_list():
 						j += step
 
 func _draw():
-#	tgui.TimerStart()
-	_draw_from_func_list()
-#_draw_from_core_list()
-#	tgui.TimerEnd()
+	if _timeline_inited:
+#		tgui.TimerStart()
+		_draw_from_func_list()
+# Other ways to draw fchart single-core
+#		_draw_from_func_list_interval(0, len(tgui.Trace[tgui.TActive].FDrawList))
+#	_draw_from_core_list()
+#		tgui.TimerEnd()
 
 func InitTimeLine(node, box):
 	print("FCHart init timeline")
