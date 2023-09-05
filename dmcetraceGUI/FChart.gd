@@ -77,7 +77,7 @@ func _compare_end(a,b):
 	return a.tend <= b.tend
 
 func _worker(thread_id, indstart, indend):
-	print("Starting thread " + str(thread_id) + "  Interval: " + str(indstart) + "-" + str(indend))
+#	print("Starting thread " + str(thread_id) + "  Interval: " + str(indstart) + "-" + str(indend))
 	_draw_from_func_list_interval(indstart, indend)
 
 func _draw_from_func_list():
@@ -119,6 +119,7 @@ func _draw_from_func_list_interval(indstart, indend):
 		var korv_count = 0
 		var box_list = []
 		var dubbla = 0
+
 		for klistindex in range(indstart, indend):
 			if klistindex > len(tgui.Trace[tgui.TActive].FDrawList) - 1:
 				break
@@ -126,6 +127,9 @@ func _draw_from_func_list_interval(indstart, indend):
 			korv_count += len(klist)
 			if len(klist) > 0:
 					var length = len (klist)
+					var step = 1
+					if not tgui.LossLess:
+						step = 3
 					# Skip entries to the left
 					var j = 0
 					var fictive = {tend = tgui.Trace[tgui.TActive].TimeSpanStart}
@@ -158,7 +162,7 @@ func _draw_from_func_list_interval(indstart, indend):
 							mutex.unlock()
 							rect_count += 1
 							# Find next entry for this function that shall be drawn in next x position
-							var next_pix_time = int((float(x_start) + 1) / ratio + tgui.Trace[tgui.TActive].TimeSpanStart)
+							var next_pix_time = int((float(x_start) + step) / ratio + tgui.Trace[tgui.TActive].TimeSpanStart)
 							fictive = {tend = next_pix_time}
 							var tmpj = klist.bsearch_custom(fictive, _compare_end)
 							if tmpj > j:
