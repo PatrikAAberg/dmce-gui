@@ -297,7 +297,7 @@ func _read_trace_from_bundle(bundle):
 				print("Trace fragment " + str(fragcount) + ": Read " + str(len(nexttrace)) + " entries")
 				fulltrace += nexttrace
 				fragcount += 1
-				if fragcount > 25:
+				if fragcount > 50:
 					print("Trace fragment limit reached, data at the end will be lost")
 					break
 		reader.close()
