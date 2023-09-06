@@ -302,6 +302,8 @@ func MouseRightReleased():
 	if tmpend > tgui.Trace[tgui.TActive].TimeEnd:
 		tmpend = tgui.Trace[tgui.TActive].TimeEnd
 
+	tgui.StoreTimespan()
+
 	tgui.Trace[tgui.TActive].TimeSpanStart = int(tmpstart)
 	tgui.Trace[tgui.TActive].TimeSpanEnd = int(tmpend)
 	tgui.Trace[tgui.TActive].TimeSpan = int(tmpend - tmpstart)

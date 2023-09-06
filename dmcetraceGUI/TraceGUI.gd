@@ -435,6 +435,7 @@ func LoadTrace(path, mode):
 	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
 	print("Initial gfx setup...")
 	ResetTimespan()
+	StoreTimespan()
 	InitTimeLine()
 	InitMarkers()
 	PopulateViews(TRACE | INFO | SRC)
@@ -446,6 +447,21 @@ func ResetTimespan():
 	Trace[TActive].TimeSpanStart = Trace[TActive].TimeStart
 	Trace[TActive].TimeSpanEnd = Trace[TActive].TimeLineTS[len(Trace[TActive].TimeLineTS) - 1]
 	Trace[TActive].TimeSpan = Trace[TActive].TimeSpanEnd - Trace[TActive].TimeSpanStart
+
+func StoreTimespan():
+	Trace[TActive].TimeSpanStartStored = Trace[TActive].TimeSpanStart
+	Trace[TActive].TimeSpanEndStored = Trace[TActive].TimeSpanEnd
+	Trace[TActive].TimeSpanStored = Trace[TActive].TimeSpan
+
+func UndoTimespan():
+	Trace[TActive].TimeSpanStart = Trace[TActive].TimeSpanStartStored
+	Trace[TActive].TimeSpanEnd = Trace[TActive].TimeSpanEndStored
+	Trace[TActive].TimeSpan = Trace[TActive].TimeSpanStored
+	InitTimeLine()
+	InitMarkers()
+	UpdateTimeLine()
+	PopulateViews(TRACE | SRC | INFO)
+	UpdateMarkers()
 
 func _ready():
 
@@ -934,12 +950,15 @@ func _input(ev):
 					PopulateViews(TRACE | SRC | INFO)
 					UpdateMarkers()
 				elif ev.keycode == KEY_Z:
-					ResetTimespan()
-					InitTimeLine()
-					InitMarkers()
-					UpdateTimeLine()
-					PopulateViews(TRACE | SRC | INFO)
-					UpdateMarkers()
+					if Input.is_physical_key_pressed(KEY_CTRL):
+						UndoTimespan()
+					else:
+						ResetTimespan()
+						InitTimeLine()
+						InitMarkers()
+						UpdateTimeLine()
+						PopulateViews(TRACE | SRC | INFO)
+						UpdateMarkers()
 				elif ev.keycode == KEY_SPACE:
 					deb_func()
 		else:
