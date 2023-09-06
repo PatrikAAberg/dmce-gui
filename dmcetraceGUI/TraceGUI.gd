@@ -83,7 +83,7 @@ var SrcViewVisibleLines = 0
 var SrcCache = {}
 var ShowProbes = false
 var PrevSrcView = ""
-var ShowRuler = true
+var RulerActive = false
 var ShowFullPath = true
 var time_start
 var timercnt = 0
@@ -400,8 +400,6 @@ func LoadTrace(path, mode):
 	tracetmp.TimeStart = tracetmp.TimeLineTS[0]
 	tracetmp.TimeEnd = tracetmp.TimeLineTS[tracetmp.INDEX_MAX]
 	tracetmp.index = tracetmp.INDEX_MAX
-	tracetmp.rulerstart = 0
-	tracetmp.rulerend = 0
 	tracetmp.base_path = ""
 	tracetmp.path_find = ""
 	tracetmp.path_replace = ""
@@ -1078,13 +1076,6 @@ func _menu_file_pressed(id):
 		AskForConfirmationDialog.popup_centered()
 	elif id == 4:
 		_import_trace_bundle()
-
-func _toggle_show_ruler():
-	if ShowRuler == true:
-		ShowRuler = false
-	else:
-		ShowRuler = true
-	UpdateMarkers()
 
 func _toggle_show_original_src_path():
 	if ShowFullPath == true:

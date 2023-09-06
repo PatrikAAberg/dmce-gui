@@ -26,15 +26,14 @@ func _draw():
 		# Probes
 		draw_line(Vector2(x, 0), Vector2(x, Box.size.y), Color.GREEN_YELLOW, 1)
 
+		# Ruler
+		var col = Color(0.4, 0.4, 0.4, 0.5)
+		if tgui.RulerActive == true:
+			col = Color(0.6, 0.6, 0.6, 0.6)
+
 		# Zoom window
 		if _draw_zoom_active:
-			draw_rect(Rect2(_zoom_start + _x_offset, 0, _zoom_end - _zoom_start, Box.size.y), Color(0.4, 0.4, 0.4, 0.5))
-
-		# Ruler
-		if tgui.ShowRuler:
-			var rstartxpos = tgui.TChart.GetXposFromTime(tgui.Trace[tgui.TActive].rulerstart) + _x_offset
-			var rendxpos = tgui.TChart.GetXposFromTime(tgui.Trace[tgui.TActive].rulerend) + _x_offset
-			draw_rect(Rect2(rstartxpos, 0, rendxpos - rstartxpos, Box.size.y), Color(0.2, 0.2, 0.2, 0.5))
+			draw_rect(Rect2(_zoom_start + _x_offset, 0, _zoom_end - _zoom_start, Box.size.y), col)
 
 func UpdateMarkers(xpos, xoff):
 	if _markers_inited:

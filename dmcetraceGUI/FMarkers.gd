@@ -20,8 +20,13 @@ func _process(_delta):
 func _draw():
 	if _markers_inited:
 		draw_line(Vector2(MarkerXPos, 0), Vector2(MarkerXPos, Box.size.y), Color.RED, 1)
+
+		var col = Color(0.4, 0.4, 0.4, 0.5)
+		if tgui.RulerActive:
+			col = Color(0.6, 0.6, 0.6, 0.7)
+
 		if _draw_zoom_active:
-			draw_rect(Rect2(_zoom_start, 0, _zoom_end - _zoom_start, Box.size.y), Color(0.4, 0.4, 0.4, 0.5))
+			draw_rect(Rect2(_zoom_start, 0, _zoom_end - _zoom_start, Box.size.y), col)
 
 func UpdateMarkers(xpos):
 	if _markers_inited:

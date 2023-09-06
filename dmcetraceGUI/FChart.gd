@@ -285,14 +285,23 @@ func MouseLeftReleased():
 	pass
 
 func MouseRightPressed():
+	if Input.is_physical_key_pressed(KEY_CTRL):
+		tgui.RulerActive = true
 	FMarkers.ActivateDrawZoom(get_local_mouse_position().x)
 	ZoomStart = _get_time_from_xpos(FMarkers.GetZoomWindow().start)
 	ZoomEnd = ZoomStart
 
 # This happens when a new zoom window is created
 func MouseRightReleased():
+
 	print("TCHart set zoom")
 	FMarkers.DeactivateDrawZoom()
+
+	# Only ruler?
+	if tgui.RulerActive == true:
+		tgui.RulerActive = false
+		return
+
 	var tmpstart = _get_time_from_xpos(FMarkers.GetZoomWindow().start)
 	var tmpend = _get_time_from_xpos(FMarkers.GetZoomWindow().end)
 
