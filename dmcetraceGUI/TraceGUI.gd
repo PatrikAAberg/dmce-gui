@@ -585,10 +585,10 @@ func _ready():
 
 func _show_src_button_pressed():
 	ShowSrcButton.release_focus()
-	if TopVBoxContainer.visible == false:
-		TopVBoxContainer.visible = true
+	if HSplitCTop.visible == false:
+		HSplitCTop.visible = true
 	else:
-		TopVBoxContainer.visible = false
+		HSplitCTop.visible = false
 
 func _trace_info_button_pressed():
 	TraceInfoButton.release_focus()
