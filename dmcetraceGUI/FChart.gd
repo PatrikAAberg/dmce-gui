@@ -84,10 +84,17 @@ func _draw_from_func_list():
 	if _timeline_inited:
 		var num_cores = OS.get_processor_count() - 2
 		var num_funcs = len(tgui.Trace[tgui.TActive].FDrawList)
-		var funcs_per_core =  num_funcs / num_cores
+		var funcs_per_core = num_funcs / num_cores
+		if funcs_per_core == 0:
+			funcs_per_core = num_funcs
 		var thread_count = 0
 		var threadlist = []
 		var func_count = 0
+#		print("num_cores: " + str(num_cores))
+#		print("num_funcs: " + str(num_funcs))
+#		print("funcs per core: " + str(funcs_per_core))
+#		print("thread_count: " + str(thread_count))
+#		print("func_count: " + str(func_count))
 		while func_count < num_funcs:
 			var thread = Thread.new()
 			if (num_funcs - func_count) < funcs_per_core:
@@ -119,7 +126,6 @@ func _draw_from_func_list_interval(indstart, indend):
 		var korv_count = 0
 		var box_list = []
 		var dubbla = 0
-
 		for klistindex in range(indstart, indend):
 			if klistindex > len(tgui.Trace[tgui.TActive].FDrawList) - 1:
 				break

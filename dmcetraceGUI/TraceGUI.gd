@@ -262,7 +262,14 @@ func FTreeInsert(trace, core, ts, pathfunc, linenbr):
 			var sind = trace.FDrawList[trace.FTree[core][len(trace.FTree[core]) - 1].index].bsearch_custom(trace.FTree[core][len(trace.FTree[core]) - 1], _compare_end)
 			trace.FDrawList[trace.FTree[core][len(trace.FTree[core]) - 1].index].insert(sind, {"tstart"=trace.FTree[core][len(trace.FTree[core]) - 1].tstart, "tend"=trace.FTree[core][len(trace.FTree[core]) - 1].tend, "core"=core})
 			trace.FTree[core].append({"tstart"=ts, "tend"=ts, "pathfunc"=pathfunc, "index"=ind, "linenbr"=linenbr})
+	return trace
 
+func FDrawListInsertLast(trace):
+	var core = 0
+	while core < len(trace.FTree):
+		if trace.FTree[core] != null:
+			trace.FDrawList[trace.FTree[core][len(trace.FTree[core]) - 1].index].append({"tstart"=trace.FTree[core][len(trace.FTree[core]) - 1].tstart, "tend"=trace.FTree[core][len(trace.FTree[core]) - 1].tend, "core"=core})
+		core += 1
 	return trace
 
 func TransformPath(path):
@@ -383,6 +390,7 @@ func LoadTrace(path, mode):
 		elif not record:
 			tracetmp.TraceInfo.append(line)
 
+	tracetmp = FDrawListInsertLast(tracetmp)
 	tracetmp.ProbedTree = false
 	for info in tracetmp.TraceInfo:
 		if "Probed code tree: yes" in info:
@@ -430,6 +438,7 @@ func LoadTrace(path, mode):
 	TraceViews.append(tabtmp)
 	TraceTab.add_child(tabtmp)
 	TraceTab.current_tab = TActive
+
 	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
 	print("Initial gfx setup...")
 	ResetTimespan()
