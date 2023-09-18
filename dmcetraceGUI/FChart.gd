@@ -223,7 +223,7 @@ func _draw_from_core_list():
 						j += step
 
 func _draw():
-	if _timeline_inited:
+	if _timeline_inited and len(tgui.Trace) > 0:
 #		tgui.TimerStart()
 		_draw_from_func_list()
 # Other ways to draw fchart single-core
