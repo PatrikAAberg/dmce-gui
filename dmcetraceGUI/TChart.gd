@@ -120,10 +120,11 @@ func MouseRightPressed():
 
 # This happens when a new zoom window is created
 func MouseRightReleased():
+	print("TCHart set zoom")
 	TMarkers.DeactivateDrawZoom()
-
 	# only ruler?
 	if tgui.RulerActive == true:
+		tgui.RulerActive = false
 		return
 
 	var tmpstart = _get_time_from_xpos(TMarkers.GetZoomWindow().start)

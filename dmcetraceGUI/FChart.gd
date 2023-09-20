@@ -300,7 +300,7 @@ func MouseRightPressed():
 # This happens when a new zoom window is created
 func MouseRightReleased():
 
-	print("TCHart set zoom")
+	print("FCHart set zoom")
 	FMarkers.DeactivateDrawZoom()
 
 	# Only ruler?
