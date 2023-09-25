@@ -1,5 +1,5 @@
 # dmce-gui
-GUI implementations for viewing dmce generated data
+GUI implementations for viewing dmce generated data. Currently for use with dmce version 1.8.0.
 
 ### dmcetraceGUI
 
