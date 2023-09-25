@@ -432,6 +432,19 @@ func LoadTrace(path, mode):
 	Trace.append(tracetmp)
 	print("...finished creating data structures")
 
+
+	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
+#	print("Initial gfx setup...")
+#	ResetTimespan()
+#	StoreTimespan()
+#	InitTimeLine()
+#	InitMarkers()
+#	PopulateViews(TRACE | INFO | SRC)
+#	TCoreLabels.Init(self)
+#	_show_all_cores(TActive)
+#	print("...Initial gfx setup done")
+
+func add_tab(file):
 	TActive = len(Trace) - 1
 	file  = file.get_file().get_basename()
 	file = file + "  "
@@ -442,17 +455,6 @@ func LoadTrace(path, mode):
 	TraceViews.append(tabtmp)
 	TraceTab.add_child(tabtmp)
 	TraceTab.current_tab = TActive
-
-	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
-	print("Initial gfx setup...")
-	ResetTimespan()
-	StoreTimespan()
-	InitTimeLine()
-	InitMarkers()
-	PopulateViews(TRACE | INFO | SRC)
-	TCoreLabels.Init(self)
-	_show_all_cores(TActive)
-	print("...Initial gfx setup done")
 
 func ResetTimespan():
 	Trace[TActive].TimeSpanStart = Trace[TActive].TimeStart
@@ -764,6 +766,17 @@ func _process(_delta):
 		InitDone = true
 
 	# Periodical update of state
+
+	# Trace being loaded?
+	if LoaderFilename != "":
+		if LoaderThread.is_started() and not LoaderThread.is_alive():
+			LoaderThread.wait_to_finish()
+			print("Adding new tab: ", LoaderFilename)
+			add_tab(LoaderFilename)
+			SetActiveTrace(TActive)
+			_show_all_cores(TActive)
+			LoaderFilename = ""
+		return
 
 	if Dragged:
 		var DraggedOffsetAllNow = str(VSplitCTop.split_offset) + str(HSplitCTop.split_offset) + str(VSplitCBot.split_offset) + str(TCMovieHSplitContainer.split_offset)
@@ -1226,13 +1239,17 @@ func _tchartvscrollbar_value_changed(val):
 	TChart.UpdateScrollPosition()
 	TCoreLabels.Init(self)
 
+var LoaderThread = null
+var LoaderFilename = ""
+
+func LoaderThreadFunc(file):
+	LoaderFilename = file
+	LoadTrace(file, "bundle")
+
 func _open_trace_selected(file):
-	if _open_trace_mode == "file":
-		LoadTrace(file, _open_trace_mode)
-		SetActiveTrace(TActive)
-	elif _open_trace_mode == "bundle":
-		LoadTrace(file, _open_trace_mode)
-		SetActiveTrace(TActive)
+	OpenTraceDialog.visible = false
+	LoaderThread = Thread.new()
+	LoaderThread.start(LoaderThreadFunc.bind(file))
 
 func SetActiveTrace(trace):
 	TActive = trace
