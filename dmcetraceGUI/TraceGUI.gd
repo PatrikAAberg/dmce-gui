@@ -879,7 +879,7 @@ func trace_pdown():
 		TraceViewScrollTop = Trace[TActive].index - int(TraceViewVisibleLines / 2)
 		PopulateViews(TRACE)
 
-func _in_tchart(_pos):
+func _in_tchart():
 	if TChartBox.get_local_mouse_position().y  > 0 and TChartBox.get_local_mouse_position().y < TChartBox.size.y:
 		if TChartBox.get_local_mouse_position().x > 0 and TChartBox.get_local_mouse_position().x < TChartBox.size.x:
 			return true
@@ -893,18 +893,18 @@ func _in_moviebox():
 			return true
 	return false
 
-func _in_corelist(_pos):
+func _in_corelist():
 	if TChartBox.get_local_mouse_position().y  > 0 and TChartBox.get_local_mouse_position().x < TChartXOffset - 10:
 		return true
 	return false
 
-func _in_fchart(_pos):
+func _in_fchart():
 	if FChartBox.get_local_mouse_position().y  > 0 and FChartBox.get_local_mouse_position().y < FChartBox.size.y:
 		if FChartBox.get_local_mouse_position().x > 0 and FChartBox.get_local_mouse_position().x < FChartBox.size.x:
 			return true
 	return false
 
-func _in_fnames(_pos):
+func _in_fnames():
 	if FChartBox.get_local_mouse_position().y  > 0 and FChartBox.get_local_mouse_position().y < FChartBox.size.y:
 		if FChartBox.get_local_mouse_position().x < 0:
 			return true
@@ -972,19 +972,19 @@ func _input(ev):
 			PopulateViews(SRC | INFO)
 			UpdateMarkers()
 
-	if ev is InputEventMouseButton and (_in_tchart(ev.position) or _in_fchart(ev.position) ):
-		if ev.button_index == MOUSE_BUTTON_WHEEL_UP and ev.pressed:
+	if ev is InputEventMouseButton and (_in_tchart() or _in_fchart() ):
+		if (ev.button_index == MOUSE_BUTTON_WHEEL_UP) and ev.pressed:
 			TChart.MouseWheelUp()
-		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN and ev.pressed:
+		elif (ev.button_index == MOUSE_BUTTON_WHEEL_DOWN) and ev.pressed:
 			TChart.MouseWheelDown()
 
-	if ev is InputEventMouseButton and (_in_fnames(ev.position)):
-		if ev.button_index == MOUSE_BUTTON_WHEEL_UP and ev.pressed:
+	if ev is InputEventMouseButton and (_in_fnames()):
+		if (ev.button_index == MOUSE_BUTTON_WHEEL_UP) and ev.pressed:
 			FChart.MouseWheelUp()
-		elif ev.button_index == MOUSE_BUTTON_WHEEL_DOWN and ev.pressed:
+		elif (ev.button_index == MOUSE_BUTTON_WHEEL_DOWN) and ev.pressed:
 			FChart.MouseWheelDown()
 
-	if ev is InputEventMouseButton and _in_tchart(ev.position):
+	if ev is InputEventMouseButton and _in_tchart():
 		if ev.button_index == MOUSE_BUTTON_LEFT and ev.pressed:
 			TChart.MouseLeftPressed()
 		elif ev.button_index == MOUSE_BUTTON_RIGHT and ev.pressed:
@@ -994,7 +994,7 @@ func _input(ev):
 		elif ev.button_index == MOUSE_BUTTON_RIGHT and not ev.pressed:
 			TChart.MouseRightReleased()
 
-	if ev is InputEventMouseMotion and _in_tchart(ev.position):
+	if ev is InputEventMouseMotion and _in_tchart():
 		TChart.MouseMoved()
 
 	if ev is InputEventMouseMotion and _in_moviebox():
@@ -1004,11 +1004,11 @@ func _input(ev):
 		if ev.button_index == MOUSE_BUTTON_LEFT and ev.pressed:
 			MovieChart.MouseLeftPressed()
 
-	if ev is InputEventMouseButton and _in_corelist(ev.position):
+	if ev is InputEventMouseButton and _in_corelist():
 		if ev.button_index == MOUSE_BUTTON_LEFT and ev.pressed:
 			TCoreLabels.MouseLeftPressed()
 
-	if ev is InputEventMouseButton and _in_fchart(ev.position):
+	if ev is InputEventMouseButton and _in_fchart():
 		if ev.button_index == MOUSE_BUTTON_LEFT and ev.pressed:
 			FChart.MouseLeftPressed()
 		elif ev.button_index == MOUSE_BUTTON_RIGHT and ev.pressed:
@@ -1018,7 +1018,7 @@ func _input(ev):
 		elif ev.button_index == MOUSE_BUTTON_RIGHT and not ev.pressed:
 			FChart.MouseRightReleased()
 
-	if ev is InputEventMouseMotion and _in_fchart(ev.position):
+	if ev is InputEventMouseMotion and _in_fchart():
 		FChart.MouseMoved()
 
 func ToggleShowCoreChartGrid():
