@@ -98,6 +98,7 @@ var TCMovieHSplitContainer
 var LossLess = true
 var CoreActivity
 var MainExtas
+var SearchShowAll = false
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -1161,16 +1162,50 @@ func _menu_search_pressed(id):
 	if len(Trace) == 0:
 		return
 	if id == 0:
-		print("Find!")
+		print("Find all")
 	elif id == 1:
-		_find_next(FindLineEdit.text)
-	elif id == 2:
-		_find_prev(FindLineEdit.text)
-	elif id == 3:
-		print("Advanced search!")
+		if SearchShowAll:
+			SearchShowAll = false
+		else:
+			SearchShowAll = true
+		MenuSearch.set_item_checked( 1, not MenuSearch.is_item_checked(1))
 
 func _menu_help_pressed(id):
-	print("Help: " + str(id))
+	if id == 0:
+		var ht = ""
+		ht += "UP - move one trace entry up\n"
+		ht += "DOWN - move one trace entry up\n"
+		ht += "PAGE UP - move several trace entry up\n"
+		ht += "PAGE DOWN - move several trace entry up\n"
+		GenericAcceptDialog.title = "Help"
+		GenericAcceptDialog.dialog_text = ht
+		GenericAcceptDialog.popup_centered()
+	elif id == 1:
+		var ht = ""
+		ht += ""
+		ht += "Copyright (c) 2023 Ericsson AB\n"
+		ht += "\n"
+		ht += "Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+		ht += "of this software and associated documentation files (the \"Software\"), to deal\n"
+		ht += "in the Software without restriction, including without limitation the rights\n"
+		ht += "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
+		ht += "copies of the Software, and to permit persons to whom the Software is\n"
+		ht += "furnished to do so, subject to the following conditions:\n"
+		ht += "\n"
+		ht += "The above copyright notice and this permission notice shall be included in all\n"
+		ht += "copies or substantial portions of the Software.\n"
+		ht += "\n"
+		ht += "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+		ht += "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+		ht += "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+		ht += "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+		ht += "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+		ht += "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n"
+		ht += "SOFTWARE.\n"
+
+		GenericAcceptDialog.dialog_text = ht
+		GenericAcceptDialog.title = "dmce-wgui version 1.0"
+		GenericAcceptDialog.popup_centered()
 
 func _funcvscrollbar_value_changed(val):
 	Trace[TActive].FuncVScrollBarIndex = FuncVScrollBar.value

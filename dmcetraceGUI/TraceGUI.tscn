@@ -362,17 +362,13 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_4hdv6")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_rwee7")
 
 [node name="PopupMenuFile" type="PopupMenu" parent="MenuBar"]
-item_count = 5
-item_0/text = "Open trace file                              "
-item_0/id = 0
-item_1/text = "Import trace bundle"
-item_1/id = 4
-item_2/text = "Close"
-item_2/id = 1
-item_3/text = "Settings"
-item_3/id = 2
-item_4/text = "Quit"
-item_4/id = 3
+item_count = 3
+item_0/text = "Import trace bundle"
+item_0/id = 4
+item_1/text = "Close current trace"
+item_1/id = 1
+item_2/text = "Quit"
+item_2/id = 3
 
 [node name="PopupMenuView" type="PopupMenu" parent="MenuBar"]
 item_count = 8
@@ -402,15 +398,12 @@ item_7/checked = true
 item_7/id = 7
 
 [node name="PopupMenuSearch" type="PopupMenu" parent="MenuBar"]
-item_count = 4
-item_0/text = "Find"
+item_count = 2
+item_0/text = "Find all"
 item_0/id = 0
-item_1/text = "Find Next"
+item_1/text = "Show all"
+item_1/checkable = 1
 item_1/id = 1
-item_2/text = "Find Previous"
-item_2/id = 2
-item_3/text = "Advanced search"
-item_3/id = 3
 
 [node name="PopupMenuHelp" type="PopupMenu" parent="MenuBar"]
 item_count = 2
@@ -534,4 +527,4 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="GenericAcceptDialog" type="AcceptDialog" parent="."]
-title = "Ooops..."
+title = ""
