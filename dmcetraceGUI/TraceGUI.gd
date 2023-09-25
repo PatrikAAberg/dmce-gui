@@ -1172,11 +1172,21 @@ func _menu_search_pressed(id):
 
 func _menu_help_pressed(id):
 	if id == 0:
-		var ht = ""
-		ht += "UP - move one trace entry up\n"
-		ht += "DOWN - move one trace entry up\n"
-		ht += "PAGE UP - move several trace entry up\n"
-		ht += "PAGE DOWN - move several trace entry up\n"
+		var ht = "Mouse and keyboard\n"
+		ht += "================================\n"
+		ht += "UP / DOWN - Move one trace entry up / down\n"
+		ht += "PAGE UP / DOWN - Move several trace entries up / down\n"
+		ht += "Mouse wheel forward/back or comma / period - Zoom in / out\n"
+		ht += "Left-click - Set cursor\n"
+		ht += "Right-click-and-hold - select zoom window\n"
+		ht += "CTRL-right-click-and-hold - measure time without zooming when released\n"
+		ht += "G - jump to beginning of trace"
+		ht += "SHIFT-G - jump to end of trace"
+		ht += "Z - Reset zoom level\n"
+		ht += "CTRL-Z - Restore previous zoom level\n"
+		ht += "P - Show inserted probes\n"
+		ht += "ESC - Quit program\n"
+
 		GenericAcceptDialog.title = "Help"
 		GenericAcceptDialog.dialog_text = ht
 		GenericAcceptDialog.popup_centered()
