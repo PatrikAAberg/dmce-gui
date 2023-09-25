@@ -598,9 +598,14 @@ func _show_src_button_pressed():
 		HSplitCTop.visible = false
 
 func _trace_info_button_pressed():
-	TraceInfoButton.release_focus()
-	CurrentTraceInfoLabel.text = str("\n".join(Trace[TActive].TraceInfo))
-	ShowCurrentTraceInfoDialog.popup_centered()
+	if len(Trace) > 0:
+		TraceInfoButton.release_focus()
+		CurrentTraceInfoLabel.text = str("\n".join(Trace[TActive].TraceInfo))
+		ShowCurrentTraceInfoDialog.popup_centered()
+	else:
+		TraceInfoButton.release_focus()
+		CurrentTraceInfoLabel.text = " No trace loaded "
+		ShowCurrentTraceInfoDialog.popup_centered()
 
 func _find_next(searchstr):
 	if Trace[TActive].index < Trace[TActive].INDEX_MAX:
