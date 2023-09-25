@@ -225,7 +225,10 @@ func PopulateViews(view):
 	# Variables View
 		VarsView.clear()
 		for v in D.vars:
-			VarsView.append_text(v.replace("[", "[lb]") + "\n")
+			if CurrentSearchString in v:
+				VarsView.append_text(v.replace("[", "[lb]").replace(CurrentSearchString, "[bgcolor=#546358]" + CurrentSearchString + "[/bgcolor]") + "\n")
+			else:
+				VarsView.append_text(v.replace("[", "[lb]") + "\n")
 
 func FTreeInit(trace):
 	trace.FTree = []
