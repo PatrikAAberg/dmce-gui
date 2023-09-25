@@ -966,6 +966,10 @@ func _input(ev):
 						UpdateTimeLine()
 						PopulateViews(TRACE | SRC | INFO)
 						UpdateMarkers()
+				elif ev.keycode == KEY_PERIOD:
+						TChart.MouseWheelUp()
+				elif ev.keycode == KEY_COMMA:
+						TChart.MouseWheelDown()
 				elif ev.keycode == KEY_SPACE:
 					deb_func()
 		else:
