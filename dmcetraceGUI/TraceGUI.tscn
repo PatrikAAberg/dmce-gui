@@ -532,7 +532,7 @@ title = ""
 [node name="LoaderProgressBar" type="ProgressBar" parent="."]
 visible = false
 layout_mode = 0
-offset_left = 191.0
-offset_top = 254.0
-offset_right = 1174.0
-offset_bottom = 431.0
+offset_left = 87.0
+offset_top = 163.0
+offset_right = 1070.0
+offset_bottom = 340.0
