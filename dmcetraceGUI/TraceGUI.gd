@@ -597,9 +597,12 @@ func _ready():
 		else:
 			if file.ends_with(".zip"):
 				LoadTrace(file, "bundle")
+				print("Adding new tab: ", LoaderFilename)
+				add_tab(LoaderFilename)
+				SetActiveTrace(TActive)
+				_show_all_cores(0)
 			else:
-				LoadTrace(file, "file")
-			_show_all_cores(0)
+				print("Unsupported file extension, please provide a .zip file.")
 	else:
 		print("dmce-wgui: No trace loaded from args")
 		# dev state, uncomment for release:
@@ -1276,12 +1279,12 @@ var LoaderThread = null
 var LoaderFilename = ""
 
 func LoaderThreadFunc(file):
-	LoaderFilename = file
 	LoadTrace(file, "bundle")
 
 func _open_trace_selected(file):
 	OpenTraceDialog.visible = false
 	LoaderThread = Thread.new()
+	LoaderFilename = file
 	LoaderThread.start(LoaderThreadFunc.bind(file))
 
 func SetActiveTrace(trace):
