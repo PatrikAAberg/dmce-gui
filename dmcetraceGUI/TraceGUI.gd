@@ -128,11 +128,15 @@ func RemoveProbe(tstr):
 			tstr = tstr.left(found) + tstr.right(len(tstr) - found - 1)
 	return tstr
 
+var LastSrcFileLookup = ""
 func ReadSrc(filename):
 	var line
 	var sourcelines = PackedStringArray([])
 	var f
 	if filename in SrcCache:
+		if filename != LastSrcFileLookup:
+			LastSrcFileLookup = filename
+			Trace[TActive].SrcStepList = [null, null, null]
 		return SrcCache[filename]
 
 	if Trace[TActive].load_mode == "file":
@@ -204,7 +208,7 @@ func PopulateViews(view):
 		TraceViews[TActive].append_text(tracetext)
 		TraceViews[TActive].scroll_to_line(TraceViewScrollTop - TraceViewStart)
 
-	# Source View
+	# Source View                 .SrcStepList = [null, null, null]
 	if view & SRC:
 		SrcView.clear()
 		D = SplitTraceLine(Trace[TActive].tracebuffer[Trace[TActive].index])
@@ -216,9 +220,21 @@ func PopulateViews(view):
 			line =  str(lnbr) + "  " + RemoveProbe(line)
 			if srclnbr == lnbr:
 				line = "[bgcolor=#208bb5]" + line + "[/bgcolor]"
+			elif Trace[TActive].SrcStepList[0] != null and Trace[TActive].SrcStepList[0] == lnbr:
+				line = "[bgcolor=#215363]" + line + "[/bgcolor]"
+			elif Trace[TActive].SrcStepList[1] != null and Trace[TActive].SrcStepList[1] == lnbr:
+				line = "[bgcolor=#1a404c]" + line + "[/bgcolor]"
+			elif Trace[TActive].SrcStepList[2] != null and Trace[TActive].SrcStepList[2] == lnbr:
+				line = "[bgcolor=#06242d]" + line + "[/bgcolor]"
 			else:
 				line = line.replace("[", "[lb]")
 			SrcView.append_text(line + "\n")
+
+		# Keep src browsing trail
+		Trace[TActive].SrcStepList[2] = Trace[TActive].SrcStepList[1]
+		Trace[TActive].SrcStepList[1] = Trace[TActive].SrcStepList[0]
+		Trace[TActive].SrcStepList[0] = srclnbr
+
 		var srctop = srclnbr - SrcViewVisibleLines / 2 + 2
 		if srctop < 0:
 			srctop = 0
@@ -339,6 +355,7 @@ func LoadTrace(path, mode):
 	tracetmp.ProbeHistogram = []			# Number of hits per unique probe above
 	tracetmp.LinePathFunc = []
 	tracetmp = FTreeInit(tracetmp)
+	tracetmp.SrcStepList = [null, null, null]
 	print("Loading trace, mode: " + mode)
 
 	if mode == "bundle":
