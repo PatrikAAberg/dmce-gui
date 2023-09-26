@@ -99,6 +99,7 @@ var LossLess = true
 var CoreActivity
 var MainExtas
 var SearchShowAll = false
+var LoaderProgressBar
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -300,7 +301,9 @@ func _read_trace_from_bundle(bundle):
 
 		var fulltrace = PackedStringArray([])
 		var fragcount = 0
+		LoaderProgressBar.visible = true
 		for f in zippedfiles:
+			LoaderProgressBar.value = float((fragcount * 2) % 100)
 			if ".dmcetracefrag-" in f:
 				print("Reading file:" + f)
 				rawtrace = reader.read_file(f)
@@ -312,6 +315,7 @@ func _read_trace_from_bundle(bundle):
 					print("Trace fragment limit reached, data at the end will be lost")
 					break
 		reader.close()
+		LoaderProgressBar.visible = false
 		print("Total number of trace entries found: " + str(len(fulltrace)))
 		return fulltrace
 
@@ -350,10 +354,13 @@ func LoadTrace(path, mode):
 	var prefix
 	var first = true
 	var count = 0
+	LoaderProgressBar.visible = true
 	while count < len(filebuf):
 		var line = filebuf[count]
 		if count % 100000 == 0:
 			print("Processed trace lines: " + str(count) + " ( " +  str(100 * (float(count) / len(filebuf))) + "% )")
+		if count % 10000 == 0:
+			LoaderProgressBar.value = 100 * (float(count) / len(filebuf))
 		if record and line.count("@") > 5: # make sure all fields are there
 			var sline = line.split("@")
 			var core = int(sline[0])
@@ -401,6 +408,7 @@ func LoadTrace(path, mode):
 			tracetmp.ProbedTree = true
 			break
 
+	LoaderProgressBar.visible = false
 	print("Processed trace lines: " + str(count) + " ( 100% )")
 	print("Largest common src path: " + prefix)
 	clist.sort()
@@ -528,6 +536,7 @@ func _ready():
 	LineEditPathFind = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditPathFind")
 	LineEditPathReplace = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditPathReplace")
 	TCMovieHSplitContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer")
+	LoaderProgressBar = get_node("LoaderProgressBar")
 
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
@@ -760,12 +769,19 @@ func val2commastr(val):
 		s = s.insert(len(s) - 11, ",")
 	return s
 
+var old_progress = 0
+
 func _process(_delta):
 	# Initial setup
 	if not InitDone:
 		InitDone = true
 
 	# Periodical update of state
+
+	# Change in progress bar ?
+	if int(LoaderProgressBar.value) != int(old_progress):
+		old_progress = LoaderProgressBar.value
+		queue_redraw()
 
 	# Trace being loaded?
 	if LoaderFilename != "":
