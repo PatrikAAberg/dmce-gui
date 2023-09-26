@@ -530,6 +530,7 @@ size_flags_horizontal = 3
 title = ""
 
 [node name="LoaderProgressBar" type="ProgressBar" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 191.0
 offset_top = 254.0
