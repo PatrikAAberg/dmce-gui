@@ -597,8 +597,8 @@ func _ready():
 		else:
 			if file.ends_with(".zip"):
 				LoadTrace(file, "bundle")
-				print("Adding new tab: ", LoaderFilename)
-				add_tab(LoaderFilename)
+				print("Adding new tab: ", file)
+				add_tab(file)
 				SetActiveTrace(TActive)
 				_show_all_cores(0)
 			else:
