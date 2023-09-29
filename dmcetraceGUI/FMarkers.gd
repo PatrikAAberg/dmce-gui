@@ -22,6 +22,7 @@ func _draw():
 		draw_line(Vector2(MarkerXPos, 0), Vector2(MarkerXPos, Box.size.y), Color.RED, 1)
 
 		var col = Color(0.4, 0.4, 0.4, 0.5)
+
 		if tgui.RulerActive:
 			col = Color(0.6, 0.6, 0.6, 0.7)
 

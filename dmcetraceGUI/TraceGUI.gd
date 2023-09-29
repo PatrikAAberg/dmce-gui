@@ -63,7 +63,7 @@ var MenuHelp
 var FindLineEdit
 var OpenTraceDialog
 var ShowCurrentTraceInfoDialog
-var SettingsConfirmationDialog
+var SearchConfirmationDialog
 var GenericAcceptDialog
 var AskForConfirmationDialog
 var CurrentTraceInfoLabel
@@ -87,9 +87,6 @@ var RulerActive = false
 var ShowFullPath = true
 var time_start
 var timercnt = 0
-var	LineEditBasePath
-var	LineEditPathFind
-var	LineEditPathReplace
 var Dragged = false
 var DraggedFrameCount = 0
 var DraggedOffsetAll = ""
@@ -98,8 +95,9 @@ var TCMovieHSplitContainer
 var LossLess = true
 var CoreActivity
 var MainExtas
-var SearchShowAll = false
-var LoaderProgressBar
+var SearchShowAll = true
+var MainProgressBar
+var LineEditFindAll
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -191,7 +189,7 @@ func PopulateViews(view):
 		for i in range(TraceViewStart, TraceViewEnd + 1):
 			#TraceView.append_text(tracebuffer[i]_trace_info_button_pressed + "\n")
 			D = SplitTraceLine(Trace[TActive].tracebuffer[i])
-			D.path = TransformPath(D.path)
+#			D.path = TransformPath(D.path)
 			if not ShowFullPath:
 				D.path = D.path.replace(Trace[TActive].CommonSourcePath, "")
 			var out = str(i) + " " + D.core + " " + D.ts + " " + D.path + " " + D.fun + " " + D.line + " " + D.src
@@ -293,9 +291,6 @@ func FDrawListInsertLast(trace):
 		core += 1
 	return trace
 
-func TransformPath(path):
-	return Trace[TActive].base_path + path.replace(Trace[TActive].path_find, Trace[TActive].path_replace)
-
 func _read_trace_from_file(file):
 	var f = FileAccess.open(file, FileAccess.READ)
 	var trace = []
@@ -317,9 +312,9 @@ func _read_trace_from_bundle(bundle):
 
 		var fulltrace = PackedStringArray([])
 		var fragcount = 0
-		LoaderProgressBar.visible = true
+		MainProgressBar.visible = true
 		for f in zippedfiles:
-			LoaderProgressBar.value = float((fragcount * 2) % 100)
+			MainProgressBar.value = float((fragcount * 2) % 100)
 			if ".dmcetracefrag-" in f:
 				print("Reading file:" + f)
 				rawtrace = reader.read_file(f)
@@ -331,7 +326,7 @@ func _read_trace_from_bundle(bundle):
 					print("Trace fragment limit reached, data at the end will be lost")
 					break
 		reader.close()
-		LoaderProgressBar.visible = false
+		MainProgressBar.visible = false
 		print("Total number of trace entries found: " + str(len(fulltrace)))
 		return fulltrace
 
@@ -356,6 +351,8 @@ func LoadTrace(path, mode):
 	tracetmp.LinePathFunc = []
 	tracetmp = FTreeInit(tracetmp)
 	tracetmp.SrcStepList = [null, null, null]
+	tracetmp.FindAllMarkers = []
+
 	print("Loading trace, mode: " + mode)
 
 	if mode == "bundle":
@@ -371,13 +368,13 @@ func LoadTrace(path, mode):
 	var prefix
 	var first = true
 	var count = 0
-	LoaderProgressBar.visible = true
+	MainProgressBar.visible = true
 	while count < len(filebuf):
 		var line = filebuf[count]
 		if count % 100000 == 0:
 			print("Processed trace lines: " + str(count) + " ( " +  str(100 * (float(count) / len(filebuf))) + "% )")
 		if count % 10000 == 0:
-			LoaderProgressBar.value = 100 * (float(count) / len(filebuf))
+			MainProgressBar.value = 100 * (float(count) / len(filebuf))
 		if record and line.count("@") > 5: # make sure all fields are there
 			var sline = line.split("@")
 			var core = int(sline[0])
@@ -425,7 +422,7 @@ func LoadTrace(path, mode):
 			tracetmp.ProbedTree = true
 			break
 
-	LoaderProgressBar.visible = false
+	MainProgressBar.visible = false
 	print("Processed trace lines: " + str(count) + " ( 100% )")
 	print("Largest common src path: " + prefix)
 	clist.sort()
@@ -437,9 +434,6 @@ func LoadTrace(path, mode):
 	tracetmp.TimeStart = tracetmp.TimeLineTS[0]
 	tracetmp.TimeEnd = tracetmp.TimeLineTS[tracetmp.INDEX_MAX]
 	tracetmp.index = tracetmp.INDEX_MAX
-	tracetmp.base_path = ""
-	tracetmp.path_find = ""
-	tracetmp.path_replace = ""
 	tracetmp.FuncVScrollBarIndex = 0
 	tracetmp.TChartVScrollBarIndex = 0
 	TraceViewEnd = tracetmp.index
@@ -546,14 +540,12 @@ func _ready():
 	GenericAcceptDialog	= get_node("GenericAcceptDialog")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
 	AskForConfirmationDialog = get_node("AskForConfirmationDialog")
-	SettingsConfirmationDialog = get_node("SettingsConfirmationDialog")
+	SearchConfirmationDialog = get_node("SearchConfirmationDialog")
 	CurrentTraceInfoLabel = get_node("ShowCurrentTraceInfoDialog/CurrentTraceInfoLabel")
 	StatusLabel = get_node("Background/VSplitTop/VBoxContainer/StatusLabel")
-	LineEditBasePath = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditBasePath")
-	LineEditPathFind = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditPathFind")
-	LineEditPathReplace = get_node("SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft/LineEditPathReplace")
+	LineEditFindAll = get_node("SearchConfirmationDialog/VBoxContainerFindAll/LineEditFindAllSearchString")
 	TCMovieHSplitContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer")
-	LoaderProgressBar = get_node("LoaderProgressBar")
+	MainProgressBar = get_node("MainProgressBar")
 
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
@@ -585,7 +577,6 @@ func _ready():
 	FindPrevButton.pressed.connect(self._find_prev_button_pressed)
 	TraceInfoButton.pressed.connect(self._trace_info_button_pressed)
 	ShowSrcButton.pressed.connect(self._show_src_button_pressed)
-	SettingsConfirmationDialog.confirmed.connect(self._settings_confirmation_dialog_confirmed)
 
 	# Initial state
 	print("dmce-wgui: started with args: " + str(OS.get_cmdline_args()))
@@ -608,10 +599,12 @@ func _ready():
 		# dev state, uncomment for release:
 		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
 			print("dmce-wgui: development mode")
-#			LoadTrace('C:/Users/epatabe/frag/dmce-trace-ag.437312.zip', "bundle")
-#			LoadTrace('C:/Users/epatabe/frag/dmce-trace-graph_tst.3293043.zip', "bundle")
-#			LoadTrace('C:/Users/epatabe/frag/dmce-trace-ag.3918767.zip', "bundle")
-#			_show_all_cores(0)
+			var file = 'C:/Users/epatabe/slasktrace/dmce-trace-ag.12299.zip'
+			LoadTrace(file, "bundle")
+			print("Adding new tab: ", file)
+			add_tab(file)
+			SetActiveTrace(TActive)
+			_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
@@ -688,13 +681,6 @@ func _find_text_submitted(text):
 	PopulateViews(SRC | INFO | TRACE)
 	UpdateTimeLine()
 	UpdateMarkers()
-
-
-func _settings_confirmation_dialog_confirmed():
-	Trace[TActive].base_path = LineEditBasePath.text
-	Trace[TActive].path_find = LineEditPathFind.text
-	Trace[TActive].path_replace = LineEditPathReplace.text
-	SetActiveTrace(TActive)
 
 func _show_all_cores(ind):
 	FChart.ClearCores(ind)
@@ -799,9 +785,19 @@ func _process(_delta):
 	# Periodical update of state
 
 	# Change in progress bar ?
-	if int(LoaderProgressBar.value) != int(old_progress):
-		old_progress = LoaderProgressBar.value
+	if int(MainProgressBar.value) != int(old_progress):
+		old_progress = MainProgressBar.value
 		queue_redraw()
+
+	# Find all search ongoing?
+	if FindAllSearchString != "":
+		if FindAllThread.is_started() and not FindAllThread.is_alive():
+			FindAllThread.wait_to_finish()
+			FindLineEdit.text = FindAllSearchString
+			FindAllSearchString = ""
+			MainProgressBar.visible = false
+			UpdateTimeLine()
+		return
 
 	# Trace being loaded?
 	if LoaderFilename != "":
@@ -1134,19 +1130,14 @@ func _confirm_quit():
 func _menu_file_pressed(id):
 	if id == 0:
 		_open_trace()
-	elif id == 1:
+	elif id == 1 and len(Trace) > 0:
 		AskForConfirmationDialog.dialog_text = "Do you really want to close active trace?"
 		AskForConfirmationDialog.confirmed.connect(self._confirm_close_trace)
 		AskForConfirmationDialog.popup_centered()
 	elif id == 2:
-		SettingsConfirmationDialog.dialog_text = ""
-		SettingsConfirmationDialog.popup_centered()
-	elif id == 3:
 		AskForConfirmationDialog.dialog_text = "Do you really want to quit?"
 		AskForConfirmationDialog.confirmed.connect(self._confirm_quit)
 		AskForConfirmationDialog.popup_centered()
-	elif id == 4:
-		_import_trace_bundle()
 
 func _toggle_show_original_src_path():
 	if ShowFullPath == true:
@@ -1207,17 +1198,45 @@ func _menu_view_pressed(id):
 	else:
 		MainExtas.visible = false
 
+func FindAllThreadFunc(s):
+	var sindex = 0
+	var tmpresults = []
+	MainProgressBar.visible = true
+	while sindex < len(Trace[TActive].tracebuffer):
+		MainProgressBar.value = 100 * (float(sindex) / len(Trace[TActive].tracebuffer))
+		if s in Trace[TActive].tracebuffer[sindex]:
+			tmpresults.append(Trace[TActive].TimeLineTS[sindex])
+		sindex += 1
+
+	Trace[TActive].FindAllMarkers = tmpresults
+	MainProgressBar.visible = false
+
+var FindAllThread = null
+var FindAllSearchString = ""
+
+func _confirm_find_all():
+	FindAllThread = Thread.new()
+	FindAllSearchString = LineEditFindAll.text
+	FindAllThread.start(FindAllThreadFunc.bind(FindAllSearchString))
+
+func _find_all():
+	SearchConfirmationDialog.title = "Find all"
+	SearchConfirmationDialog.confirmed.connect(self._confirm_find_all)
+	SearchConfirmationDialog.popup_centered()
+
 func _menu_search_pressed(id):
 	if len(Trace) == 0:
 		return
 	if id == 0:
 		print("Find all")
+		_find_all()
 	elif id == 1:
 		if SearchShowAll:
 			SearchShowAll = false
 		else:
 			SearchShowAll = true
 		MenuSearch.set_item_checked( 1, not MenuSearch.is_item_checked(1))
+		UpdateTimeLine()
 
 func _menu_help_pressed(id):
 	if id == 0:

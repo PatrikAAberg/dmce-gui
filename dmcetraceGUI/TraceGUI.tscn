@@ -364,11 +364,11 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_rwee7")
 [node name="PopupMenuFile" type="PopupMenu" parent="MenuBar"]
 item_count = 3
 item_0/text = "Import trace bundle"
-item_0/id = 4
+item_0/id = 0
 item_1/text = "Close current trace"
 item_1/id = 1
 item_2/text = "Quit"
-item_2/id = 3
+item_2/id = 2
 
 [node name="PopupMenuView" type="PopupMenu" parent="MenuBar"]
 item_count = 8
@@ -403,6 +403,7 @@ item_0/text = "Find all"
 item_0/id = 0
 item_1/text = "Show all"
 item_1/checkable = 1
+item_1/checked = true
 item_1/id = 1
 
 [node name="PopupMenuHelp" type="PopupMenu" parent="MenuBar"]
@@ -485,51 +486,29 @@ text = "No available trace information"
 [node name="AskForConfirmationDialog" type="ConfirmationDialog" parent="."]
 initial_position = 2
 
-[node name="SettingsConfirmationDialog" type="ConfirmationDialog" parent="."]
+[node name="SearchConfirmationDialog" type="ConfirmationDialog" parent="."]
 title = "Settings"
+size = Vector2i(600, 169)
 
-[node name="HBoxContainerSettings" type="HBoxContainer" parent="SettingsConfirmationDialog"]
+[node name="VBoxContainerFindAll" type="VBoxContainer" parent="SearchConfirmationDialog"]
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="VBoxContainerLeft" type="VBoxContainer" parent="SettingsConfirmationDialog/HBoxContainerSettings"]
+[node name="LineEditFindAllSearchString" type="LineEdit" parent="SearchConfirmationDialog/VBoxContainerFindAll"]
 layout_mode = 2
-size_flags_horizontal = 3
+placeholder_text = "Enter search string"
 
-[node name="LabelBasePath" type="Label" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
+[node name="LabelSpacing1" type="Label" parent="SearchConfirmationDialog/VBoxContainerFindAll"]
 layout_mode = 2
-text = "Prefix source code path with:"
 
-[node name="LineEditBasePath" type="LineEdit" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
+[node name="FindAllFullTraceCheckBox" type="CheckBox" parent="SearchConfirmationDialog/VBoxContainerFindAll"]
 layout_mode = 2
-placeholder_text = "Enter path"
-
-[node name="LabelSourceBasePath" type="Label" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
-layout_mode = 2
-text = "
-Part of source code path to be replaced:"
-
-[node name="LineEditPathFind" type="LineEdit" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
-layout_mode = 2
-placeholder_text = "Enter path"
-
-[node name="LabelReplaceBasePathWith" type="Label" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
-layout_mode = 2
-text = "
-Replace with:"
-
-[node name="LineEditPathReplace" type="LineEdit" parent="SettingsConfirmationDialog/HBoxContainerSettings/VBoxContainerLeft"]
-layout_mode = 2
-placeholder_text = "Enter path"
-
-[node name="VBoxContainerRight" type="VBoxContainer" parent="SettingsConfirmationDialog/HBoxContainerSettings"]
-layout_mode = 2
-size_flags_horizontal = 3
+text = "Search full trace"
 
 [node name="GenericAcceptDialog" type="AcceptDialog" parent="."]
 title = ""
 
-[node name="LoaderProgressBar" type="ProgressBar" parent="."]
+[node name="MainProgressBar" type="ProgressBar" parent="."]
 visible = false
 layout_mode = 0
 offset_left = 87.0

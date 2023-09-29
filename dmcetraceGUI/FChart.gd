@@ -80,6 +80,10 @@ func _worker(thread_id, indstart, indend):
 #	print("Starting thread " + str(thread_id) + "  Interval: " + str(indstart) + "-" + str(indend))
 	_draw_from_func_list_interval(indstart, indend)
 
+func _find_all_marker_in_sight(ts):
+	if (ts > tgui.Trace[tgui.TActive].TimeSpanStart) and (ts < tgui.Trace[tgui.TActive].TimeSpanEnd):
+		return true
+
 func _draw_from_func_list():
 	if _timeline_inited:
 		var num_cores = OS.get_processor_count() - 2
@@ -108,6 +112,20 @@ func _draw_from_func_list():
 			threadlist.append(thread)
 		for t in threadlist:
 			t.wait_to_finish()
+
+		if tgui.SearchShowAll:
+			var count = tgui.Trace[tgui.TActive].FindAllMarkers.bsearch(tgui.Trace[tgui.TActive].TimeSpanStart) - 1
+			if count < 0:
+				count = 0
+			while count < len(tgui.Trace[tgui.TActive].FindAllMarkers):
+				var ts = tgui.Trace[tgui.TActive].FindAllMarkers[count]
+				if ts > tgui.Trace[tgui.TActive].TimeSpanEnd:
+					break
+				var Width = float(Box.size.x)
+				if _find_all_marker_in_sight(ts):
+					var xpos = (ts - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan)
+					draw_rect(Rect2(xpos, 0, 1, Box.size.y), Color.GREEN, false)
+				count += 1
 
 func _draw_from_func_list_interval(indstart, indend):
 	if _timeline_inited:
