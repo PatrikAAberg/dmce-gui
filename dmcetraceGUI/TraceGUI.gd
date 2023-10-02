@@ -599,12 +599,12 @@ func _ready():
 		# dev state, uncomment for release:
 		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
 			print("dmce-wgui: development mode")
-			var file = 'C:/Users/epatabe/slasktrace/dmce-trace-ag.12299.zip'
-			LoadTrace(file, "bundle")
-			print("Adding new tab: ", file)
-			add_tab(file)
-			SetActiveTrace(TActive)
-			_show_all_cores(0)
+			#var file = 'Path-to-default-trace'
+			#LoadTrace(file, "bundle")
+			#print("Adding new tab: ", file)
+			#add_tab(file)
+			#SetActiveTrace(TActive)
+			#_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
@@ -794,9 +794,11 @@ func _process(_delta):
 		if FindAllThread.is_started() and not FindAllThread.is_alive():
 			FindAllThread.wait_to_finish()
 			FindLineEdit.text = FindAllSearchString
+			CurrentSearchString = FindAllSearchString
 			FindAllSearchString = ""
 			MainProgressBar.visible = false
 			UpdateTimeLine()
+			PopulateViews(SRC | TRACE)
 		return
 
 	# Trace being loaded?
