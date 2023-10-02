@@ -1223,6 +1223,7 @@ func _find_all():
 	SearchConfirmationDialog.title = "Find all"
 	SearchConfirmationDialog.confirmed.connect(self._confirm_find_all)
 	SearchConfirmationDialog.popup_centered()
+	LineEditFindAll.grab_focus()
 
 func _menu_search_pressed(id):
 	if len(Trace) == 0:
