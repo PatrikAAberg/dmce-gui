@@ -124,7 +124,7 @@ func _draw_from_func_list():
 				var Width = float(Box.size.x)
 				if _find_all_marker_in_sight(ts):
 					var xpos = (ts - tgui.Trace[tgui.TActive].TimeSpanStart) * ( Width / tgui.Trace[tgui.TActive].TimeSpan)
-					draw_rect(Rect2(xpos, 0, 1, Box.size.y), Color.GREEN, false)
+					draw_rect(Rect2(xpos, 0, 1, Box.size.y), Color("208bb5"), false)
 				count += 1
 
 func _draw_from_func_list_interval(indstart, indend):
