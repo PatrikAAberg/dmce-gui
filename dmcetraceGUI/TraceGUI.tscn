@@ -199,10 +199,12 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_iqdt1")
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 2
 theme_override_font_sizes/normal_font_size = 14
 text = "
 "
 autowrap_mode = 0
+selection_enabled = true
 
 [node name="StatusLabel" type="Label" parent="Background/VSplitTop/VBoxContainer"]
 layout_mode = 2
