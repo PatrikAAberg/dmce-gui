@@ -1224,6 +1224,7 @@ func _confirm_find_all():
 func _find_all():
 	SearchConfirmationDialog.title = "Find all"
 	SearchConfirmationDialog.confirmed.connect(self._confirm_find_all)
+	SearchConfirmationDialog.register_text_enter(LineEditFindAll)
 	SearchConfirmationDialog.popup_centered()
 	LineEditFindAll.grab_focus()
 
