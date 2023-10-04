@@ -98,6 +98,8 @@ var MainExtas
 var SearchShowAll = true
 var MainProgressBar
 var LineEditFindAll
+var LineEditFindAllProbeNumber
+var FindAllProbeNumber = ""
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -544,6 +546,7 @@ func _ready():
 	CurrentTraceInfoLabel = get_node("ShowCurrentTraceInfoDialog/CurrentTraceInfoLabel")
 	StatusLabel = get_node("Background/VSplitTop/VBoxContainer/StatusLabel")
 	LineEditFindAll = get_node("SearchConfirmationDialog/VBoxContainerFindAll/LineEditFindAllSearchString")
+	LineEditFindAllProbeNumber = get_node("SearchConfirmationDialog/VBoxContainerFindAll/LineEditFindAllProbenumber")
 	TCMovieHSplitContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer")
 	MainProgressBar = get_node("MainProgressBar")
 
@@ -790,12 +793,13 @@ func _process(_delta):
 		queue_redraw()
 
 	# Find all search ongoing?
-	if FindAllSearchString != "":
+	if FindAllSearchString != "" or FindAllProbeNumber != "":
 		if FindAllThread.is_started() and not FindAllThread.is_alive():
 			FindAllThread.wait_to_finish()
 			FindLineEdit.text = FindAllSearchString
 			CurrentSearchString = FindAllSearchString
 			FindAllSearchString = ""
+			FindAllProbeNumber = ""
 			MainProgressBar.visible = false
 			UpdateTimeLine()
 			PopulateViews(SRC | TRACE)
@@ -1202,13 +1206,18 @@ func _menu_view_pressed(id):
 	else:
 		MainExtas.visible = false
 
-func FindAllThreadFunc(s):
+func FindAllThreadFunc(s, pnum):
 	var sindex = 0
 	var tmpresults = []
+	var thispnum = ""
+	var probestring = ""
 	MainProgressBar.visible = true
 	while sindex < len(Trace[TActive].tracebuffer):
 		MainProgressBar.value = 100 * (float(sindex) / len(Trace[TActive].tracebuffer))
-		if s in Trace[TActive].tracebuffer[sindex]:
+		var m = re_get_probenbr.search(Trace[TActive].tracebuffer[sindex])
+		if m:
+			thispnum = m.get_string(1)
+		if (s in Trace[TActive].tracebuffer[sindex]) or (m and (thispnum == pnum)):
 			tmpresults.append(Trace[TActive].TimeLineTS[sindex])
 		sindex += 1
 
@@ -1221,12 +1230,14 @@ var FindAllSearchString = ""
 func _confirm_find_all():
 	FindAllThread = Thread.new()
 	FindAllSearchString = LineEditFindAll.text
-	FindAllThread.start(FindAllThreadFunc.bind(FindAllSearchString))
+	FindAllProbeNumber = LineEditFindAllProbeNumber.text
+	FindAllThread.start(FindAllThreadFunc.bind(FindAllSearchString, FindAllProbeNumber))
 
 func _find_all():
 	SearchConfirmationDialog.title = "Find all"
 	SearchConfirmationDialog.confirmed.connect(self._confirm_find_all)
 	SearchConfirmationDialog.register_text_enter(LineEditFindAll)
+	SearchConfirmationDialog.register_text_enter(LineEditFindAllProbeNumber)
 	SearchConfirmationDialog.popup_centered()
 	LineEditFindAll.grab_focus()
 

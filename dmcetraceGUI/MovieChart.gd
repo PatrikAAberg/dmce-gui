@@ -46,7 +46,7 @@ func SetActiveProbe(probenbr):
 	var ind = tgui.Trace[tgui.TActive].UniqueProbeList.find(probenbr)
 	if ind != -1:
 		_infolabelsearch = tgui.Trace[tgui.TActive].LinePathFunc[ind]
-		infolabel.text = _infolabelsearch + "    count: " + str(tgui.Trace[tgui.TActive].ProbeHistogram[ind])
+		infolabel.text = "Probe: " + str(probenbr) + "    " + _infolabelsearch + "    count: " + str(tgui.Trace[tgui.TActive].ProbeHistogram[ind])
 
 func MouseLeftPressed():
 	tgui.FindLineEdit.text = _infolabelsearch

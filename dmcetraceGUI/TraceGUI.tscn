@@ -502,6 +502,14 @@ offset_bottom = 40.0
 layout_mode = 2
 placeholder_text = "Enter search string"
 
+[node name="LabelAndOr" type="Label" parent="SearchConfirmationDialog/VBoxContainerFindAll"]
+layout_mode = 2
+text = "and / or"
+
+[node name="LineEditFindAllProbenumber" type="LineEdit" parent="SearchConfirmationDialog/VBoxContainerFindAll"]
+layout_mode = 2
+placeholder_text = "Enter probe number"
+
 [node name="LabelSpacing1" type="Label" parent="SearchConfirmationDialog/VBoxContainerFindAll"]
 layout_mode = 2
 
