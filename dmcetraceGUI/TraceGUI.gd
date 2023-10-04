@@ -872,6 +872,32 @@ func UpdateMarkers():
 	FChart.UpdateMarkers()
 	CoreActivity.Update()
 
+func strafe_left():
+	var speed = int(float(Trace[TActive].TimeSpan) * 0.1)
+	if Trace[TActive].TimeSpanStart - speed < Trace[TActive].TimeStart:
+		Trace[TActive].TimeSpanStart = Trace[TActive].TimeStart
+		Trace[TActive].TimeSpanEnd = Trace[TActive].TimeStart + Trace[TActive].TimeSpan
+	else:
+		Trace[TActive].TimeSpanStart = Trace[TActive].TimeSpanStart - speed
+		Trace[TActive].TimeSpanEnd = Trace[TActive].TimeSpanEnd - speed
+
+	Trace[TActive].TimeSpan = Trace[TActive].TimeSpanEnd - Trace[TActive].TimeSpanStart
+	UpdateTimeLine()
+	UpdateMarkers()
+
+func strafe_right():
+	var speed = int(float(Trace[TActive].TimeSpan) * 0.1)
+	if Trace[TActive].TimeSpanEnd + speed > Trace[TActive].TimeEnd:
+		Trace[TActive].TimeSpanStart = Trace[TActive].TimeEnd - Trace[TActive].TimeSpan
+		Trace[TActive].TimeSpanEnd = Trace[TActive].TimeEnd
+	else:
+		Trace[TActive].TimeSpanStart = Trace[TActive].TimeSpanStart + speed
+		Trace[TActive].TimeSpanEnd = Trace[TActive].TimeSpanEnd + speed
+
+	Trace[TActive].TimeSpan = Trace[TActive].TimeSpanEnd - Trace[TActive].TimeSpanStart
+	UpdateTimeLine()
+	UpdateMarkers()
+
 func trace_up():
 	if Trace[TActive].index > 0:
 		Trace[TActive].index -= 1
@@ -991,6 +1017,10 @@ func _input(ev):
 					trace_up()
 				elif ev.keycode == KEY_DOWN:
 					trace_down()
+				if ev.keycode == KEY_LEFT:
+					strafe_left()
+				elif ev.keycode == KEY_RIGHT:
+					strafe_right()
 				elif ev.keycode == KEY_PAGEUP:
 					trace_pup()
 				elif ev.keycode == KEY_PAGEDOWN:
@@ -1261,6 +1291,7 @@ func _menu_help_pressed(id):
 		ht += "================================\n"
 		ht += "UP / DOWN - Move one trace entry up / down\n"
 		ht += "PAGE UP / DOWN - Move several trace entries up / down\n"
+		ht += "LEFT / RIGHT - Strafe left / right\n"
 		ht += "Mouse wheel forward/back or comma / period - Zoom in / out\n"
 		ht += "Left-click - Set cursor\n"
 		ht += "Right-click-and-hold - select zoom window\n"
@@ -1269,7 +1300,7 @@ func _menu_help_pressed(id):
 		ht += "SHIFT-G - jump to end of trace\n"
 		ht += "Z - Reset zoom level\n"
 		ht += "CTRL-Z - Restore previous zoom level\n"
-		ht += "P - Show inserted probes\n"
+		ht += "P - Toggle inserted probes visible\n"
 		ht += "ESC - Quit program\n"
 
 		GenericAcceptDialog.title = "Help"
