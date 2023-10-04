@@ -1026,6 +1026,8 @@ func _input(ev):
 						TChart.MouseWheelUp()
 				elif ev.keycode == KEY_COMMA:
 						TChart.MouseWheelDown()
+				elif ev.keycode == KEY_F and Input.is_physical_key_pressed(KEY_CTRL):
+					FindLineEdit.grab_focus()
 				elif ev.keycode == KEY_SPACE:
 					deb_func()
 		else:
