@@ -3,7 +3,7 @@ extends Control
 var debcnt = 0
 
 # defines
-var TRACE_VIEW_HEIGHT = 10
+var TRACE_VIEW_HEIGHT = 100
 var TRACE_PAGESIZE = 20
 var TRACE = 1
 var INFO = 2
@@ -452,7 +452,6 @@ func LoadTrace(path, mode):
 
 	Trace.append(tracetmp)
 	print("...finished creating data structures")
-
 
 	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
 #	print("Initial gfx setup...")
