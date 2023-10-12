@@ -15,6 +15,7 @@ var CORE_KORV_HEIGHT = 16
 var MAX_NUM_CORES = 512
 
 # gloabls
+var WeAreBusy = false
 var CurrentTime = 0
 var ShowCoreChartGrid = true
 var TChartXOffset = 20
@@ -258,7 +259,6 @@ func PopulateViews(view):
 		if srctop < 0:
 			srctop = 0
 		SrcView.scroll_to_line(srctop)
-
 	# Variables View
 		VarsView.clear()
 		for v in D.vars:
@@ -813,6 +813,7 @@ func _process(_delta):
 	# Find all search ongoing?
 	if FindAllSearchString != "" or FindAllProbeNumber != "":
 		if FindAllThread.is_started() and not FindAllThread.is_alive():
+			WeAreBusy = true
 			FindAllThread.wait_to_finish()
 			FindLineEdit.text = FindAllSearchString
 			CurrentSearchString = FindAllSearchString
@@ -821,17 +822,20 @@ func _process(_delta):
 			MainProgressBar.visible = false
 			UpdateTimeLine()
 			PopulateViews(SRC | TRACE)
+			WeAreBusy = false
 		return
 
 	# Trace being loaded?
 	if LoaderFilename != "":
 		if LoaderThread.is_started() and not LoaderThread.is_alive():
+			WeAreBusy = true
 			LoaderThread.wait_to_finish()
 			print("Adding new tab: ", LoaderFilename)
 			add_tab(LoaderFilename)
 			SetActiveTrace(TActive)
 			_show_all_cores(TActive)
 			LoaderFilename = ""
+			WeAreBusy = false
 		return
 
 	if Dragged:
@@ -1017,6 +1021,8 @@ func _in_fnames():
 var KEY_CTRL = 4194326
 
 func _input(ev):
+	if WeAreBusy:
+		return
 	if  len(Trace) == 0:
 		return
 	if ev is InputEventKey:

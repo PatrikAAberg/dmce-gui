@@ -51,8 +51,10 @@ func _box_local_mouse_position():
 
 func InitTimeLine(node, box):
 	print("TChart init timeline")
-	tgui = node
-	Box = box
+	if tgui == null:
+		tgui = node
+	if Box == null:
+		Box = box
 	_timeline_inited = true
 	tgui.TChartVScrollBar.max_value = len(tgui.Trace[tgui.TActive].CoreList)
 

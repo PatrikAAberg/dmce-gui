@@ -251,8 +251,11 @@ func _draw():
 
 func InitTimeLine(node, box):
 	print("FCHart init timeline")
-	tgui = node
-	Box = box
+	if tgui == null:
+		tgui = node
+	if Box == null:
+		Box = box
+
 	tgui.FNameText.text = ""
 	for i in range(len(tgui.Trace[tgui.TActive].FList)):
 		tgui.FNameText.text += tgui.Trace[tgui.TActive].FList[i] + "\n"
