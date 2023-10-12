@@ -169,6 +169,23 @@ func SplitTraceLine(tline):
 	var fun = a[4]
 	var src = RemoveProbe(a[5])
 	var vars = a[6].split(" ")
+	# If hexdump, format it
+	if vars[0] == "dmce_hexdump":
+		var varstmp = "000000 "
+		var ascii = ""
+		for i in range (1, len(vars)):
+			if i % 16 == 0:
+				varstmp += ascii + "\n" + "%06x" % i + " "
+				ascii = ""
+			else:
+				varstmp += vars[i]
+				varstmp += " "
+				if i > 31 and i < 127:
+					ascii += char(vars[i].hex_to_int())
+				else:
+					ascii += "."
+		vars = [varstmp]
+
 	return {"core":core, "ts":ts, "path":path, "line":line, "fun":fun, "src":src, "vars":vars}
 
 func PopulateViews(view):

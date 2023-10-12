@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bbpl0u6a7p760"]
+[gd_scene load_steps=5 format=3 uid="uid://bbpl0u6a7p760"]
 
 [ext_resource type="Script" path="res://windows.gd" id="1_hhts4"]
+[ext_resource type="FontFile" uid="uid://dht4rbxnn5koh" path="res://FiraCode-Regular.ttf" id="2_16y0s"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_suces"]
 content_margin_left = 3.0
@@ -22,7 +23,6 @@ border_width_right = 3
 border_width_bottom = 3
 
 [node name="Control" type="Control"]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -113,7 +113,7 @@ text = "asfdasdfasfd"
 layout_mode = 0
 offset_left = 88.0
 offset_top = 448.0
-offset_right = 480.0
+offset_right = 1159.0
 offset_bottom = 784.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
@@ -123,10 +123,12 @@ text = "Hejsan 1"
 fit_content = true
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="HBoxContainer"]
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(500, 100)
 layout_mode = 2
-text = "Hejsan 2"
-fit_content = true
+theme_override_fonts/normal_font = ExtResource("2_16y0s")
+text = "AAAAAAAAAAAAAAAAAAAA
+11111111111111111111"
+autowrap_mode = 0
 
 [node name="CheckButton" type="CheckButton" parent="."]
 layout_mode = 0

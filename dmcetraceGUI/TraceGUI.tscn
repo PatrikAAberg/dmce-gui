@@ -1,10 +1,11 @@
-[gd_scene load_steps=30 format=3 uid="uid://haxot671h3c4"]
+[gd_scene load_steps=31 format=3 uid="uid://haxot671h3c4"]
 
 [ext_resource type="Script" path="res://TraceGUI.gd" id="1_rncp3"]
 [ext_resource type="Script" path="res://TChart.gd" id="2_m5p0u"]
 [ext_resource type="Script" path="res://FChart.gd" id="2_u40rw"]
 [ext_resource type="Script" path="res://FMarkers.gd" id="3_1kuvw"]
 [ext_resource type="Script" path="res://TMarkers.gd" id="3_rw642"]
+[ext_resource type="FontFile" uid="uid://p2j82l8w22qw" path="res://FiraCode-Medium.ttf" id="3_wmipt"]
 [ext_resource type="Script" path="res://TCoreLabels.gd" id="6_peopc"]
 [ext_resource type="Script" path="res://CoreActivityRichTextLabel.gd" id="7_nh6xr"]
 [ext_resource type="Script" path="res://MovieChart.gd" id="7_qhf0k"]
@@ -182,6 +183,7 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_wmipt")
 theme_override_font_sizes/normal_font_size = 14
 text = "No source tree available
 "
@@ -200,6 +202,7 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_wmipt")
 theme_override_font_sizes/normal_font_size = 14
 text = "
 "
@@ -436,6 +439,7 @@ offset_top = 81.0
 offset_right = -2.0
 offset_bottom = 30.0
 size_flags_horizontal = 3
+theme_override_fonts/normal_font = ExtResource("3_wmipt")
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
 text = "No trace loaded"
