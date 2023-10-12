@@ -169,9 +169,11 @@ func SplitTraceLine(tline):
 	var fun = a[4]
 	var src = RemoveProbe(a[5])
 	var vars = a[6].split(" ")
+
 	# If hexdump, format it
-	if vars[0] == "dmce_hexdump":
-		var varstmp = "000000 "
+	if "dmce_hexdump" in vars[0]:
+		var varstmp = vars[0] + "\n\n"
+		varstmp += "000000 "
 		var ascii = ""
 		for i in range (1, len(vars)):
 			if i % 16 == 0:
