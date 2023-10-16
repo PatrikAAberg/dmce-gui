@@ -183,7 +183,7 @@ func SplitTraceLine(tline):
 			else:
 				varstmp += vars[i]
 				varstmp += " "
-				if i > 31 and i < 127:
+				if vars[i].hex_to_int() > 31 and vars[i].hex_to_int() < 127:
 					ascii += char(vars[i].hex_to_int())
 				else:
 					ascii += "."
