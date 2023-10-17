@@ -232,6 +232,7 @@ func PopulateViews(view):
 	if view & SRC:
 		SrcView.clear()
 		D = SplitTraceLine(Trace[TActive].tracebuffer[Trace[TActive].index])
+
 		var slines = ReadSrc(D.path)
 		var lnbr = 0
 		var srclnbr = int(D.line.replace("+",""))
@@ -404,7 +405,15 @@ func LoadTrace(path, mode):
 			var function = sline[4]
 			var pathfunc = srcpath + ":" + function
 			var linenbr = sline[3]
-
+			if "dmce_hexdump" in function:
+				var prevline = filebuf[count - 1]
+				var psline = prevline.split("@")
+				srcpath = psline[2]
+				linenbr = psline[3]
+				sline[2] = psline[2]
+				sline[3] = psline[3]
+				line = "@".join(sline)
+				print("Found hexdump! Src: " + srcpath + "   line: " + linenbr)
 			var m = re_get_probenbr.search(line)
 			tracetmp.TimestampsPerCore[core].append(ts)
 
