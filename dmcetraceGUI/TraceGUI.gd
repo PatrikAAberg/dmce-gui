@@ -170,25 +170,6 @@ func SplitTraceLine(tline):
 	var fun = a[4]
 	var src = RemoveProbe(a[5])
 	var vars = a[6].split(" ")
-
-	# If hexdump, format it
-	if "dmce_hexdump" in vars[0]:
-		var varstmp = vars[0] + "\n\n"
-		varstmp += "000000 "
-		var ascii = ""
-		for i in range (1, len(vars)):
-			if i % 16 == 0:
-				varstmp += ascii + "\n" + "%06x" % i + " "
-				ascii = ""
-			else:
-				varstmp += vars[i]
-				varstmp += " "
-				if vars[i].hex_to_int() > 31 and vars[i].hex_to_int() < 127:
-					ascii += char(vars[i].hex_to_int())
-				else:
-					ascii += "."
-		vars = [varstmp]
-
 	return {"core":core, "ts":ts, "path":path, "line":line, "fun":fun, "src":src, "vars":vars}
 
 func PopulateViews(view):
@@ -260,13 +241,17 @@ func PopulateViews(view):
 		if srctop < 0:
 			srctop = 0
 		SrcView.scroll_to_line(srctop)
-	# Variables View
+
+		# Variables View
 		VarsView.clear()
-		for v in D.vars:
-			if CurrentSearchString in v:
-				VarsView.append_text(v.replace("[", "[lb]").replace(CurrentSearchString, "[bgcolor=#546358]" + CurrentSearchString + "[/bgcolor]") + "\n")
-			else:
-				VarsView.append_text(v.replace("[", "[lb]") + "\n")
+		if "dmce_hexdump" in D.fun:
+			VarsView.append_text(Trace[TActive].HexDump[Trace[TActive].index])
+		else:
+			for v in D.vars:
+				if CurrentSearchString in v:
+					VarsView.append_text(v.replace("[", "[lb]").replace(CurrentSearchString, "[bgcolor=#546358]" + CurrentSearchString + "[/bgcolor]") + "\n")
+				else:
+					VarsView.append_text(v.replace("[", "[lb]") + "\n")
 
 func FTreeInit(trace):
 	trace.FTree = []
@@ -352,6 +337,24 @@ func _read_trace_from_bundle(bundle):
 		print("Total number of trace entries found: " + str(len(fulltrace)))
 		return fulltrace
 
+func _get_hexdump(vars):
+	vars = vars.split(" ")
+	var varstmp = vars[0] + "\n\n"
+	varstmp += "000000 "
+	var ascii = ""
+	for i in range (1, len(vars)):
+		if i % 16 == 0:
+			varstmp += ascii + "\n" + "%06x" % i + " "
+			ascii = ""
+		else:
+			varstmp += vars[i]
+			varstmp += " "
+			if vars[i].hex_to_int() > 31 and vars[i].hex_to_int() < 127:
+				ascii += char(vars[i].hex_to_int())
+			else:
+				ascii += "."
+	return varstmp
+
 func LoadTrace(path, mode):
 	var file = path
 	var clist = []
@@ -374,6 +377,7 @@ func LoadTrace(path, mode):
 	tracetmp = FTreeInit(tracetmp)
 	tracetmp.SrcStepList = [null, null, null]
 	tracetmp.FindAllMarkers = []
+	tracetmp.HexDump = []
 
 	print("Loading trace, mode: " + mode)
 
@@ -413,7 +417,10 @@ func LoadTrace(path, mode):
 				sline[2] = psline[2]
 				sline[3] = psline[3]
 				line = "@".join(sline)
-				print("Found hexdump! Src: " + srcpath + "   line: " + linenbr)
+				tracetmp.HexDump.append(_get_hexdump(sline[6]))
+			else:
+				tracetmp.HexDump.append("")
+
 			var m = re_get_probenbr.search(line)
 			tracetmp.TimestampsPerCore[core].append(ts)
 
