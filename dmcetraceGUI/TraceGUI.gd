@@ -16,6 +16,7 @@ var CORE_KORV_HEIGHT = 16
 var MAX_NUM_CORES = 512
 
 # gloabls
+var CurrentSourceFile = ""
 var WeAreBusy = 0
 var CurrentTime = 0
 var ShowCoreChartGrid = true
@@ -82,7 +83,8 @@ var TraceViewEnd
 var TraceViewScrollTop = 999999999
 var TraceViewVisibleLines = 0
 var SrcViewVisibleLines = 0
-var SrcCache = {}
+var SrcCacheFileNames = []
+var SrcCacheCodeLines = []
 var ShowProbes = false
 var PrevSrcView = ""
 var RulerActive = false
@@ -135,34 +137,38 @@ func RemoveProbe(tstr):
 var LastSrcFileLookup = ""
 var SrcViewOffset = 0
 func ReadSrc(filename, lnbr):
+	var found = false
 	var line
 	var sourcelines = PackedStringArray([])
 	var f
-	if filename in SrcCache:
+	var cind = Trace[TActive].SrcCacheFileNames.find(filename)
+	if cind  != -1:
 		if filename != LastSrcFileLookup:
 			LastSrcFileLookup = filename
 			Trace[TActive].SrcStepList = [null, null, null]
-		return SrcCache[filename]
+		found = true
+		sourcelines = Trace[TActive].SrcCacheCodeLines[cind]
 
-	if Trace[TActive].load_mode == "file":
-		f = FileAccess.open(filename, FileAccess.READ)
-		if f == null:
-			sourcelines.append("Unable to load " + filename + " from host filesystem")
-		else:
-			while not f.eof_reached(): # iterate through all lines until the end of file is reached
-				line = f.get_line()
-				sourcelines.append(line.replace("[", "[lb]")) # escape bbcode on the fly
-			f.close()
-	elif Trace[TActive].load_mode == "bundle":
+	if Trace[TActive].load_mode != "bundle":
+		print("Unsupported trace format")
+		get_tree().quit()
+	elif not found:
 		var reader = ZIPReader.new()
 		var err = reader.open(Trace[TActive].filename)
 		if err == OK:
 			var rawfile = reader.read_file(filename)
+			DirAccess.make_dir_recursive_absolute(DmceCacheDirPath + "/" + filename.get_base_dir())
+			print("Storing in cache: " + DmceCacheDirPath + "/" + filename)
+			var cachedfile = FileAccess.open(DmceCacheDirPath + "/" + filename, FileAccess.WRITE)
+			cachedfile.store_string(rawfile.get_string_from_ascii())
+			cachedfile.close()
 			sourcelines = rawfile.get_string_from_ascii().replace("[", "[lb]").split("\n")
 		reader.close()
 		if len(sourcelines) == 1 and sourcelines[0] == "":
 			sourcelines[0] = "Unable to load " + filename + " from bundle " + Trace[TActive].filename
-	SrcCache["filename"] = sourcelines
+		else:
+			Trace[TActive].SrcCacheFileNames.append(filename)
+			Trace[TActive].SrcCacheCodeLines.append(sourcelines)
 
 	# Only return maximum SRC_VIEW_BUF_HEIGHT lines to keep stepping snappy
 	if len(sourcelines) - lnbr < SRC_VIEW_BUF_HEIGHT:
@@ -378,7 +384,8 @@ func LoadTrace(path, mode):
 	tracetmp.TraceInfo = PackedStringArray([])
 	tracetmp.tracebuffer = PackedStringArray([])
 	tracetmp.TimestampsPerCore = []
-
+	tracetmp.SrcCacheFileNames = []
+	tracetmp.SrcCacheCodeLines = []
 	for i in range(MAX_NUM_CORES):
 		tracetmp.TimestampsPerCore.append([])
 
@@ -544,7 +551,15 @@ func UndoTimespan():
 	PopulateViews(TRACE | SRC | INFO)
 	UpdateMarkers()
 
+var a= 1
+var b= 0
+var DmceCacheDir
+var DmceCacheDirPath
 func _ready():
+	DmceCacheDirPath = OS.get_cache_dir() + "/dmce"
+	DirAccess.make_dir_absolute(DmceCacheDirPath)
+	DmceCacheDir = DirAccess.open(DmceCacheDirPath)
+	DmceCacheDir.remove("*.*")
 
 	# Node handles
 	VSplitCTop 			= get_node("Background/VSplitTop")
