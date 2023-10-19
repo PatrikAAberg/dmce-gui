@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bbpl0u6a7p760"]
 
 [ext_resource type="Script" path="res://windows.gd" id="1_hhts4"]
-[ext_resource type="FontFile" uid="uid://dht4rbxnn5koh" path="res://FiraCode-Regular.ttf" id="2_16y0s"]
+[ext_resource type="FontFile" uid="uid://p2j82l8w22qw" path="res://FiraCode-Medium.ttf" id="2_toqbq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_suces"]
 content_margin_left = 3.0
@@ -125,7 +125,7 @@ fit_content = true
 [node name="RichTextLabel2" type="RichTextLabel" parent="HBoxContainer"]
 custom_minimum_size = Vector2(500, 100)
 layout_mode = 2
-theme_override_fonts/normal_font = ExtResource("2_16y0s")
+theme_override_fonts/normal_font = ExtResource("2_toqbq")
 text = "AAAAAAAAAAAAAAAAAAAA
 11111111111111111111"
 autowrap_mode = 0
