@@ -171,12 +171,13 @@ func ReadSrc(filename, lnbr):
 			Trace[TActive].SrcCacheCodeLines.append(sourcelines)
 
 	# Only return maximum SRC_VIEW_BUF_HEIGHT lines to keep stepping snappy
-	if len(sourcelines) - lnbr < SRC_VIEW_BUF_HEIGHT:
-		SrcViewOffset = len(sourcelines) - SRC_VIEW_BUF_HEIGHT
-		return sourcelines.slice(-SRC_VIEW_BUF_HEIGHT)
 	if lnbr < SRC_VIEW_BUF_HEIGHT:
 		SrcViewOffset = 0
 		return sourcelines.slice(0, SRC_VIEW_BUF_HEIGHT)
+	if len(sourcelines) - lnbr < SRC_VIEW_BUF_HEIGHT:
+		SrcViewOffset = len(sourcelines) - SRC_VIEW_BUF_HEIGHT
+		return sourcelines.slice(-SRC_VIEW_BUF_HEIGHT)
+
 	SrcViewOffset = lnbr - SRC_VIEW_BUF_HEIGHT / 2
 	return sourcelines.slice(lnbr - SRC_VIEW_BUF_HEIGHT / 2 , lnbr + SRC_VIEW_BUF_HEIGHT / 2)
 
@@ -259,6 +260,12 @@ func PopulateViews(view):
 
 		var viewpos = SrcViewVisibleLines / 2
 		var scrollto = srclnbr - SrcViewOffset - viewpos - 2
+
+		print("----")
+		print("viewpos: " + str(viewpos))
+		print("scrollto: " + str(scrollto))
+		print("SrcViewOffset: " + str(SrcViewOffset))
+
 		SrcView.scroll_to_line(scrollto)
 
 		# Variables View
