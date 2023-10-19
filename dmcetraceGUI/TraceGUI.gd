@@ -4,6 +4,7 @@ var debcnt = 0
 
 # defines
 var TRACE_VIEW_HEIGHT = 100
+var SRC_VIEW_BUF_HEIGHT = 1000
 var TRACE_PAGESIZE = 20
 var TRACE = 1
 var INFO = 2
@@ -102,6 +103,7 @@ var LineEditFindAll
 var LineEditFindAllProbeNumber
 var FindAllProbeNumber = ""
 var HexdumpSceneRef
+var SrcViewScrollBar
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -131,7 +133,8 @@ func RemoveProbe(tstr):
 	return tstr
 
 var LastSrcFileLookup = ""
-func ReadSrc(filename):
+var SrcViewOffset = 0
+func ReadSrc(filename, lnbr):
 	var line
 	var sourcelines = PackedStringArray([])
 	var f
@@ -160,7 +163,16 @@ func ReadSrc(filename):
 		if len(sourcelines) == 1 and sourcelines[0] == "":
 			sourcelines[0] = "Unable to load " + filename + " from bundle " + Trace[TActive].filename
 	SrcCache["filename"] = sourcelines
-	return sourcelines
+
+	# Only return maximum SRC_VIEW_BUF_HEIGHT lines to keep stepping snappy
+	if len(sourcelines) - lnbr < SRC_VIEW_BUF_HEIGHT:
+		SrcViewOffset = len(sourcelines) - SRC_VIEW_BUF_HEIGHT
+		return sourcelines.slice(-SRC_VIEW_BUF_HEIGHT)
+	if lnbr < SRC_VIEW_BUF_HEIGHT:
+		SrcViewOffset = 0
+		return sourcelines.slice(0, SRC_VIEW_BUF_HEIGHT)
+	SrcViewOffset = lnbr - SRC_VIEW_BUF_HEIGHT / 2
+	return sourcelines.slice(lnbr - SRC_VIEW_BUF_HEIGHT / 2 , lnbr + SRC_VIEW_BUF_HEIGHT / 2)
 
 func SplitTraceLine(tline):
 	var a = tline.split("@")
@@ -215,9 +227,10 @@ func PopulateViews(view):
 		SrcView.clear()
 		D = SplitTraceLine(Trace[TActive].tracebuffer[Trace[TActive].index])
 
-		var slines = ReadSrc(D.path)
-		var lnbr = 0
 		var srclnbr = int(D.line.replace("+",""))
+		var slines = ReadSrc(D.path, srclnbr)
+
+		var lnbr = SrcViewOffset
 		for line in slines:
 			lnbr += 1
 			line =  str(lnbr) + "  " + RemoveProbe(line)
@@ -238,10 +251,9 @@ func PopulateViews(view):
 		Trace[TActive].SrcStepList[1] = Trace[TActive].SrcStepList[0]
 		Trace[TActive].SrcStepList[0] = srclnbr
 
-		var srctop = srclnbr - SrcViewVisibleLines / 2 + 2
-		if srctop < 0:
-			srctop = 0
-		SrcView.scroll_to_line(srctop)
+		var viewpos = SrcViewVisibleLines / 2
+		var scrollto = srclnbr - SrcViewOffset - viewpos - 2
+		SrcView.scroll_to_line(scrollto)
 
 		# Variables View
 		VarsView.clear()
@@ -584,7 +596,7 @@ func _ready():
 	LineEditFindAllProbeNumber = get_node("SearchConfirmationDialog/VBoxContainerFindAll/LineEditFindAllProbenumber")
 	TCMovieHSplitContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer")
 	MainProgressBar = get_node("MainProgressBar")
-
+	SrcViewScrollBar = SrcView.get_v_scroll_bar()
 #	HexdumpSceneRef = preload("res://hexdumps_node_2d.tscn").instantiate()
 #	add_child(HexdumpSceneRef)
 #	HexdumpSceneRef.visible = false
