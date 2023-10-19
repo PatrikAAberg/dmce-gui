@@ -101,6 +101,7 @@ var MainProgressBar
 var LineEditFindAll
 var LineEditFindAllProbeNumber
 var FindAllProbeNumber = ""
+var HexdumpSceneRef
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -584,6 +585,11 @@ func _ready():
 	TCMovieHSplitContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer")
 	MainProgressBar = get_node("MainProgressBar")
 
+#	HexdumpSceneRef = preload("res://hexdumps_node_2d.tscn").instantiate()
+#	add_child(HexdumpSceneRef)
+#	HexdumpSceneRef.visible = false
+#	HexdumpSceneRef.init(self)
+#	print("ref:" + str(HexdumpSceneRef))
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
 	re_get_probenbr = RegEx.new()
@@ -1105,6 +1111,9 @@ func _input(ev):
 					FindLineEdit.grab_focus()
 				elif ev.keycode == KEY_SPACE:
 					deb_func()
+				elif ev.keycode == KEY_H:
+					HexdumpSceneRef.visible = true
+					self.visible = false
 		else:
 			PopulateViews(SRC | INFO)
 			UpdateMarkers()
