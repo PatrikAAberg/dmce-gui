@@ -261,10 +261,10 @@ func PopulateViews(view):
 		var viewpos = SrcViewVisibleLines / 2
 		var scrollto = srclnbr - SrcViewOffset - viewpos - 2
 
-		print("----")
-		print("viewpos: " + str(viewpos))
-		print("scrollto: " + str(scrollto))
-		print("SrcViewOffset: " + str(SrcViewOffset))
+#		print("----")
+#		print("viewpos: " + str(viewpos))
+#		print("scrollto: " + str(scrollto))
+#		print("SrcViewOffset: " + str(SrcViewOffset))
 
 		SrcView.scroll_to_line(scrollto)
 
