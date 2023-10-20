@@ -106,6 +106,7 @@ var LineEditFindAllProbeNumber
 var FindAllProbeNumber = ""
 var HexdumpSceneRef
 var SrcViewScrollBar
+var SrcPopOutButton
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -237,8 +238,11 @@ func PopulateViews(view):
 		SrcView.clear()
 		D = SplitTraceLine(Trace[TActive].tracebuffer[Trace[TActive].index])
 
+		Trace[TActive].CurrentSrcFile = D.path
+
 		var srclnbr = int(D.line.replace("+",""))
 		var slines = ReadSrc(D.path, srclnbr)
+		Trace[TActive].CurrentSrcLines = slines
 
 		var lnbr = SrcViewOffset
 		for line in slines:
@@ -396,6 +400,9 @@ func LoadTrace(path, mode):
 	tracetmp.TimestampsPerCore = []
 	tracetmp.SrcCacheFileNames = []
 	tracetmp.SrcCacheCodeLines = []
+	tracetmp.CurrentSrcFile = ""
+	tracetmp.CurrentSrcLines = [""]
+
 	for i in range(MAX_NUM_CORES):
 		tracetmp.TimestampsPerCore.append([])
 
@@ -618,6 +625,7 @@ func _ready():
 	FindPrevButton		= get_node("FindPrevButton")
 	TraceInfoButton 	= get_node("TraceInfoButton")
 	ShowSrcButton		= get_node("ShowSrcButton")
+	SrcPopOutButton		= get_node("SrcPopOutButton")
 	GenericAcceptDialog	= get_node("GenericAcceptDialog")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
 	AskForConfirmationDialog = get_node("AskForConfirmationDialog")
@@ -664,6 +672,7 @@ func _ready():
 	FindPrevButton.pressed.connect(self._find_prev_button_pressed)
 	TraceInfoButton.pressed.connect(self._trace_info_button_pressed)
 	ShowSrcButton.pressed.connect(self._show_src_button_pressed)
+	SrcPopOutButton.pressed.connect(self._src_pop_out_button_pressed)
 
 	# Initial state
 	print("dmce-wgui: started with args: " + str(OS.get_cmdline_args()))
@@ -704,6 +713,25 @@ func _ready():
 	$MenuBar/PopupMenuView.name = " View "
 	$MenuBar/PopupMenuSearch.name = " Search "
 	$MenuBar/PopupMenuHelp.name = " Help "
+
+func _src_pop_out_button_pressed():
+	SrcPopOutButton.release_focus()
+	if len(Trace) > 0:
+		print(Trace[TActive].CurrentSrcFile)
+		var reader = ZIPReader.new()
+		var err = reader.open(Trace[TActive].filename)
+		if err == OK:
+			var rawfile = reader.read_file(Trace[TActive].CurrentSrcFile)
+			reader.close()
+			var tmp = Trace[TActive].CurrentSrcFile.split("/")
+			var basename = tmp[len(tmp) - 1]
+			var cachedfile = FileAccess.open(DmceCacheDirPath + "/" + basename, FileAccess.WRITE)
+			cachedfile.store_string(rawfile.get_string_from_ascii())
+			cachedfile.close()
+			OS.execute(EditorExec, [DmceCacheDirPath + "/" + basename])
+		else:
+			print("Could not open file: " + Trace[TActive].filename)
+			return
 
 func _show_src_button_pressed():
 	ShowSrcButton.release_focus()
@@ -800,6 +828,9 @@ func _resized():
 
 	ShowSrcButton.position.x = TraceInfoButton.position.x - 100
 	ShowSrcButton.position.y = 3
+
+	SrcPopOutButton.position.x = ShowSrcButton.position.x - 110
+	SrcPopOutButton.position.y = 3
 
 	VSplitCTop.split_offset = VSplitCTop.size.y * VSplitTop
 	HSplitCTop.split_offset = HSplitCTop.size.x * HSplitTop
