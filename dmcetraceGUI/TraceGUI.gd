@@ -157,11 +157,14 @@ func ReadSrc(filename, lnbr):
 		var err = reader.open(Trace[TActive].filename)
 		if err == OK:
 			var rawfile = reader.read_file(filename)
-			DirAccess.make_dir_recursive_absolute(DmceCacheDirPath + "/" + filename.get_base_dir())
-			print("Storing in cache: " + DmceCacheDirPath + "/" + filename)
-			var cachedfile = FileAccess.open(DmceCacheDirPath + "/" + filename, FileAccess.WRITE)
-			cachedfile.store_string(rawfile.get_string_from_ascii())
-			cachedfile.close()
+# Keep for future development of Trace-individual file cache, needs a hash key in bundles for identification
+#			var tmp = filename.split("/")
+#			var basename = tmp[len(tmp) - 1]
+#			DirAccess.make_dir_recursive_absolute(DmceCacheDirPath + "/" + filename.get_base_dir())
+#			print("Storing in cache: " + DmceCacheDirPath + "/" + filename)
+#			var cachedfile = FileAccess.open(DmceCacheDirPath + "/" + basename, FileAccess.WRITE)
+#			cachedfile.store_string(rawfile.get_string_from_ascii())
+#			cachedfile.close()
 			sourcelines = rawfile.get_string_from_ascii().replace("[", "[lb]").split("\n")
 		reader.close()
 		if len(sourcelines) == 1 and sourcelines[0] == "":
