@@ -16,7 +16,7 @@ var CORE_KORV_HEIGHT = 16
 var MAX_NUM_CORES = 512
 
 # gloabls
-var CurrentSourceFile = ""
+var EditorExec
 var WeAreBusy = 0
 var CurrentTime = 0
 var ShowCoreChartGrid = true
@@ -563,6 +563,13 @@ var b= 0
 var DmceCacheDir
 var DmceCacheDirPath
 func _ready():
+	print("OS: " + OS.get_distribution_name ())
+
+	if OS.get_distribution_name() == "Windows":
+		EditorExec = "notepad"
+	else:
+		EditorExec = "vim"
+
 	DmceCacheDirPath = OS.get_cache_dir() + "/dmce"
 	DirAccess.make_dir_absolute(DmceCacheDirPath)
 	DmceCacheDir = DirAccess.open(DmceCacheDirPath)
