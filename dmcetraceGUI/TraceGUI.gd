@@ -16,6 +16,7 @@ var CORE_KORV_HEIGHT = 16
 var MAX_NUM_CORES = 512
 
 # gloabls
+var SceneController
 var EditorExec
 var WeAreBusy = 0
 var CurrentTime = 0
@@ -415,6 +416,8 @@ func LoadTrace(path, mode):
 	tracetmp.SrcStepList = [null, null, null]
 	tracetmp.FindAllMarkers = []
 	tracetmp.HexDump = []
+	tracetmp.HexDumpTraceEntry = []
+	tracetmp.HexDumpTraceEntryIndex = []
 
 	print("Loading trace, mode: " + mode)
 
@@ -447,16 +450,26 @@ func LoadTrace(path, mode):
 			var pathfunc = srcpath + ":" + function
 			var linenbr = sline[3]
 			if "dmce_hexdump" in function:
-				var prevline = filebuf[count - 1]
-				var psline = prevline.split("@")
+				var backwardindex = count - 1
+				var psline = filebuf[backwardindex].split("@")
+				backwardindex -= 1
+				# In case some other core trace entry got in between,
+				# look backwards max 100 steps
+				while int(psline[0]) != core and backwardindex > 0:
+					psline = filebuf[backwardindex].split("@")
+					backwardindex -= 1
+
 				srcpath = psline[2]
 				linenbr = psline[3]
 				sline[2] = psline[2]
 				sline[3] = psline[3]
 				line = "@".join(sline)
 				tracetmp.HexDump.append(_get_hexdump(sline[6]))
+				tracetmp.HexDumpTraceEntry.append(psline)
+				tracetmp.HexDumpTraceEntryIndex.append(len(tracetmp.HexDumpTraceEntry) - 1)
 			else:
-				tracetmp.HexDump.append("")
+				tracetmp.HexDump.append(null)
+				tracetmp.HexDumpTraceEntry.append(null)
 
 			var m = re_get_probenbr.search(line)
 			tracetmp.TimestampsPerCore[core].append(ts)
@@ -569,7 +582,8 @@ func UndoTimespan():
 	UpdateMarkers()
 
 func init(node):
-	HexdumpSceneRef = node.HexdumpSceneRef
+	SceneController = node
+	HexdumpSceneRef = SceneController.HexdumpSceneRef
 
 var a= 1
 var b= 0
@@ -1492,6 +1506,7 @@ func SetActiveTrace(trace):
 	PopulateViews(SRC | INFO | TRACE)
 	TCoreLabels.Init(self)
 	FuncVScrollBar.value = Trace[TActive].FuncVScrollBarIndex
+	SceneController.HexdumpSceneRef.Load()
 
 ##########################
 # Scratch space
