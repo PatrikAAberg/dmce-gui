@@ -2,19 +2,21 @@ extends Node2D
 
 var VISIBLE_HEXDUMPS = 10
 var tgui
-var inited = false
 var HDLabels = []
 var lsettings = []
 var count = 0
 var HexdumpsPanelContainer
 var HDLabelTemplate
 var TraceGUI_scene
-var active = false
+var Active = false
+var inited = false
+#var Active = true
+#var inited = true
+var MainWindowSize
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	HDLabelTemplate = get_node("HexdumpsPanelContainer/HDLabelTemplate")
-	HexdumpsPanelContainer = get_node("HexdumpsPanelContainer")
+	HDLabelTemplate = get_node("HDLabelTemplate")
 	var hdtmp = HDLabelTemplate.duplicate()
 	hdtmp.visible = true
 	for i in range (VISIBLE_HEXDUMPS):
@@ -25,34 +27,36 @@ func _ready():
 
 	HDLabels.append(hdtmp)
 	add_child(hdtmp)
-	init(null)
-	print("Hexdump ready")
+	print("Hexdump viewer ready")
 
 func init(node):
-	tgui = node
+	tgui = node.TraceGuiSceneRef
 	inited = true
 	print("Hexdump support init done")
 
+func Activate():
+	Active = true
+
 func _input(ev):
-	if inited and active:
+	if inited and Active:
 		if ev is InputEventKey:
 			if ev.pressed:
 				if ev.keycode == KEY_ESCAPE:
-					self.visible = false
 					tgui.visible = true
+					self.visible = false
+					Active = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if inited and active:
-		var appsize = get_tree().root.size
-		var apppos = Vector2(0,0)
-		HexdumpsPanelContainer.size = appsize
-		HexdumpsPanelContainer.position = apppos
-
+	if inited and Active:
+		MainWindowSize = get_tree().root.size
 #		OS.delay_msec(100)
 		count += 1
 		if count == 10:
 			count = 0
+
+		self.visible = true
+		HDLabels[0].visible = true
 		HDLabels[0].label_settings = lsettings[count]
 		HDLabels[0].text = "Hexdump!"
 		HDLabels[0].position.x += count

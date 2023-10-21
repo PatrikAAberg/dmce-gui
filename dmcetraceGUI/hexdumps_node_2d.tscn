@@ -5,10 +5,6 @@
 [node name="HexdumpsNode2D" type="Node2D"]
 script = ExtResource("1_cqj7w")
 
-[node name="HexdumpsPanelContainer" type="PanelContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="HDLabelTemplate" type="Label" parent="HexdumpsPanelContainer"]
-visible = false
-layout_mode = 2
+[node name="HDLabelTemplate" type="Label" parent="."]
+offset_right = 1.0
+offset_bottom = 23.0

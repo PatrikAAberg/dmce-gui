@@ -568,6 +568,9 @@ func UndoTimespan():
 	PopulateViews(TRACE | SRC | INFO)
 	UpdateMarkers()
 
+func init(node):
+	HexdumpSceneRef = node.HexdumpSceneRef
+
 var a= 1
 var b= 0
 var DmceCacheDir
@@ -637,11 +640,7 @@ func _ready():
 	TCMovieHSplitContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer")
 	MainProgressBar = get_node("MainProgressBar")
 	SrcViewScrollBar = SrcView.get_v_scroll_bar()
-#	HexdumpSceneRef = preload("res://hexdumps_node_2d.tscn").instantiate()
-#	add_child(HexdumpSceneRef)
-#	HexdumpSceneRef.visible = false
-#	HexdumpSceneRef.init(self)
-#	print("ref:" + str(HexdumpSceneRef))
+
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
 	re_get_probenbr = RegEx.new()
@@ -1187,8 +1186,9 @@ func _input(ev):
 				elif ev.keycode == KEY_SPACE:
 					deb_func()
 				elif ev.keycode == KEY_H:
-					HexdumpSceneRef.visible = true
+					HexdumpSceneRef.Activate()
 					self.visible = false
+					HexdumpSceneRef.visible = true
 		else:
 			PopulateViews(SRC | INFO)
 			UpdateMarkers()
