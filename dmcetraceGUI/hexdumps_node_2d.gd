@@ -2,7 +2,7 @@ extends Node2D
 
 var SCROLL_VISIBLE_HEXDUMPS = 10
 var SLIDER_VISIBLE_HEXDUMPS = 3
-var HEXDUMP_WIDTH = 500
+var HEXDUMP_WIDTH = 80
 var tgui
 var HDLabels = []
 var lsettings = []
@@ -16,6 +16,9 @@ var inited = false
 #var inited = true
 var MainWindowSize
 var index = 1
+var yoffset = 0
+var font_height
+var font_width
 
 func ClearScreen():
 	for hdl in HDLabels:
@@ -27,21 +30,22 @@ func _draw():
 	draw_rect(Rect2(0,0, MainWindowSize.x, MainWindowSize.y), Color(0.15, 0.15, 0.15, 1.0), true)
 
 func PopulateScreen():
-	ClearScreen()
 	var sindex = index - (SLIDER_VISIBLE_HEXDUMPS / 2)
 	var xpos = 100
 	var ypos = 100
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
 		if sindex >= 0:
 			HDLabels[sindex].position.x = xpos
-			HDLabels[sindex].position.y = ypos
+			HDLabels[sindex].position.y = ypos + yoffset
 			HDLabels[sindex].visible = true
 		sindex += 1
-		xpos += HEXDUMP_WIDTH
+		xpos += font_width * HEXDUMP_WIDTH
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	HDLabelTemplate = get_node("HDLabelTemplate")
+	font_height = HDLabelTemplate.size.y
+	font_width = HDLabelTemplate.size.x / 10
 	for i in range (SCROLL_VISIBLE_HEXDUMPS):
 		var lset = LabelSettings.new()
 		lset.font_size = 32 - i
@@ -51,17 +55,6 @@ func _ready():
 	print("Hexdump viewer ready")
 
 func Load():
-	print(len(tgui.Trace[tgui.TActive].HexDump))
-	print(len(tgui.Trace[tgui.TActive].HexDumpTraceEntry))
-	print(len(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex))
-	for i in range(len(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex)):
-		print("te index " + str(i) + ": " + str(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]))
-	var debug = tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[0]
-	print("Short index: " + str(debug))
-	print(tgui.Trace[tgui.TActive].HexDumpTraceEntry[debug])
-	for i in range(len(tgui.Trace[tgui.TActive].HexDumpTraceEntry)):
-		if tgui.Trace[tgui.TActive].HexDumpTraceEntry[i] != null:
-			print("Entry: " + str(i) + "   :" + " ".join(tgui.Trace[tgui.TActive].HexDumpTraceEntry[i]))
 	for i in range(len(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex)):
 		var hdtmp = HDLabelTemplate.duplicate()
 		hdtmp.visible = false
@@ -70,6 +63,7 @@ func Load():
 		hdtmp.text = s
 		HDLabels.append(hdtmp)
 		add_child(hdtmp)
+	ClearScreen()
 	PopulateScreen()
 
 func init(node):
@@ -88,6 +82,12 @@ func _input(ev):
 					tgui.visible = true
 					self.visible = false
 					Active = false
+				if ev.keycode == KEY_UP:
+					yoffset += font_height
+					PopulateScreen()
+				if ev.keycode == KEY_DOWN:
+					yoffset -= font_height
+					PopulateScreen()
 
 func _process(delta):
 	pass
