@@ -5,25 +5,20 @@ var SLIDER_VISIBLE_HEXDUMPS = 3
 var HEXDUMP_WIDTH = 80
 var tgui
 var HDLabels = []
+var HDLabelsText = []
 var lsettings = []
 var count = 0
 var HexdumpsPanelContainer
 var HDLabelTemplate
 var TraceGUI_scene
 var Active = false
-var inited = false
-#var Active = true
-#var inited = true
+var Inited = false
 var MainWindowSize
-var index = 1
+var index
 var yoffset = 0
 var font_height
 var font_width
-
-func ClearScreen():
-	for hdl in HDLabels:
-		hdl.visible = false
-	queue_redraw()
+var NumHexdumps = 0
 
 func _draw():
 	MainWindowSize = get_tree().root.size
@@ -40,22 +35,33 @@ func scroll_down():
 		hdl.position.y = yoffset
 
 func PopulateScreen():
-	var sindex = index - (SLIDER_VISIBLE_HEXDUMPS / 2)
-	var xpos = 100
-	var ypos = 100
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
-		if sindex >= 0:
-			HDLabels[sindex].position.x = xpos
-			HDLabels[sindex].position.y = ypos + yoffset
-			HDLabels[sindex].visible = true
-		sindex += 1
-		xpos += font_width * HEXDUMP_WIDTH
+		if index - 1 + i >= 0:
+			HDLabels[i].text = HDLabelsText[index - 1 + i]
+		HDLabels[i].visible = false
+
+	HDLabels[1].visible = true
+	if index > 0:
+		HDLabels[0].visible = true
+	if index < NumHexdumps - 1:
+		HDLabels[2].visible = true
+	queue_redraw()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	HDLabelTemplate = get_node("HDLabelTemplate")
 	font_height = HDLabelTemplate.size.y
 	font_width = HDLabelTemplate.size.x / 10
+
+	var xpos = 100
+	for i in range(SLIDER_VISIBLE_HEXDUMPS):
+		var hdtmp = HDLabelTemplate.duplicate()
+		hdtmp.position.x = xpos
+		hdtmp.visible = true
+		xpos += font_width * HEXDUMP_WIDTH
+		add_child(hdtmp)
+		HDLabels.append(hdtmp)
+
 	for i in range (SCROLL_VISIBLE_HEXDUMPS):
 		var lset = LabelSettings.new()
 		lset.font_size = 32 - i
