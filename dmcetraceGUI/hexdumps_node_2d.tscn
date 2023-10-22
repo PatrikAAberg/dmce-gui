@@ -7,6 +7,7 @@
 script = ExtResource("1_cqj7w")
 
 [node name="HDLabelTemplate" type="Label" parent="."]
+visible = false
 offset_right = 1.0
 offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("2_swlf5")
