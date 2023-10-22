@@ -16,6 +16,7 @@ var CORE_KORV_HEIGHT = 16
 var MAX_NUM_CORES = 512
 
 # gloabls
+var Active = true
 var SceneController
 var EditorExec
 var WeAreBusy = 0
@@ -108,6 +109,12 @@ var FindAllProbeNumber = ""
 var HexdumpSceneRef
 var SrcViewScrollBar
 var SrcPopOutButton
+
+func Activate():
+	Active = true
+
+func Deactivate():
+	Active = false
 
 func TimerStart():
 	time_start = Time.get_ticks_msec()
@@ -1132,8 +1139,9 @@ func _in_fnames():
 var KEY_CTRL = 4194326
 
 func _input(ev):
-	if WeAreBusy > 0:
+	if not Active or WeAreBusy > 0:
 		return
+	deb_func()
 	if  len(Trace) == 0:
 		return
 	if ev is InputEventKey:
@@ -1202,6 +1210,7 @@ func _input(ev):
 				elif ev.keycode == KEY_H:
 					HexdumpSceneRef.Activate()
 					self.visible = false
+					Deactivate()
 					HexdumpSceneRef.visible = true
 		else:
 			PopulateViews(SRC | INFO)
