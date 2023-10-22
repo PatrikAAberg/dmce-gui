@@ -29,6 +29,16 @@ func _draw():
 	MainWindowSize = get_tree().root.size
 	draw_rect(Rect2(0,0, MainWindowSize.x, MainWindowSize.y), Color(0.15, 0.15, 0.15, 1.0), true)
 
+func scroll_up():
+	yoffset -= font_height
+	for hdl in HDLabels:
+		hdl.position.y = yoffset
+
+func scroll_down():
+	yoffset += font_height
+	for hdl in HDLabels:
+		hdl.position.y = yoffset
+
 func PopulateScreen():
 	var sindex = index - (SLIDER_VISIBLE_HEXDUMPS / 2)
 	var xpos = 100
@@ -83,11 +93,23 @@ func _input(ev):
 					self.visible = false
 					Active = false
 				if ev.keycode == KEY_UP:
-					yoffset += font_height
-					PopulateScreen()
+					scroll_up()
+					return
 				if ev.keycode == KEY_DOWN:
-					yoffset -= font_height
+					scroll_down()
+					return
+				if ev.keycode == KEY_LEFT:
+					index -= 1
+					if index < 0:
+						index = 0
 					PopulateScreen()
+					return
+				if ev.keycode == KEY_RIGHT:
+					index += 1
+					if index >= NumHexdumps - 1:
+						index = NumHexdumps - 1
+					PopulateScreen()
+					return
 
 func _process(delta):
 	pass
