@@ -65,33 +65,43 @@ func _ready():
 	print("Hexdump viewer ready")
 
 func Load():
-	for i in range(len(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex)):
+	NumHexdumps = len(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex)
+
+	for i in range(NumHexdumps):
 		var hdtmp = HDLabelTemplate.duplicate()
 		hdtmp.visible = false
-		var s = " ".join(tgui.Trace[tgui.TActive].HexDumpTraceEntry[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]])
+		var tl = tgui.Trace[tgui.TActive].HexDumpTraceEntry[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]]
+		var s =     "Hexdump:    " + str(i)
+		s += "\n" + "Core:       " + str(tl[0])
+		s += "\n" + "Timestamp:  " + str(tl[1])
+		s += "\n" + "File/line:  " + str(tl[2]) + str(tl[3])
+		s += "\n" + "Function:   " + str(tl[4])
+		s += "\n"
 		s += "\n" + tgui.Trace[tgui.TActive].HexDump[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]]
-		hdtmp.text = s
-		HDLabels.append(hdtmp)
-		add_child(hdtmp)
-	ClearScreen()
+		HDLabelsText.append(s)
+	index = 0
+	if NumHexdumps > 0:
+		index = 1
 	PopulateScreen()
 
 func init(node):
 	tgui = node.TraceGuiSceneRef
-	inited = true
+	Inited = true
 	print("Hexdump support init done")
 
 func Activate():
 	Active = true
 
 func _input(ev):
-	if inited and Active:
+	if Inited and Active:
 		if ev is InputEventKey:
 			if ev.pressed:
 				if ev.keycode == KEY_ESCAPE:
 					tgui.visible = true
 					self.visible = false
 					Active = false
+					tgui.Activate()
+					return
 				if ev.keycode == KEY_UP:
 					scroll_up()
 					return
@@ -115,7 +125,7 @@ func _process(delta):
 	pass
 
 func _processflash(delta):
-	if inited and Active:
+	if Inited and Active:
 		MainWindowSize = get_tree().root.size
 #		OS.delay_msec(100)
 		count += 1
