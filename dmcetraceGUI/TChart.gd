@@ -43,6 +43,10 @@ func _draw():
 			for i in range(len(tgui.Trace[tgui.TActive].CoreList)):
 				draw_rect(Rect2(0, tgui.CORE_KORV_HEIGHT * i, Box.size.x, tgui.CORE_KORV_HEIGHT), Color.DARK_SEA_GREEN / 2, false)
 
+		# scrollbar size
+		tgui.TChartVScrollBar.max_value = len(tgui.Trace[tgui.TActive].CoreList)
+		tgui.TChartVScrollBar.page = Box.size.y / tgui.CORE_KORV_HEIGHT
+
 func _box_size_x():
 	return Box.size.x - tgui.TChartXOffset
 
@@ -56,7 +60,6 @@ func InitTimeLine(node, box):
 	if Box == null:
 		Box = box
 	_timeline_inited = true
-	tgui.TChartVScrollBar.max_value = len(tgui.Trace[tgui.TActive].CoreList)
 
 func UpdateTimeLine():
 	if _timeline_inited:

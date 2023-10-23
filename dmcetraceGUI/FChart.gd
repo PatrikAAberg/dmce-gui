@@ -12,6 +12,7 @@ var TitleText
 var ZoomStart = 0
 var ZoomEnd = 0
 var mutex
+var FChartPanel
 
 func ClearCores(ind):
 	Cores[ind] = []
@@ -40,6 +41,7 @@ func _ready():
 		Colors.append(Color(colstr))
 		TextColor.append("[color=#" + colstr + "]")
 
+	FChartPanel = get_node("../../FChartPanel")
 	TitleText = get_node("../../FChartBar/TitleText")
 	TitleText.position.x = 0
 	TitleText.position.y = -40
@@ -94,6 +96,17 @@ func _draw_from_func_list():
 		var thread_count = 0
 		var threadlist = []
 		var func_count = 0
+
+		# Set vscroll size
+		var page = int(FChartPanel.size.y / tgui.FNameText.get_line_offset(1))
+		tgui.FuncVScrollBar.max_value = num_funcs
+		tgui.FuncVScrollBar.page = page
+
+		print("Size y: " + str(FChartPanel.size.y))
+		print("tgui.FNameText.get_line_offset(1): " + str(tgui.FNameText.get_line_offset(1)))
+		print("Page: " + str(page))
+		print("Total: " + str(num_funcs))
+
 #		print("num_cores: " + str(num_cores))
 #		print("num_funcs: " + str(num_funcs))
 #		print("funcs per core: " + str(funcs_per_core))
@@ -260,7 +273,6 @@ func InitTimeLine(node, box):
 	for i in range(len(tgui.Trace[tgui.TActive].FList)):
 		tgui.FNameText.text += tgui.Trace[tgui.TActive].FList[i] + "\n"
 	_timeline_inited = true
-	tgui.FuncVScrollBar.max_value = len(tgui.Trace[tgui.TActive].FList)
 	print("FCHart init timeline done")
 
 func UpdateTimeLine():

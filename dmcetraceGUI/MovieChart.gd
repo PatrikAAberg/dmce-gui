@@ -27,7 +27,8 @@ func Update():
 		scrollbar.visible = false
 	else:
 		scrollbar.visible = true
-		scrollbar.max_value = numprobes - visibleprobes
+		scrollbar.max_value = numprobes
+		scrollbar.page = visibleprobes
 	queue_redraw()
 
 # Called when the node enters the scene tree for the first time.
