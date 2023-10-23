@@ -95,10 +95,12 @@ popup/item_1/id = 1
 [node name="VScrollBar" type="VScrollBar" parent="."]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 0
-offset_left = 568.0
-offset_top = 280.0
-offset_right = 608.0
-offset_bottom = 568.0
+offset_left = 571.0
+offset_top = 303.0
+offset_right = 611.0
+offset_bottom = 591.0
+step = 20.0
+page = 20.0
 
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
 initial_position = 2

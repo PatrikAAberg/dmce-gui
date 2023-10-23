@@ -276,7 +276,7 @@ autowrap_mode = 0
 shortcut_keys_enabled = false
 
 [node name="FuncVScrollBar" type="VScrollBar" parent="Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer"]
-custom_minimum_size = Vector2(12, 0)
+custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 max_value = 10.0
@@ -319,7 +319,7 @@ z_index = 10
 script = ExtResource("3_rw642")
 
 [node name="TChartVScrollBar" type="VScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer"]
-custom_minimum_size = Vector2(12, 0)
+custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 max_value = 10.0
@@ -355,7 +355,7 @@ size_flags_vertical = 3
 script = ExtResource("7_qhf0k")
 
 [node name="MovieHScrollBar" type="HScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 step = 1.0
 
