@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dnoffm85jonra"]
+[gd_scene load_steps=4 format=3 uid="uid://dnoffm85jonra"]
 
 [ext_resource type="Script" path="res://hexdumps_node_2d.gd" id="1_cqj7w"]
 [ext_resource type="FontFile" uid="uid://p2j82l8w22qw" path="res://FiraCode-Medium.ttf" id="2_swlf5"]
+[ext_resource type="Script" path="res://DataNode2D.gd" id="3_rwmj7"]
 
 [node name="HexdumpsNode2D" type="Node2D"]
 script = ExtResource("1_cqj7w")
@@ -12,3 +13,23 @@ offset_right = 1.0
 offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("2_swlf5")
 text = "0123456789"
+
+[node name="MainVBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 1600.0
+offset_bottom = 1024.0
+
+[node name="DataPanelContainer" type="PanelContainer" parent="MainVBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DataNode2D" type="Node2D" parent="MainVBoxContainer/DataPanelContainer"]
+script = ExtResource("3_rwmj7")
+
+[node name="ControlPanelContainer" type="PanelContainer" parent="MainVBoxContainer"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="MainVBoxContainer/ControlPanelContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+text = "Status and buttons..."

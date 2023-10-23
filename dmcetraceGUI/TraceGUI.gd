@@ -1141,7 +1141,6 @@ var KEY_CTRL = 4194326
 func _input(ev):
 	if not Active or WeAreBusy > 0:
 		return
-	deb_func()
 	if  len(Trace) == 0:
 		return
 	if ev is InputEventKey:
