@@ -1,8 +1,9 @@
 extends Node2D
 
 var SCROLL_VISIBLE_HEXDUMPS = 10
-var SLIDER_VISIBLE_HEXDUMPS = 3
+var SLIDER_VISIBLE_HEXDUMPS = 5
 var HEXDUMP_WIDTH = 80
+var HexdumpWidthPixels
 var tgui
 var hexdump
 var HDLabels = []
@@ -16,69 +17,66 @@ var Active = false
 var Inited = false
 var MainWindowSize
 var index
+var indexwanted
 var yoffset = 0
-var font_height
-var font_width
+var xscrolloffset = 0
+var FontHeight
+var FontWidth
 var NumHexdumps = 0
 var HexDumpMaxLines
 
 func _draw():
 	MainWindowSize = hexdump.MainWindowSize
-	draw_rect(Rect2(0,0, MainWindowSize.x, MainWindowSize.y), Color(0.1, 0.1, 0.1, 1.0), true)
+	draw_rect(Rect2(-MainWindowSize.x,0, MainWindowSize.x * 3, MainWindowSize.y), Color(0.1, 0.1, 0.1, 1.0), true)
 
 func scroll_set():
-	if yoffset < -((HexDumpMaxLines) * font_height):
-		yoffset = -(HexDumpMaxLines) * font_height
+	if yoffset < -((HexDumpMaxLines) * FontHeight):
+		yoffset = -(HexDumpMaxLines) * FontHeight
 	elif yoffset > 0:
 		yoffset = 0
 	for hdl in HDLabels:
 		hdl.position.y = yoffset
 
 func scroll_up():
-	yoffset -= font_height
+	yoffset -= FontHeight
 	scroll_set()
 
 func scroll_down():
-	yoffset += font_height
+	yoffset += FontHeight
 	scroll_set()
 
 func scroll_page_up():
-	yoffset -= font_height * 20
+	yoffset -= FontHeight * 20
 	scroll_set()
 
 func scroll_page_down():
-	yoffset += font_height * 20
+	yoffset += FontHeight * 20
 	scroll_set()
 
 func PopulateScreen():
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
-		if index - 1 + i >= 0:
-			HDLabels[i].text = HDLabelsText[index - 1 + i]
-		HDLabels[i].visible = false
-
-	HDLabels[1].visible = true
-	if index > 0:
-		HDLabels[0].visible = true
-	if index < NumHexdumps - 1:
-		HDLabels[2].visible = true
-	queue_redraw()
+		if index - 2 + i >= 0:
+			HDLabels[i].text = HDLabelsText[index - 2 + i]
+#	queue_redraw()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	HDLabelTemplate = get_node("../../../HDLabelTemplate")
-	font_height = HDLabelTemplate.size.y
-	font_width = HDLabelTemplate.size.x / 10
+	FontHeight = HDLabelTemplate.size.y
+	FontWidth = HDLabelTemplate.size.x / 10
 
 	var lsetmain = LabelSettings.new()
 	lsetmain.font_color = Color(0.9, 0.9, 0.9, 1.0)
 
-	var xpos = 100
+	HexdumpWidthPixels = FontWidth * HEXDUMP_WIDTH
+
+	var xpos = 100 - HexdumpWidthPixels
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
 		var hdtmp = HDLabelTemplate.duplicate()
 		hdtmp.position.x = xpos
 		hdtmp.visible = true
 		hdtmp.label_settings = lsetmain
-		xpos += font_width * HEXDUMP_WIDTH
+		xpos += HexdumpWidthPixels
 		add_child(hdtmp)
 		HDLabels.append(hdtmp)
 
@@ -111,6 +109,9 @@ func Load():
 	index = 0
 	if NumHexdumps > 0:
 		index = 1
+
+	index = 10
+	indexwanted = index
 	PopulateScreen()
 
 func init(node):
@@ -129,7 +130,7 @@ func _input(ev):
 			if ev.pressed:
 				if ev.keycode == KEY_ESCAPE:
 					tgui.visible = true
-					self.visible = false
+					hexdump.visible = false
 					Active = false
 					tgui.Activate()
 					return
@@ -146,20 +147,41 @@ func _input(ev):
 					scroll_page_up()
 					return
 				if ev.keycode == KEY_LEFT:
-					index -= 1
-					if index < 0:
-						index = 0
-					PopulateScreen()
+					indexwanted -= 1
+					if indexwanted < 0:
+						indexwanted = 0
 					return
 				if ev.keycode == KEY_RIGHT:
-					index += 1
-					if index >= NumHexdumps - 1:
-						index = NumHexdumps - 1
-					PopulateScreen()
+					indexwanted += 1
+					if indexwanted >= NumHexdumps - 1:
+						indexwanted = NumHexdumps - 1
 					return
 
 func _process(delta):
-	pass
+	if index != indexwanted:
+		if indexwanted > index:
+			# scrolling right
+			if xscrolloffset <= 0:
+				xscrolloffset = HexdumpWidthPixels
+			xscrolloffset -= FontWidth * 8
+			if xscrolloffset <= 0:
+				index += 1
+				xscrolloffset = 0
+				self.position.x = xscrolloffset
+			else:
+				self.position.x = 0 - (HexdumpWidthPixels - xscrolloffset)
+		else:
+			# scrolling left
+			if xscrolloffset <= 0:
+				xscrolloffset = HexdumpWidthPixels
+			xscrolloffset -= FontWidth * 8
+			if xscrolloffset <= 0:
+				index -= 1
+				xscrolloffset = 0
+				self.position.x = -xscrolloffset
+			else:
+				self.position.x = 0 + (HexdumpWidthPixels - xscrolloffset)
+		PopulateScreen()
 
 func _processflash(delta):
 	if Inited and Active:
