@@ -55,9 +55,11 @@ func scroll_page_down():
 
 func PopulateScreen():
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
-		if index - 2 + i >= 0:
+		var tindex = index - 2 + i
+		if tindex >= 0 and tindex < len(HDLabelsText):
 			HDLabels[i].text = HDLabelsText[index - 2 + i]
-#	queue_redraw()
+		else:
+			HDLabels[i].text = ""
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
