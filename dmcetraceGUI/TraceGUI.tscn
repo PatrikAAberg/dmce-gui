@@ -170,6 +170,7 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_vo8sc")
 
 [node name="HSplitSrcVars" type="HSplitContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop"]
 layout_mode = 2
+split_offset = 500
 
 [node name="SrcTab" type="TabContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars"]
 layout_mode = 2
@@ -179,7 +180,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_1n3jt")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_q8b8d")
 
 [node name="SrcView" type="RichTextLabel" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars/SrcTab"]
-custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2
@@ -198,7 +198,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_mnfpc")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_iqdt1")
 
 [node name="VarsView" type="RichTextLabel" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars/VarsTab"]
-custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 2

@@ -25,7 +25,7 @@ var ShowCoreChartGrid = true
 var TChartXOffset = 20
 var InitDone = false
 var VSplitTop = 0.25
-var HSplitTop = 0.8
+var HSplitTop = 0.5
 var HSplitBot = 0.75
 var VSplitBot = 0.5
 var TActive = 0
@@ -109,6 +109,7 @@ var FindAllProbeNumber = ""
 var HexdumpSceneRef
 var SrcViewScrollBar
 var SrcPopOutButton
+var HSplitSrcVars
 
 func Activate():
 	Active = true
@@ -612,6 +613,7 @@ func _ready():
 	# Node handles
 	VSplitCTop 			= get_node("Background/VSplitTop")
 	HSplitCTop 			= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop")
+	HSplitSrcVars 		= get_node("Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars")
 	VSplitCBot			= get_node("Background/VSplitTop/VSplitBot")
 	TopVBoxContainer 	= get_node("Background/VSplitTop/VBoxContainer")
 	TChart 				= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartPanel/TChart")
