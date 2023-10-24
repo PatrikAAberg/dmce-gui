@@ -177,41 +177,42 @@ func _input(ev):
 					return
 
 func _process(delta):
-	if index != indexwanted:
-		if indexwanted > index:
-			# scrolling right
-			if xscrolloffset <= 0:
-				xscrolloffset = HexdumpWidthPixels
-			xscrolloffset -= FontWidth * 8
-			if xscrolloffset <= 0:
-				index += 1
-				PopulateScreen()
-				xscrolloffset = 0
-				self.position.x = xscrolloffset
+	if Inited and Active:
+		if index != indexwanted:
+			if indexwanted > index:
+				# scrolling right
+				if xscrolloffset <= 0:
+					xscrolloffset = HexdumpWidthPixels
+				xscrolloffset -= FontWidth * 8
+				if xscrolloffset <= 0:
+					index += 1
+					PopulateScreen()
+					xscrolloffset = 0
+					self.position.x = xscrolloffset
+				else:
+					self.position.x = 0 - (HexdumpWidthPixels - xscrolloffset)
 			else:
-				self.position.x = 0 - (HexdumpWidthPixels - xscrolloffset)
-		else:
-			# scrolling left
-			if xscrolloffset <= 0:
-				xscrolloffset = HexdumpWidthPixels
-			xscrolloffset -= FontWidth * 8
-			if xscrolloffset <= 0:
-				index -= 1
-				PopulateScreen()
-				xscrolloffset = 0
-				self.position.x = -xscrolloffset
-			else:
-				self.position.x = 0 + (HexdumpWidthPixels - xscrolloffset)
+				# scrolling left
+				if xscrolloffset <= 0:
+					xscrolloffset = HexdumpWidthPixels
+				xscrolloffset -= FontWidth * 8
+				if xscrolloffset <= 0:
+					index -= 1
+					PopulateScreen()
+					xscrolloffset = 0
+					self.position.x = -xscrolloffset
+				else:
+					self.position.x = 0 + (HexdumpWidthPixels - xscrolloffset)
 
 func _processflash(delta):
-	if Inited and Active:
-#		OS.delay_msec(100)
-		count += 1
-		if count == 10:
-			count = 0
+		if Inited and Active:
+#			OS.delay_msec(100)
+			count += 1
+			if count == 10:
+				count = 0
 
-		self.visible = true
-		HDLabels[0].visible = true
+			self.visible = true
+			HDLabels[0].visible = true
 		HDLabels[0].label_settings = lsettings[count]
 		HDLabels[0].text = "Hexdump!"
 		HDLabels[0].position.x += count
