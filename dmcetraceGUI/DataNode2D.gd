@@ -56,9 +56,10 @@ func scroll_page_down():
 
 func PopulateScreen():
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
-		if index - 1 + i < 0:
+		if (index - 1 + i < 0) or (index - 1 + i) > (NumHexdumps - 1):
 			HDLabels[i].text = HDLabelsText[0] # If first index, fill both with same
-		HDLabels[i].text = HDLabelsText[index - 1 + i]
+		else:
+			HDLabels[i].text = HDLabelsText[index - 1 + i]
 
 func _value_changed(val):
 	if val > NumHexdumps - 1:
@@ -162,7 +163,7 @@ func _input(ev):
 					indexwanted -= 1
 					if indexwanted < 0:
 						indexwanted = 0
-					HexdumpScrollBar.value = indexwanted
+					HexdumpScrollBar.set_value_no_signal(indexwanted)
 					return
 				if ev.keycode == KEY_RIGHT:
 					indexwanted += 1
@@ -170,7 +171,7 @@ func _input(ev):
 						indexwanted = NumHexdumps - 3
 					if indexwanted < 0:
 						indexwanted = 0
-					HexdumpScrollBar.value = indexwanted
+					HexdumpScrollBar.set_value_no_signal(indexwanted)
 					return
 
 func _process(delta):
