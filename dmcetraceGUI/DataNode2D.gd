@@ -61,8 +61,11 @@ func PopulateScreen():
 		HDLabels[i].text = HDLabelsText[index - 1 + i]
 
 func _value_changed(val):
+	if val > NumHexdumps - 1:
+		val = NumHexdumps - 1
 	indexwanted = val
 	index = indexwanted
+	HexdumpScrollBar.value = indexwanted
 	PopulateScreen()
 
 # Called when the node enters the scene tree for the first time.
@@ -118,8 +121,7 @@ func Load():
 
 	index = 0
 	indexwanted = index
-#	HexdumpScrollBar.max_value = NumHexdumps
-	HexdumpScrollBar.max_value = NumHexdumps - 1
+	HexdumpScrollBar.max_value = NumHexdumps - 2
 	HexdumpScrollBar.page = 1
 
 	PopulateScreen()
@@ -160,6 +162,7 @@ func _input(ev):
 					indexwanted -= 1
 					if indexwanted < 0:
 						indexwanted = 0
+					HexdumpScrollBar.value = indexwanted
 					return
 				if ev.keycode == KEY_RIGHT:
 					indexwanted += 1
@@ -167,6 +170,7 @@ func _input(ev):
 						indexwanted = NumHexdumps - 3
 					if indexwanted < 0:
 						indexwanted = 0
+					HexdumpScrollBar.value = indexwanted
 					return
 
 func _process(delta):
