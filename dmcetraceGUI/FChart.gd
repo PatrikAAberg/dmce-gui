@@ -102,11 +102,6 @@ func _draw_from_func_list():
 		tgui.FuncVScrollBar.max_value = num_funcs
 		tgui.FuncVScrollBar.page = page
 
-		print("Size y: " + str(FChartPanel.size.y))
-		print("tgui.FNameText.get_line_offset(1): " + str(tgui.FNameText.get_line_offset(1)))
-		print("Page: " + str(page))
-		print("Total: " + str(num_funcs))
-
 #		print("num_cores: " + str(num_cores))
 #		print("num_funcs: " + str(num_funcs))
 #		print("funcs per core: " + str(funcs_per_core))
