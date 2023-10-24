@@ -104,6 +104,7 @@ func _ready():
 func Load():
 	NumHexdumps = len(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex)
 	HexDumpMaxLines = 0
+	HDLabelsText = []
 
 	for i in range(NumHexdumps):
 		var hdtmp = HDLabelTemplate.duplicate()
@@ -126,6 +127,7 @@ func Load():
 	HexdumpScrollBar.page = 1
 
 	PopulateScreen()
+	print("Loaded hexdump for trace " + str(tgui.TActive))
 
 func init(node):
 	tgui = node.TraceGuiSceneRef
