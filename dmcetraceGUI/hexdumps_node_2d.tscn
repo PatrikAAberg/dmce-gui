@@ -32,4 +32,10 @@ layout_mode = 2
 [node name="StatusLabel" type="Label" parent="MainVBoxContainer/ControlPanelContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-text = "Status and buttons..."
+text = "
+Status and buttons..."
+
+[node name="HexdumpHScrollBar" type="HScrollBar" parent="MainVBoxContainer/ControlPanelContainer"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+step = 1.0

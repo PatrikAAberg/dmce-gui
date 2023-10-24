@@ -24,6 +24,7 @@ var FontHeight
 var FontWidth
 var NumHexdumps = 0
 var HexDumpMaxLines
+var HexdumpScrollBar
 
 func _draw():
 	MainWindowSize = hexdump.MainWindowSize
@@ -64,6 +65,9 @@ func PopulateScreen():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	HDLabelTemplate = get_node("../../../HDLabelTemplate")
+	HexdumpScrollBar = get_node("../../ControlPanelContainer/HexdumpHScrollBar")
+	HexdumpScrollBar.value_changed.connect(self._value_changed)
+
 	FontHeight = HDLabelTemplate.size.y
 	FontWidth = HDLabelTemplate.size.x / 10
 
