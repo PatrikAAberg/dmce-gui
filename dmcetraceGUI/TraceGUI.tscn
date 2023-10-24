@@ -217,6 +217,7 @@ vertical_alignment = 2
 
 [node name="VSplitBot" type="VSplitContainer" parent="Background/VSplitTop"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/autohide = 0
 split_offset = 400
 

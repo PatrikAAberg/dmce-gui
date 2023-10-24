@@ -753,12 +753,18 @@ func _src_pop_out_button_pressed():
 			print("Could not open file: " + Trace[TActive].filename)
 			return
 
+var oldVsplitTop = 0
+
 func _show_src_button_pressed():
 	ShowSrcButton.release_focus()
 	if HSplitCTop.visible == false:
 		HSplitCTop.visible = true
+		VSplitTop = oldVsplitTop
 	else:
 		HSplitCTop.visible = false
+		oldVsplitTop = VSplitTop
+		VSplitTop = 0
+	_resized()
 
 func _trace_info_button_pressed():
 	if len(Trace) > 0:
