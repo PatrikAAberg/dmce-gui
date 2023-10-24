@@ -603,7 +603,7 @@ func _ready():
 	if OS.get_distribution_name() == "Windows":
 		EditorExec = "notepad"
 	else:
-		EditorExec = "vim"
+		EditorExec = "gvim"
 
 	DmceCacheDirPath = OS.get_cache_dir() + "/dmce"
 	DirAccess.make_dir_absolute(DmceCacheDirPath)
@@ -750,7 +750,10 @@ func _src_pop_out_button_pressed():
 			var cachedfile = FileAccess.open(DmceCacheDirPath + "/" + basename, FileAccess.WRITE)
 			cachedfile.store_string(rawfile.get_string_from_ascii())
 			cachedfile.close()
-			OS.execute(EditorExec, [DmceCacheDirPath + "/" + basename])
+			if EditorExec == "gvim":
+				OS.create_process(EditorExec, [DmceCacheDirPath + "/" + basename, "&"])
+			else:
+				OS.execute(EditorExec, [DmceCacheDirPath + "/" + basename])
 		else:
 			print("Could not open file: " + Trace[TActive].filename)
 			return
