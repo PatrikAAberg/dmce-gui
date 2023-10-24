@@ -172,6 +172,7 @@ func _process(delta):
 			xscrolloffset -= FontWidth * 8
 			if xscrolloffset <= 0:
 				index += 1
+				PopulateScreen()
 				xscrolloffset = 0
 				self.position.x = xscrolloffset
 			else:
@@ -183,11 +184,11 @@ func _process(delta):
 			xscrolloffset -= FontWidth * 8
 			if xscrolloffset <= 0:
 				index -= 1
+				PopulateScreen()
 				xscrolloffset = 0
 				self.position.x = -xscrolloffset
 			else:
 				self.position.x = 0 + (HexdumpWidthPixels - xscrolloffset)
-		PopulateScreen()
 
 func _processflash(delta):
 	if Inited and Active:
