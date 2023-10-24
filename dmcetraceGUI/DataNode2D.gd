@@ -56,11 +56,14 @@ func scroll_page_down():
 
 func PopulateScreen():
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
-		var tindex = index - 2 + i
-		if tindex >= 0 and tindex < len(HDLabelsText):
-			HDLabels[i].text = HDLabelsText[index - 2 + i]
-		else:
-			HDLabels[i].text = ""
+		if index - 1 + i < 0:
+			HDLabels[i].text = HDLabelsText[0] # If first index, fill both with same
+		HDLabels[i].text = HDLabelsText[index - 1 + i]
+
+func _value_changed(val):
+	indexwanted = val
+	index = indexwanted
+	PopulateScreen()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -112,12 +115,13 @@ func Load():
 		HDLabelsText.append(s)
 		if HexDumpMaxLines < s.count("\n"):
 			HexDumpMaxLines = s.count("\n")
-	index = 0
-	if NumHexdumps > 0:
-		index = 1
 
-	index = 10
+	index = 0
 	indexwanted = index
+#	HexdumpScrollBar.max_value = NumHexdumps
+	HexdumpScrollBar.max_value = NumHexdumps - 1
+	HexdumpScrollBar.page = 1
+
 	PopulateScreen()
 
 func init(node):
@@ -159,8 +163,10 @@ func _input(ev):
 					return
 				if ev.keycode == KEY_RIGHT:
 					indexwanted += 1
-					if indexwanted >= NumHexdumps - 1:
-						indexwanted = NumHexdumps - 1
+					if indexwanted >= NumHexdumps - 3:
+						indexwanted = NumHexdumps - 3
+					if indexwanted < 0:
+						indexwanted = 0
 					return
 
 func _process(delta):
