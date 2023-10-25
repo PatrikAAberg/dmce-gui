@@ -27,8 +27,9 @@ var HexDumpMaxLines
 var HexdumpScrollBar
 
 func _draw():
-	MainWindowSize = hexdump.MainWindowSize
-	draw_rect(Rect2(-MainWindowSize.x,0, MainWindowSize.x * 3, MainWindowSize.y), Color(0.1, 0.1, 0.1, 1.0), true)
+	if Inited and Active:
+		MainWindowSize = hexdump.MainWindowSize
+		draw_rect(Rect2(-MainWindowSize.x,0, MainWindowSize.x * 3, MainWindowSize.y), Color(0.1, 0.1, 0.1, 1.0), true)
 
 func scroll_set():
 	if yoffset < -((HexDumpMaxLines) * FontHeight):
@@ -60,6 +61,7 @@ func PopulateScreen():
 			HDLabels[i].text = HDLabelsText[0] # If first index, fill both with same
 		else:
 			HDLabels[i].text = HDLabelsText[index - 1 + i]
+	queue_redraw()
 
 func _value_changed(val):
 	if val > NumHexdumps - 1:
@@ -132,12 +134,12 @@ func Load():
 func init(node):
 	tgui = node.TraceGuiSceneRef
 	hexdump = node.HexdumpSceneRef
-
 	Inited = true
 	print("Hexdump support init done")
 
 func Activate():
 	Active = true
+	PopulateScreen()
 
 func _input(ev):
 	if Inited and Active:
@@ -145,7 +147,6 @@ func _input(ev):
 			if ev.pressed:
 				if ev.keycode == KEY_ESCAPE:
 					tgui.visible = true
-					hexdump.visible = false
 					Active = false
 					tgui.Activate()
 					return
@@ -176,8 +177,12 @@ func _input(ev):
 					HexdumpScrollBar.set_value_no_signal(indexwanted)
 					return
 
+var _process_first_time = true
 func _process(delta):
 	if Inited and Active:
+		if _process_first_time:
+			queue_redraw()
+			_process_first_time = false
 		if index != indexwanted:
 			if indexwanted > index:
 				# scrolling right

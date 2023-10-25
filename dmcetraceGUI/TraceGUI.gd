@@ -547,6 +547,8 @@ func LoadTrace(path, mode):
 	print("...finished creating data structures")
 
 	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
+
+
 #	print("Initial gfx setup...")
 #	ResetTimespan()
 #	StoreTimespan()
@@ -592,6 +594,8 @@ func UndoTimespan():
 func init(node):
 	SceneController = node
 	HexdumpSceneRef = SceneController.HexdumpSceneRef
+	print("Rendering additional scenes")
+	HexdumpSceneRef.visible = true
 
 var a= 1
 var b= 0
@@ -735,6 +739,8 @@ func _ready():
 	$MenuBar/PopupMenuView.name = " View "
 	$MenuBar/PopupMenuSearch.name = " Search "
 	$MenuBar/PopupMenuHelp.name = " Help "
+
+	print("Rendering additional scenes")
 
 func _src_pop_out_button_pressed():
 	SrcPopOutButton.release_focus()
@@ -1221,7 +1227,6 @@ func _input(ev):
 					HexdumpSceneRef.Activate()
 					self.visible = false
 					Deactivate()
-					HexdumpSceneRef.visible = true
 		else:
 			PopulateViews(SRC | INFO)
 			UpdateMarkers()
