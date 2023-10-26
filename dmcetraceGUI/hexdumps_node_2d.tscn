@@ -12,6 +12,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 focus_mode = 2
 theme_override_colors/default_color = Color(0.784314, 0.784314, 0.784314, 1)
+theme_override_colors/selection_color = Color(0.372549, 0.372549, 0.372549, 1)
 theme_override_fonts/normal_font = ExtResource("2_swlf5")
 text = "0123456789"
 fit_content = true

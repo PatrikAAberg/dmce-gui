@@ -29,13 +29,18 @@ var HexdumpScrollBar
 var RightPos
 var ShowDiffPrev = true
 
-func get_diff_positions():
+func get_diff_positions_prev():
 	var difflist = []
-	difflist.append(0)
-	difflist.append(2)
-	difflist.append(4)
-	difflist.append(5)
-	difflist.append(20)
+	if index < NumHexdumps - 1:
+		var left = tgui.Trace[tgui.TActive].HexDumpRaw[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[index]]
+		var right = tgui.Trace[tgui.TActive].HexDumpRaw[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[index + 1]]
+		left = left.split(" ")
+		right = right.split(" ")
+		var i = 1 					# first element is name of the hexdump, skip it
+		while i < len(left) and i < len(right):
+			if left[i] != right[i]:
+				difflist.append(i - 1)
+			i += 1
 	return difflist
 
 func _draw():
@@ -44,10 +49,10 @@ func _draw():
 		draw_rect(Rect2(-MainWindowSize.x,0, MainWindowSize.x * 3, MainWindowSize.y), Color(0.1, 0.1, 0.1, 1.0), true)
 
 		if ShowDiffPrev:
-			for imarker in get_diff_positions():
-				var xpos = (imarker % 16) * FontWidth + RightPos.x
+			for imarker in get_diff_positions_prev():
 				var ypos = (imarker / 16) * FontHeight + FontHeight * 8 + RightPos.y
-				draw_rect(Rect2(xpos, ypos, FontWidth, FontHeight), Color(0.8, 0.1, 0.1, 1.0), true)
+				var xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + RightPos.x
+				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.2, 0.2, 0.9, 1.0), true)
 
 func scroll_set():
 	if yoffset < -((HexDumpMaxLines) * FontHeight):
@@ -111,7 +116,7 @@ func _ready():
 
 	HexdumpWidthPixels = FontWidth * HEXDUMP_WIDTH
 
-	var xpos = 100 - HexdumpWidthPixels
+	var xpos = 80 - HexdumpWidthPixels
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
 		var hdtmp = HDRichTextLabelTemplate.duplicate()
 		hdtmp.position.x = xpos
@@ -206,6 +211,10 @@ func _input(ev):
 var _process_first_time = true
 func _process(delta):
 	if Inited and Active:
+		# Some brute pushback of side effects not handled
+		for l in HDLabels:
+			l.release_focus()
+
 		if _process_first_time:
 			queue_redraw()
 			_process_first_time = false

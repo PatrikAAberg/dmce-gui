@@ -430,6 +430,7 @@ func LoadTrace(path, mode):
 	tracetmp.SrcStepList = [null, null, null]
 	tracetmp.FindAllMarkers = []
 	tracetmp.HexDump = []
+	tracetmp.HexDumpRaw = []
 	tracetmp.HexDumpTraceEntry = []
 	tracetmp.HexDumpTraceEntryIndex = []
 
@@ -479,10 +480,12 @@ func LoadTrace(path, mode):
 				sline[3] = psline[3]
 				line = "@".join(sline)
 				tracetmp.HexDump.append(_get_hexdump(sline[6]))
+				tracetmp.HexDumpRaw.append(sline[6])
 				tracetmp.HexDumpTraceEntry.append(psline)
 				tracetmp.HexDumpTraceEntryIndex.append(len(tracetmp.HexDumpTraceEntry) - 1)
 			else:
 				tracetmp.HexDump.append(null)
+				tracetmp.HexDumpRaw.append(null)
 				tracetmp.HexDumpTraceEntry.append(null)
 
 			var m = re_get_probenbr.search(line)
