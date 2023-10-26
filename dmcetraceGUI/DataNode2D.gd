@@ -1,7 +1,7 @@
 extends Node2D
 
 var SCROLL_VISIBLE_HEXDUMPS = 10
-var SLIDER_VISIBLE_HEXDUMPS = 5
+var SLIDER_VISIBLE_HEXDUMPS = 3
 var HEXDUMP_WIDTH = 80
 var HexdumpWidthPixels
 var tgui
@@ -12,6 +12,7 @@ var lsettings = []
 var count = 0
 var HexdumpsPanelContainer
 var HDLabelTemplate
+var HDRichTextLabelTemplate
 var TraceGUI_scene
 var Active = false
 var Inited = false
@@ -25,11 +26,28 @@ var FontWidth
 var NumHexdumps = 0
 var HexDumpMaxLines
 var HexdumpScrollBar
+var RightPos
+var ShowDiffPrev = true
+
+func get_diff_positions():
+	var difflist = []
+	difflist.append(0)
+	difflist.append(2)
+	difflist.append(4)
+	difflist.append(5)
+	difflist.append(20)
+	return difflist
 
 func _draw():
 	if Inited and Active:
 		MainWindowSize = hexdump.MainWindowSize
 		draw_rect(Rect2(-MainWindowSize.x,0, MainWindowSize.x * 3, MainWindowSize.y), Color(0.1, 0.1, 0.1, 1.0), true)
+
+		if ShowDiffPrev:
+			for imarker in get_diff_positions():
+				var xpos = (imarker % 16) * FontWidth + RightPos.x
+				var ypos = (imarker / 16) * FontHeight + FontHeight * 8 + RightPos.y
+				draw_rect(Rect2(xpos, ypos, FontWidth, FontHeight), Color(0.8, 0.1, 0.1, 1.0), true)
 
 func scroll_set():
 	if yoffset < -((HexDumpMaxLines) * FontHeight):
@@ -61,6 +79,8 @@ func PopulateScreen():
 			HDLabels[i].text = HDLabelsText[0] # If first index, fill both with same
 		else:
 			HDLabels[i].text = HDLabelsText[index - 1 + i]
+		RightPos = HDLabels[2].position
+#	print("Index: " + str(index) + "X, Y: " + str(RightPos))
 	queue_redraw()
 
 func _value_changed(val):
@@ -74,11 +94,17 @@ func _value_changed(val):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	HDLabelTemplate = get_node("../../../HDLabelTemplate")
+	HDRichTextLabelTemplate = get_node("../../../HDRichTextLabelTemplate")
 	HexdumpScrollBar = get_node("../../ControlPanelContainer/HexdumpHScrollBar")
 	HexdumpScrollBar.value_changed.connect(self._value_changed)
 
-	FontHeight = HDLabelTemplate.size.y
-	FontWidth = HDLabelTemplate.size.x / 10
+#	FontHeight = HDRichTextLabelTemplate.size.y
+#	FontWidth = HDRichTextLabelTemplate.size.x / 10
+
+#	print("Font size: " + str(HDRichTextLabelTemplate.get_content_height()))
+
+	FontHeight = HDRichTextLabelTemplate.get_content_height()
+	FontWidth = HDRichTextLabelTemplate.size.x / 10
 
 	var lsetmain = LabelSettings.new()
 	lsetmain.font_color = Color(0.9, 0.9, 0.9, 1.0)
@@ -87,10 +113,10 @@ func _ready():
 
 	var xpos = 100 - HexdumpWidthPixels
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
-		var hdtmp = HDLabelTemplate.duplicate()
+		var hdtmp = HDRichTextLabelTemplate.duplicate()
 		hdtmp.position.x = xpos
 		hdtmp.visible = true
-		hdtmp.label_settings = lsetmain
+#		hdtmp.label_settings = lsetmain
 		xpos += HexdumpWidthPixels
 		add_child(hdtmp)
 		HDLabels.append(hdtmp)
@@ -109,7 +135,7 @@ func Load():
 	HDLabelsText = []
 
 	for i in range(NumHexdumps):
-		var hdtmp = HDLabelTemplate.duplicate()
+		var hdtmp = HDRichTextLabelTemplate.duplicate()
 		hdtmp.visible = false
 		var tl = tgui.Trace[tgui.TActive].HexDumpTraceEntry[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]]
 		var s =     "Hexdump:    " + str(i)
@@ -125,7 +151,7 @@ func Load():
 
 	index = 0
 	indexwanted = index
-	HexdumpScrollBar.max_value = NumHexdumps - 2
+	HexdumpScrollBar.max_value = NumHexdumps - 1
 	HexdumpScrollBar.page = 1
 
 	PopulateScreen()
@@ -170,8 +196,8 @@ func _input(ev):
 					return
 				if ev.keycode == KEY_RIGHT:
 					indexwanted += 1
-					if indexwanted >= NumHexdumps - 3:
-						indexwanted = NumHexdumps - 3
+					if indexwanted >= NumHexdumps - 2:
+						indexwanted = NumHexdumps - 2
 					if indexwanted < 0:
 						indexwanted = 0
 					HexdumpScrollBar.set_value_no_signal(indexwanted)

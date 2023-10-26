@@ -386,6 +386,12 @@ func _get_hexdump(vars):
 	var ascii = ""
 	for i in range (1, len(vars)):
 		if i % 16 == 0:
+			varstmp += vars[i] + " "
+			if vars[i].hex_to_int() > 31 and vars[i].hex_to_int() < 127:
+				ascii += char(vars[i].hex_to_int())
+			else:
+				ascii += "."
+
 			varstmp += ascii + "\n" + "%06x" % i + " "
 			ascii = ""
 		else:
@@ -1224,9 +1230,12 @@ func _input(ev):
 				elif ev.keycode == KEY_SPACE:
 					deb_func()
 				elif ev.keycode == KEY_H:
-					HexdumpSceneRef.Activate()
-					self.visible = false
-					Deactivate()
+					if len(Trace[TActive].HexDumpTraceEntryIndex) > 0:
+						HexdumpSceneRef.Activate()
+						self.visible = false
+						Deactivate()
+					else:
+						print("No hexdump available in active trace!")
 		else:
 			PopulateViews(SRC | INFO)
 			UpdateMarkers()
@@ -1530,7 +1539,8 @@ func SetActiveTrace(trace):
 	PopulateViews(SRC | INFO | TRACE)
 	TCoreLabels.Init(self)
 	FuncVScrollBar.value = Trace[TActive].FuncVScrollBarIndex
-	SceneController.HexdumpSceneRef.Load()
+	if len(Trace[TActive].HexDumpTraceEntryIndex) > 0:
+		SceneController.HexdumpSceneRef.Load()
 
 ##########################
 # Scratch space
