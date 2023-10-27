@@ -59,8 +59,9 @@ func scroll_set():
 		yoffset = -(HexDumpMaxLines) * FontHeight
 	elif yoffset > 0:
 		yoffset = 0
-	for hdl in HDLabels:
-		hdl.position.y = yoffset
+	self.position.y = yoffset
+#	for hdl in HDLabels:
+#		hdl.position.y = yoffset
 
 func scroll_up():
 	yoffset -= FontHeight
