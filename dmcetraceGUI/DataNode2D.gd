@@ -27,7 +27,8 @@ var NumHexdumps = 0
 var HexDumpMaxLines
 var HexdumpScrollBar
 var RightPos
-var ShowDiffPrev = true
+var ShowDiffPrev = false
+var ShowDiffAll = false
 
 func get_diff_positions_prev():
 	var difflist = []
@@ -101,7 +102,7 @@ func _value_changed(val):
 func _ready():
 	HDLabelTemplate = get_node("../../../HDLabelTemplate")
 	HDRichTextLabelTemplate = get_node("../../../HDRichTextLabelTemplate")
-	HexdumpScrollBar = get_node("../../ControlPanelContainer/HexdumpHScrollBar")
+	HexdumpScrollBar = get_node("../../ControlButtonsHBoxContainer/ControlPanelContainer/HexdumpHScrollBar")
 	HexdumpScrollBar.value_changed.connect(self._value_changed)
 
 #	FontHeight = HDRichTextLabelTemplate.size.y

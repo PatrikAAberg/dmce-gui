@@ -39,16 +39,35 @@ size_flags_vertical = 3
 [node name="DataNode2D" type="Node2D" parent="MainVBoxContainer/DataPanelContainer"]
 script = ExtResource("3_rwmj7")
 
-[node name="ControlPanelContainer" type="PanelContainer" parent="MainVBoxContainer"]
+[node name="ControlButtonsHBoxContainer" type="HBoxContainer" parent="MainVBoxContainer"]
 layout_mode = 2
 
-[node name="StatusLabel" type="Label" parent="MainVBoxContainer/ControlPanelContainer"]
+[node name="ControlPanelContainer" type="PanelContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StatusLabel" type="Label" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ControlPanelContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 text = "
 Status and buttons..."
 
-[node name="HexdumpHScrollBar" type="HScrollBar" parent="MainVBoxContainer/ControlPanelContainer"]
+[node name="HexdumpHScrollBar" type="HScrollBar" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ControlPanelContainer"]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 step = 1.0
+
+[node name="ButtonsPanelContainer" type="PanelContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ButtonsPanelContainer"]
+layout_mode = 2
+
+[node name="DiffPrevCheckButton" type="CheckButton" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ButtonsPanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Diff prev"
+
+[node name="DiffAllCheckButton" type="CheckButton" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ButtonsPanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Diff all"
