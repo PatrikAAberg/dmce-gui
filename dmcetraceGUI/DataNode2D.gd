@@ -44,10 +44,31 @@ func get_diff_positions_prev():
 			i += 1
 	return difflist
 
+func get_diff_all_positions_prev():
+	var difflist = []
+	if index < NumHexdumps - 1:
+		for dindex in range(0, index):
+			var left = tgui.Trace[tgui.TActive].HexDumpRaw[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[dindex]]
+			var right = tgui.Trace[tgui.TActive].HexDumpRaw[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[index + 1]]
+			left = left.split(" ")
+			right = right.split(" ")
+			var i = 1 					# first element is name of the hexdump, skip it
+			while i < len(left) and i < len(right):
+				if left[i] != right[i]:
+					difflist.append(i - 1)
+				i += 1
+	return difflist
+
 func _draw():
 	if Inited and Active:
 		MainWindowSize = hexdump.MainWindowSize
 		draw_rect(Rect2(-MainWindowSize.x, 0, MainWindowSize.x * 3, MainWindowSize.y * 10), Color(0.1, 0.1, 0.1, 1.0), true)
+
+		if ShowDiffAll:
+			for imarker in get_diff_all_positions_prev():
+				var ypos = (imarker / 16) * FontHeight + FontHeight * 8 + RightPos.y
+				var xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + RightPos.x
+				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.1, 0.1, 0.5, 1.0), true)
 
 		if ShowDiffPrev:
 			for imarker in get_diff_positions_prev():
