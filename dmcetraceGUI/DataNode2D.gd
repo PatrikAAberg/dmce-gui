@@ -46,7 +46,7 @@ func get_diff_positions_prev():
 func _draw():
 	if Inited and Active:
 		MainWindowSize = hexdump.MainWindowSize
-		draw_rect(Rect2(-MainWindowSize.x,0, MainWindowSize.x * 3, MainWindowSize.y), Color(0.1, 0.1, 0.1, 1.0), true)
+		draw_rect(Rect2(-MainWindowSize.x, 0, MainWindowSize.x * 3, MainWindowSize.y * 10), Color(0.1, 0.1, 0.1, 1.0), true)
 
 		if ShowDiffPrev:
 			for imarker in get_diff_positions_prev():
