@@ -481,7 +481,7 @@ func LoadTrace(path, mode):
 				line = "@".join(sline)
 				tracetmp.HexDump.append(_get_hexdump(sline[6]))
 				tracetmp.HexDumpRaw.append(sline[6])
-				tracetmp.HexDumpTraceEntry.append(psline)
+				tracetmp.HexDumpTraceEntry.append(sline)
 				tracetmp.HexDumpTraceEntryIndex.append(len(tracetmp.HexDumpTraceEntry) - 1)
 			else:
 				tracetmp.HexDump.append(null)

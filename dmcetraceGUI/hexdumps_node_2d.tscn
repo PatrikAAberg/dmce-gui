@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dnoffm85jonra"]
+[gd_scene load_steps=5 format=3 uid="uid://dnoffm85jonra"]
 
 [ext_resource type="Script" path="res://hexdumps_node_2d.gd" id="1_cqj7w"]
 [ext_resource type="FontFile" uid="uid://p2j82l8w22qw" path="res://FiraCode-Medium.ttf" id="2_swlf5"]
 [ext_resource type="Script" path="res://DataNode2D.gd" id="3_rwmj7"]
+[ext_resource type="Script" path="res://StatusNode2D.gd" id="4_u1icm"]
 
 [node name="HexdumpsNode2D" type="Node2D"]
 script = ExtResource("1_cqj7w")
@@ -50,12 +51,16 @@ size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 text = "
+
 Status and buttons..."
 
 [node name="HexdumpHScrollBar" type="HScrollBar" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ControlPanelContainer"]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 step = 1.0
+
+[node name="StatusNode2D" type="Node2D" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ControlPanelContainer"]
+script = ExtResource("4_u1icm")
 
 [node name="ButtonsPanelContainer" type="PanelContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer"]
 custom_minimum_size = Vector2(200, 0)

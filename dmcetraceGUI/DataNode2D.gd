@@ -29,6 +29,7 @@ var HexdumpScrollBar
 var RightPos
 var ShowDiffPrev = false
 var ShowDiffAll = false
+var StatusNode2d
 
 func get_diff_positions_prev():
 	var difflist = []
@@ -109,6 +110,7 @@ func PopulateScreen():
 			HDLabels[i].text = HDLabelsText[index - 1 + i]
 		RightPos = HDLabels[2].position
 #	print("Index: " + str(index) + "X, Y: " + str(RightPos))
+	StatusNode2d.Update()
 	queue_redraw()
 
 func _value_changed(val):
@@ -125,7 +127,7 @@ func _ready():
 	HDRichTextLabelTemplate = get_node("../../../HDRichTextLabelTemplate")
 	HexdumpScrollBar = get_node("../../ControlButtonsHBoxContainer/ControlPanelContainer/HexdumpHScrollBar")
 	HexdumpScrollBar.value_changed.connect(self._value_changed)
-
+	StatusNode2d = get_node("../../ControlButtonsHBoxContainer/ControlPanelContainer/StatusNode2D")
 #	FontHeight = HDRichTextLabelTemplate.size.y
 #	FontWidth = HDRichTextLabelTemplate.size.x / 10
 
@@ -189,6 +191,7 @@ func init(node):
 	tgui = node.TraceGuiSceneRef
 	hexdump = node.HexdumpSceneRef
 	Inited = true
+	StatusNode2d.Init(self)
 	print("Hexdump support init done")
 
 func Activate():
