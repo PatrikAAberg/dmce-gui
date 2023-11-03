@@ -1,9 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnoffm85jonra"]
+[gd_scene load_steps=7 format=3 uid="uid://dnoffm85jonra"]
 
 [ext_resource type="Script" path="res://hexdumps_node_2d.gd" id="1_cqj7w"]
 [ext_resource type="FontFile" uid="uid://p2j82l8w22qw" path="res://FiraCode-Medium.ttf" id="2_swlf5"]
 [ext_resource type="Script" path="res://DataNode2D.gd" id="3_rwmj7"]
 [ext_resource type="Script" path="res://StatusNode2D.gd" id="4_u1icm"]
+[ext_resource type="Script" path="res://SearchPanelContainer.gd" id="5_x7c6s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rihrv"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 
 [node name="HexdumpsNode2D" type="Node2D"]
 script = ExtResource("1_cqj7w")
@@ -12,8 +19,6 @@ script = ExtResource("1_cqj7w")
 offset_right = 40.0
 offset_bottom = 40.0
 focus_mode = 2
-theme_override_colors/default_color = Color(0.784314, 0.784314, 0.784314, 1)
-theme_override_colors/selection_color = Color(0.372549, 0.372549, 0.372549, 1)
 theme_override_fonts/normal_font = ExtResource("2_swlf5")
 text = "0123456789"
 fit_content = true
@@ -43,24 +48,52 @@ script = ExtResource("3_rwmj7")
 [node name="ControlButtonsHBoxContainer" type="HBoxContainer" parent="MainVBoxContainer"]
 layout_mode = 2
 
-[node name="ControlPanelContainer" type="PanelContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer"]
+[node name="ScrollSearchVBoxContainer" type="VBoxContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="StatusLabel" type="Label" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ControlPanelContainer"]
+[node name="ControlPanelContainer" type="PanelContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StatusLabel" type="Label" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 text = "
 
 Status and buttons..."
 
-[node name="HexdumpHScrollBar" type="HScrollBar" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ControlPanelContainer"]
+[node name="HexdumpHScrollBar" type="HScrollBar" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer"]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 step = 1.0
 
-[node name="StatusNode2D" type="Node2D" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ControlPanelContainer"]
+[node name="StatusNode2D" type="Node2D" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer"]
 script = ExtResource("4_u1icm")
+
+[node name="SearchPanelContainer" type="PanelContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_rihrv")
+script = ExtResource("5_x7c6s")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer"]
+layout_mode = 2
+
+[node name="FindLabel" type="Label" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Find: "
+
+[node name="HexdumpFindLineEdit" type="LineEdit" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter search string"
 
 [node name="ButtonsPanelContainer" type="PanelContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer"]
 custom_minimum_size = Vector2(200, 0)

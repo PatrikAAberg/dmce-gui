@@ -127,9 +127,9 @@ func _value_changed(val):
 func _ready():
 	HDLabelTemplate = get_node("../../../HDLabelTemplate")
 	HDRichTextLabelTemplate = get_node("../../../HDRichTextLabelTemplate")
-	HexdumpScrollBar = get_node("../../ControlButtonsHBoxContainer/ControlPanelContainer/HexdumpHScrollBar")
+	HexdumpScrollBar = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer/HexdumpHScrollBar")
 	HexdumpScrollBar.value_changed.connect(self._value_changed)
-	StatusNode2d = get_node("../../ControlButtonsHBoxContainer/ControlPanelContainer/StatusNode2D")
+	StatusNode2d = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer/StatusNode2D")
 #	FontHeight = HDRichTextLabelTemplate.size.y
 #	FontWidth = HDRichTextLabelTemplate.size.x / 10
 
@@ -148,6 +148,7 @@ func _ready():
 		var hdtmp = HDRichTextLabelTemplate.duplicate()
 		hdtmp.position.x = xpos
 		hdtmp.visible = true
+		hdtmp.selection_enabled = true
 #		hdtmp.label_settings = lsetmain
 		xpos += HexdumpWidthPixels
 		add_child(hdtmp)
