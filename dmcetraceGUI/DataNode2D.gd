@@ -30,6 +30,7 @@ var RightPos
 var ShowDiffPrev = false
 var ShowDiffAll = false
 var StatusNode2d
+var KEY_CTRL = 4194326
 
 func get_diff_positions_prev():
 	var difflist = []
@@ -104,6 +105,7 @@ func scroll_page_down():
 
 func PopulateScreen():
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
+
 		if (index - 1 + i < 0) or (index - 1 + i) > (NumHexdumps - 1):
 			HDLabels[i].text = HDLabelsText[0] # If first index, fill both with same
 		else:
@@ -198,6 +200,8 @@ func Activate():
 	Active = true
 	PopulateScreen()
 
+var Clipboard = ""
+
 func _input(ev):
 	if Inited and Active:
 		if ev is InputEventKey:
@@ -206,6 +210,11 @@ func _input(ev):
 					tgui.visible = true
 					Active = false
 					tgui.Activate()
+					return
+				if ev.keycode == KEY_C and Input.is_physical_key_pressed(KEY_CTRL):
+					for i in range(SLIDER_VISIBLE_HEXDUMPS):
+						if HDLabels[i].get_selected_text() != "":
+							DisplayServer.clipboard_set(HDLabels[i].get_selected_text())
 					return
 				if ev.keycode == KEY_UP:
 					scroll_down()
