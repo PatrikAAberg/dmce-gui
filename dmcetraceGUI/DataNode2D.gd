@@ -27,10 +27,14 @@ var NumHexdumps = 0
 var HexDumpMaxLines
 var HexdumpScrollBar
 var RightPos
+var LeftPos
 var ShowDiffPrev = false
 var ShowDiffAll = false
 var StatusNode2d
 var KEY_CTRL = 4194326
+var NextButton
+var PrevButton
+var HexdumpFindLineEdit
 
 func get_diff_positions_prev():
 	var difflist = []
@@ -61,6 +65,23 @@ func get_diff_all_positions_prev():
 				i += 1
 	return difflist
 
+func get_search_positions():
+	var content = HDLabelsText[index]
+	var dindex = 0
+	var result = []
+	if SearchText != "":
+		while true:
+			var bytepos = content.find(SearchText, dindex)
+			if bytepos == -1:
+				break
+			else:
+				var pos = bytepos
+				for a in range(len(SearchText)):
+					result.append(a + pos)
+			dindex = bytepos + 1
+	print(result)
+	return result
+
 func _draw():
 	if Inited and Active:
 		MainWindowSize = hexdump.MainWindowSize
@@ -77,6 +98,18 @@ func _draw():
 				var ypos = (imarker / 16) * FontHeight + FontHeight * 8 + RightPos.y
 				var xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + RightPos.x
 				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.2, 0.2, 0.9, 1.0), true)
+
+		if SearchText != "":
+			var offset
+			if index == 0:
+				offset = LeftPos
+			else:
+				offset = LeftPos
+			for imarker in get_search_positions():
+				var linewidth = 7 + 16 * 4 + 1 # including end of line character
+				var ypos = (imarker / linewidth) * FontHeight + offset.y
+				var xpos = (imarker % linewidth) * FontWidth + offset.x
+				draw_rect(Rect2(xpos, ypos, FontWidth, FontHeight), Color(0.5, 0.5, 0.5, 1.0), true)
 
 func scroll_set():
 	if yoffset < -((HexDumpMaxLines) * FontHeight):
@@ -105,12 +138,12 @@ func scroll_page_down():
 
 func PopulateScreen():
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
-
 		if (index - 1 + i < 0) or (index - 1 + i) > (NumHexdumps - 1):
 			HDLabels[i].text = HDLabelsText[0] # If first index, fill both with same
 		else:
 			HDLabels[i].text = HDLabelsText[index - 1 + i]
 		RightPos = HDLabels[2].position
+		LeftPos = HDLabels[1].position
 #	print("Index: " + str(index) + "X, Y: " + str(RightPos))
 	StatusNode2d.Update()
 	queue_redraw()
@@ -130,10 +163,13 @@ func _ready():
 	HexdumpScrollBar = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer/HexdumpHScrollBar")
 	HexdumpScrollBar.value_changed.connect(self._value_changed)
 	StatusNode2d = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer/StatusNode2D")
-#	FontHeight = HDRichTextLabelTemplate.size.y
-#	FontWidth = HDRichTextLabelTemplate.size.x / 10
+	NextButton = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/NextButton")
+	PrevButton = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/PrevButton")
+	HexdumpFindLineEdit = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/HexdumpFindLineEdit")
 
-#	print("Font size: " + str(HDRichTextLabelTemplate.get_content_height()))
+	NextButton.pressed.connect(self._next_button_pressed)
+	PrevButton.pressed.connect(self._prev_button_pressed)
+	HexdumpFindLineEdit.text_submitted.connect(self._find_text_submitted)
 
 	FontHeight = HDRichTextLabelTemplate.get_content_height()
 	FontWidth = HDRichTextLabelTemplate.size.x / 10
@@ -162,6 +198,35 @@ func _ready():
 
 	print("Hexdump viewer ready")
 
+var SearchText = ""
+
+func _find_text_submitted(text):
+	HexdumpFindLineEdit.release_focus()
+	SearchText = text
+
+	print(SearchText)
+	print("len above: " + str(len(SearchText)))
+	# Search from start to the right
+	var i = 0
+	while i < (NumHexdumps - 1):
+		if SearchText in HDLabelsText[i]:
+			indexwanted = i
+			index = i
+			print ("found at " + str(index))
+			PopulateScreen()
+			break
+		i += 1
+
+func _next_button_pressed():
+	NextButton.release_focus()
+
+	# Search from index to the right
+
+func _prev_button_pressed():
+	NextButton.release_focus()
+
+	# Search from start to the left
+
 func Load():
 	NumHexdumps = len(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex)
 	HexDumpMaxLines = 0
@@ -170,14 +235,19 @@ func Load():
 	for i in range(NumHexdumps):
 		var hdtmp = HDRichTextLabelTemplate.duplicate()
 		hdtmp.visible = false
+		var pad = 7 + 16 * 4
 		var tl = tgui.Trace[tgui.TActive].HexDumpTraceEntry[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]]
-		var s =     "Hexdump:    " + str(i)
-		s += "\n" + "Core:       " + str(tl[0])
-		s += "\n" + "Timestamp:  " + str(tl[1])
-		s += "\n" + "File/line:  " + str(tl[2]) + str(tl[3])
-		s += "\n" + "Function:   " + str(tl[4])
-		s += "\n"
-		s += "\n" + tgui.Trace[tgui.TActive].HexDump[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]]
+		var s =  ("Hexdump:    " + str(i)).rpad(pad, " ") + "\n"
+		s += ("Core:       " + str(tl[0])).rpad(pad, " ") + "\n"
+		s += ("Timestamp:  " + str(tl[1])).rpad(pad, " ") + "\n"
+		s += ("File/line:  " + str(tl[2])).rpad(pad, " ") + "\n"
+		s += ("Function:   " + str(tl[4])).rpad(pad, " ") + "\n"
+		s += ("").rpad(pad, " ") + "\n"
+		var actualdump = (tgui.Trace[tgui.TActive].HexDump[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]])
+		actualdump = actualdump.split("\n")
+		actualdump = actualdump.slice(2)
+		actualdump = "\n".join(actualdump)
+		s += actualdump
 		HDLabelsText.append(s)
 		if HexDumpMaxLines < s.count("\n"):
 			HexDumpMaxLines = s.count("\n")
@@ -200,8 +270,6 @@ func init(node):
 func Activate():
 	Active = true
 	PopulateScreen()
-
-var Clipboard = ""
 
 func _input(ev):
 	if Inited and Active:
