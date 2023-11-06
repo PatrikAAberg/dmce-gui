@@ -65,8 +65,8 @@ func get_diff_all_positions_prev():
 				i += 1
 	return difflist
 
-func get_search_positions():
-	var content = HDLabelsText[index]
+func get_search_positions(sindex):
+	var content = HDLabelsText[sindex]
 	var dindex = 0
 	var result = []
 	if SearchText != "":
@@ -79,7 +79,6 @@ func get_search_positions():
 				for a in range(len(SearchText)):
 					result.append(a + pos)
 			dindex = bytepos + 1
-	print(result)
 	return result
 
 func _draw():
@@ -100,16 +99,22 @@ func _draw():
 				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.2, 0.2, 0.9, 1.0), true)
 
 		if SearchText != "":
-			var offset
-			if index == 0:
-				offset = LeftPos
-			else:
-				offset = LeftPos
-			for imarker in get_search_positions():
+			var offset = LeftPos
+			var sindex = index
+
+			for imarker in get_search_positions(sindex):
 				var linewidth = 7 + 16 * 4 + 1 # including end of line character
 				var ypos = (imarker / linewidth) * FontHeight + offset.y
 				var xpos = (imarker % linewidth) * FontWidth + offset.x
 				draw_rect(Rect2(xpos, ypos, FontWidth, FontHeight), Color(0.5, 0.5, 0.5, 1.0), true)
+
+			if NumHexdumps > 1:
+				offset = RightPos
+				for imarker in get_search_positions(index + 1):
+					var linewidth = 7 + 16 * 4 + 1 # including end of line character
+					var ypos = (imarker / linewidth) * FontHeight + offset.y
+					var xpos = (imarker % linewidth) * FontWidth + offset.x
+					draw_rect(Rect2(xpos, ypos, FontWidth, FontHeight), Color(0.5, 0.5, 0.5, 1.0), true)
 
 func scroll_set():
 	if yoffset < -((HexDumpMaxLines) * FontHeight):
