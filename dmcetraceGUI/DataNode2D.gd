@@ -224,13 +224,36 @@ func _find_text_submitted(text):
 
 func _next_button_pressed():
 	NextButton.release_focus()
+	SearchText = HexdumpFindLineEdit.text
 
-	# Search from index to the right
+	# Search from index + 1 to the right
+	var i = index + 1
+	while i < NumHexdumps:
+		if SearchText in HDLabelsText[i]:
+			if i >= NumHexdumps - 2:
+				i = NumHexdumps - 2
+			indexwanted = i
+			index = i
+			HexdumpScrollBar.set_value_no_signal(indexwanted)
+			PopulateScreen()
+			break
+		i += 1
+
 
 func _prev_button_pressed():
 	NextButton.release_focus()
+	SearchText = HexdumpFindLineEdit.text
 
-	# Search from start to the left
+	# Search from index - 1 to the left
+	var i = index - 1
+	while i >= 0:
+		if SearchText in HDLabelsText[i]:
+			indexwanted = i
+			index = i
+			HexdumpScrollBar.set_value_no_signal(indexwanted)
+			PopulateScreen()
+			break
+		i -= 1
 
 func Load():
 	NumHexdumps = len(tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex)
