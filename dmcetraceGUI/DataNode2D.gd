@@ -268,7 +268,7 @@ func Load():
 		var s =  ("Hexdump:    " + str(i)).rpad(pad, " ") + "\n"
 		s += ("Core:       " + str(tl[0])).rpad(pad, " ") + "\n"
 		s += ("Timestamp:  " + str(tl[1])).rpad(pad, " ") + "\n"
-		s += ("File/line:  " + str(tl[2])).rpad(pad, " ") + "\n"
+		s += ("File/line:  " + (str(tl[2]) + " " + str(tl[3]))).rpad(pad, " ") + "\n"
 		s += ("Function:   " + str(tl[4])).rpad(pad, " ") + "\n"
 		s += ("").rpad(pad, " ") + "\n"
 		var actualdump = (tgui.Trace[tgui.TActive].HexDump[tgui.Trace[tgui.TActive].HexDumpTraceEntryIndex[i]])
