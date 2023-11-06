@@ -204,15 +204,15 @@ func _find_text_submitted(text):
 	HexdumpFindLineEdit.release_focus()
 	SearchText = text
 
-	print(SearchText)
-	print("len above: " + str(len(SearchText)))
 	# Search from start to the right
 	var i = 0
-	while i < (NumHexdumps - 1):
+	while i < NumHexdumps:
 		if SearchText in HDLabelsText[i]:
+			if i >= NumHexdumps - 2:
+				i = NumHexdumps - 2
 			indexwanted = i
 			index = i
-			print ("found at " + str(index))
+			HexdumpScrollBar.set_value_no_signal(indexwanted)
 			PopulateScreen()
 			break
 		i += 1
