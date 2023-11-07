@@ -34,7 +34,7 @@ var StatusNode2d
 var KEY_CTRL = 4194326
 var NextButton
 var PrevButton
-var HexdumpFindLineEdit
+var HexdumpFindTextEdit
 
 func get_diff_positions_prev():
 	var difflist = []
@@ -168,13 +168,14 @@ func _ready():
 	HexdumpScrollBar = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer/HexdumpHScrollBar")
 	HexdumpScrollBar.value_changed.connect(self._value_changed)
 	StatusNode2d = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer/StatusNode2D")
-	NextButton = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/NextButton")
-	PrevButton = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/PrevButton")
-	HexdumpFindLineEdit = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/HexdumpFindLineEdit")
+	NextButton = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/ButtonsVBoxContainer/NextButton")
+	PrevButton = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/ButtonsVBoxContainer/PrevButton")
+	HexdumpFindTextEdit = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/HexdumpFindTextEdit")
 
 	NextButton.pressed.connect(self._next_button_pressed)
 	PrevButton.pressed.connect(self._prev_button_pressed)
-	HexdumpFindLineEdit.text_submitted.connect(self._find_text_submitted)
+#	HexdumpFindLineEdit.text_submitted.connect(self._find_text_submitted)
+	HexdumpFindTextEdit.text_changed.connect(self._find_text_submitted)
 
 	FontHeight = HDRichTextLabelTemplate.get_content_height()
 	FontWidth = HDRichTextLabelTemplate.size.x / 10
@@ -205,9 +206,10 @@ func _ready():
 
 var SearchText = ""
 
-func _find_text_submitted(text):
-	HexdumpFindLineEdit.release_focus()
-	SearchText = text
+func _find_text_submitted():
+	SearchText = HexdumpFindTextEdit.text
+	if SearchText == "":
+		PopulateScreen()
 
 	# Search from start to the right
 	var i = 0
@@ -224,7 +226,7 @@ func _find_text_submitted(text):
 
 func _next_button_pressed():
 	NextButton.release_focus()
-	SearchText = HexdumpFindLineEdit.text
+	SearchText = HexdumpFindTextEdit.text
 
 	# Search from index + 1 to the right
 	var i = index + 1
@@ -242,7 +244,7 @@ func _next_button_pressed():
 
 func _prev_button_pressed():
 	NextButton.release_focus()
-	SearchText = HexdumpFindLineEdit.text
+	SearchText = HexdumpFindTextEdit.text
 
 	# Search from index - 1 to the left
 	var i = index - 1
@@ -304,10 +306,19 @@ func _input(ev):
 		if ev is InputEventKey:
 			if ev.pressed:
 				if ev.keycode == KEY_ESCAPE:
-					tgui.visible = true
-					Active = false
-					tgui.Activate()
+					if HexdumpFindTextEdit.has_focus():
+						HexdumpFindTextEdit.release_focus()
+						return
+					else:
+						tgui.visible = true
+						Active = false
+						tgui.Activate()
+						return
+
+				# Check if some input field wants the arrow keys
+				if HexdumpFindTextEdit.has_focus():
 					return
+
 				if ev.keycode == KEY_C and Input.is_physical_key_pressed(KEY_CTRL):
 					for i in range(SLIDER_VISIBLE_HEXDUMPS):
 						if HDLabels[i].get_selected_text() != "":

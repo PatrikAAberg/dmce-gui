@@ -75,6 +75,7 @@ script = ExtResource("4_u1icm")
 [node name="SearchPanelContainer" type="PanelContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_be1ip")
 script = ExtResource("5_x7c6s")
 
@@ -83,20 +84,24 @@ layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="HexdumpFindLineEdit" type="LineEdit" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer"]
+[node name="HexdumpFindTextEdit" type="TextEdit" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter search string"
 
-[node name="NextButton" type="Button" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer"]
+[node name="ButtonsVBoxContainer" type="VBoxContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Next"
 
-[node name="PrevButton" type="Button" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer"]
+[node name="PrevButton" type="Button" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/ButtonsVBoxContainer"]
 layout_mode = 2
 text = "Prev"
+
+[node name="NextButton" type="Button" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer/HBoxContainer/ButtonsVBoxContainer"]
+layout_mode = 2
+text = "Next"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MainVBoxContainer/ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/SearchPanelContainer/VBoxContainer"]
 layout_mode = 2
