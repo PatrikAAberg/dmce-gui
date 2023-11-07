@@ -10,7 +10,7 @@ var HDLabels = []
 var HDLabelsText = []
 var lsettings = []
 var count = 0
-var HexdumpsPanelContainer
+var DataPanelContainer
 var HDLabelTemplate
 var HDRichTextLabelTemplate
 var TraceGUI_scene
@@ -141,6 +141,14 @@ func scroll_page_down():
 	yoffset += FontHeight * 20
 	scroll_set()
 
+func scroll_mouse_up():
+	yoffset -= FontHeight * 5
+	scroll_set()
+
+func scroll_mouse_down():
+	yoffset += FontHeight * 5
+	scroll_set()
+
 func PopulateScreen():
 	for i in range(SLIDER_VISIBLE_HEXDUMPS):
 		if (index - 1 + i < 0) or (index - 1 + i) > (NumHexdumps - 1):
@@ -165,6 +173,7 @@ func _value_changed(val):
 func _ready():
 	HDLabelTemplate = get_node("../../../HDLabelTemplate")
 	HDRichTextLabelTemplate = get_node("../../../HDRichTextLabelTemplate")
+	DataPanelContainer = get_node("../../DataPanelContainer")
 	HexdumpScrollBar = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer/HexdumpHScrollBar")
 	HexdumpScrollBar.value_changed.connect(self._value_changed)
 	StatusNode2d = get_node("../../ControlButtonsHBoxContainer/ScrollSearchVBoxContainer/ControlPanelContainer/StatusNode2D")
@@ -350,6 +359,21 @@ func _input(ev):
 						indexwanted = 0
 					HexdumpScrollBar.set_value_no_signal(indexwanted)
 					return
+		if ev is InputEventMouseButton and (_in_DataPanelContainer()):
+			if (ev.button_index == MOUSE_BUTTON_WHEEL_UP) and ev.pressed:
+					scroll_mouse_down()
+					return
+			elif (ev.button_index == MOUSE_BUTTON_WHEEL_DOWN) and ev.pressed:
+					scroll_mouse_up()
+					return
+
+func _in_DataPanelContainer():
+	if DataPanelContainer.get_local_mouse_position().y  > 0 and DataPanelContainer.get_local_mouse_position().y < DataPanelContainer.size.y:
+		if DataPanelContainer.get_local_mouse_position().x > 0 and DataPanelContainer.get_local_mouse_position().x < DataPanelContainer.size.x:
+			return true
+	return false
+
+
 
 var _process_first_time = true
 func _process(delta):
