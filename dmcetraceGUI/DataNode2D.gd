@@ -88,15 +88,29 @@ func _draw():
 
 		if ShowDiffAll:
 			for imarker in get_diff_all_positions_prev():
-				var ypos = (imarker / 16) * FontHeight + FontHeight * 8 + RightPos.y
-				var xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + RightPos.x
-				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.1, 0.1, 0.5, 1.0), true)
+				var ypos
+				var xpos
+
+				ypos = (imarker / 16) * FontHeight + FontHeight * 6 + LeftPos.y
+				xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + LeftPos.x
+				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.1, 0.2, 0.5, 1.0), true)
+
+				ypos = (imarker / 16) * FontHeight + FontHeight * 6 + RightPos.y
+				xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + RightPos.x
+				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.5, 0.2, 0.1, 1.0), true)
 
 		if ShowDiffPrev:
 			for imarker in get_diff_positions_prev():
-				var ypos = (imarker / 16) * FontHeight + FontHeight * 8 + RightPos.y
-				var xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + RightPos.x
+				var xpos
+				var ypos
+
+				ypos = (imarker / 16) * FontHeight + FontHeight * 6 + LeftPos.y
+				xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + LeftPos.x
 				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.2, 0.2, 0.9, 1.0), true)
+
+				ypos = (imarker / 16) * FontHeight + FontHeight * 6 + RightPos.y
+				xpos = 7 * FontWidth + (imarker % 16) * 3 * FontWidth + RightPos.x
+				draw_rect(Rect2(xpos, ypos, FontWidth * 2, FontHeight), Color(0.9, 0.2, 0.2, 1.0), true)
 
 		if SearchText != "":
 			var offset = LeftPos
