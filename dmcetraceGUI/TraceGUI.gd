@@ -603,6 +603,35 @@ func UndoTimespan():
 func init(node):
 	SceneController = node
 	HexdumpSceneRef = SceneController.HexdumpSceneRef
+
+	# Initial state
+	print("dmce-wgui: started with args: " + str(OS.get_cmdline_args()))
+
+	if len(OS.get_cmdline_args()) > 0 and OS.get_cmdline_args()[0] != "res://TraceGUI.tscn":
+		var file = OS.get_cmdline_args()[0]
+		if not FileAccess.file_exists(file):
+			print("dmce-wgui: Could not open " + str(file))
+		else:
+			if file.ends_with(".zip"):
+				LoadTrace(file, "bundle")
+				print("Adding new tab: ", file)
+				add_tab(file)
+				SetActiveTrace(TActive)
+				_show_all_cores(0)
+			else:
+				print("Unsupported file extension, please provide a .zip file.")
+	else:
+		print("dmce-wgui: No trace loaded from args")
+		# dev state, uncomment for release:
+		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
+			print("dmce-wgui: development mode")
+			#var file = 'Path-to-default-trace'
+			#LoadTrace(file, "bundle")
+			#print("Adding new tab: ", file)
+			#add_tab(file)
+			#SetActiveTrace(TActive)
+			#_show_all_cores(0)
+
 	print("Rendering additional scenes")
 	HexdumpSceneRef.visible = true
 
@@ -708,34 +737,6 @@ func _ready():
 	TraceInfoButton.pressed.connect(self._trace_info_button_pressed)
 	ShowSrcButton.pressed.connect(self._show_src_button_pressed)
 	SrcPopOutButton.pressed.connect(self._src_pop_out_button_pressed)
-
-	# Initial state
-	print("dmce-wgui: started with args: " + str(OS.get_cmdline_args()))
-
-	if len(OS.get_cmdline_args()) > 0 and OS.get_cmdline_args()[0] != "res://TraceGUI.tscn":
-		var file = OS.get_cmdline_args()[0]
-		if not FileAccess.file_exists(file):
-			print("dmce-wgui: Could not open " + str(file))
-		else:
-			if file.ends_with(".zip"):
-				LoadTrace(file, "bundle")
-				print("Adding new tab: ", file)
-				add_tab(file)
-				SetActiveTrace(TActive)
-				_show_all_cores(0)
-			else:
-				print("Unsupported file extension, please provide a .zip file.")
-	else:
-		print("dmce-wgui: No trace loaded from args")
-		# dev state, uncomment for release:
-		if len(OS.get_cmdline_args()) == 2 and OS.get_cmdline_args()[1] == "--dev":
-			print("dmce-wgui: development mode")
-			#var file = 'Path-to-default-trace'
-			#LoadTrace(file, "bundle")
-			#print("Adding new tab: ", file)
-			#add_tab(file)
-			#SetActiveTrace(TActive)
-			#_show_all_cores(0)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
