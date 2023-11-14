@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://haxot671h3c4"]
+[gd_scene load_steps=37 format=3 uid="uid://haxot671h3c4"]
 
 [ext_resource type="Script" path="res://TraceGUI.gd" id="1_rncp3"]
 [ext_resource type="Script" path="res://TChart.gd" id="2_m5p0u"]
@@ -99,6 +99,24 @@ bg_color = Color(0, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a3unn"]
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ofdfa"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_awp5k"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i6jng"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ydq80"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eunkh"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ulhlh"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kt5st"]
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
 
@@ -170,6 +188,7 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_vo8sc")
 
 [node name="HSplitSrcVars" type="HSplitContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop"]
 layout_mode = 2
+theme_override_constants/autohide = 0
 split_offset = 500
 
 [node name="SrcTab" type="TabContainer" parent="Background/VSplitTop/VBoxContainer/myHSplitContainerTop/HSplitSrcVars"]
@@ -284,6 +303,7 @@ step = 1.0
 
 [node name="TCMovieHSplitContainer" type="HSplitContainer" parent="Background/VSplitTop/VSplitBot"]
 layout_mode = 2
+theme_override_constants/autohide = 0
 
 [node name="TChartTab" type="TabContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
 custom_minimum_size = Vector2(12, 0)
@@ -328,14 +348,38 @@ step = 1.0
 [node name="HistoCoreActivityHSplitContainer" type="HSplitContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/autohide = 0
 
-[node name="CoreActivityRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
+[node name="LogCoreActivityHSplitContainer" type="HSplitContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/autohide = 0
+
+[node name="CoreActivityTabContainer" type="TabContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_ofdfa")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_awp5k")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_i6jng")
+
+[node name="CoreActivityRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/CoreActivityTabContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
 autowrap_mode = 0
 meta_underlined = false
 script = ExtResource("7_nh6xr")
+
+[node name="LogTabContainer" type="TabContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_ydq80")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_eunkh")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_ulhlh")
+
+[node name="LogRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer"]
+layout_mode = 2
+text = "No log (DMCE_PRINTF) entries available"
 
 [node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
 layout_mode = 2
@@ -378,7 +422,7 @@ item_2/text = "Quit"
 item_2/id = 2
 
 [node name="PopupMenuView" type="PopupMenu" parent="MenuBar"]
-item_count = 8
+item_count = 9
 item_0/text = "Show all cores"
 item_0/id = 0
 item_1/text = "Hide all cores"
@@ -403,6 +447,10 @@ item_7/text = "Show Core function activity"
 item_7/checkable = 1
 item_7/checked = true
 item_7/id = 7
+item_8/text = "Show log"
+item_8/checkable = 1
+item_8/checked = true
+item_8/id = 8
 
 [node name="PopupMenuSearch" type="PopupMenu" parent="MenuBar"]
 item_count = 2
@@ -486,6 +534,13 @@ layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
 text = "View source"
+
+[node name="ShowLogButton" type="Button" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "View log"
 
 [node name="ShowCurrentTraceInfoDialog" type="AcceptDialog" parent="."]
 title = "Trace Info"

@@ -78,6 +78,7 @@ var FindNextButton
 var FindPrevButton
 var TraceInfoButton
 var ShowSrcButton
+var ShowLogButton
 var re_remove_probe
 var re_get_probenbr
 var TraceViewStart
@@ -110,6 +111,8 @@ var HexdumpSceneRef
 var SrcViewScrollBar
 var SrcPopOutButton
 var HSplitSrcVars
+var LogTabContainer
+var CoreActivityTabContainer
 
 func Activate():
 	Active = true
@@ -671,7 +674,7 @@ func _ready():
 	MovieContainer		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer")
 	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer/MovieChart")
 	MovieChartContainer	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer")
-	CoreActivity		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/CoreActivityRichTextLabel")
+	CoreActivity		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/CoreActivityTabContainer/CoreActivityRichTextLabel")
 	MainExtas			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer")
 	FChart 				= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FChart")
 	FMarkers 			= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FMarkers")
@@ -698,6 +701,7 @@ func _ready():
 	TraceInfoButton 	= get_node("TraceInfoButton")
 	ShowSrcButton		= get_node("ShowSrcButton")
 	SrcPopOutButton		= get_node("SrcPopOutButton")
+	ShowLogButton		= get_node("ShowLogButton")
 	GenericAcceptDialog	= get_node("GenericAcceptDialog")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
 	AskForConfirmationDialog = get_node("AskForConfirmationDialog")
@@ -708,6 +712,8 @@ func _ready():
 	LineEditFindAllProbeNumber = get_node("SearchConfirmationDialog/VBoxContainerFindAll/LineEditFindAllProbenumber")
 	TCMovieHSplitContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer")
 	MainProgressBar = get_node("MainProgressBar")
+	LogTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer")
+	CoreActivityTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/CoreActivityTabContainer")
 	SrcViewScrollBar = SrcView.get_v_scroll_bar()
 
 	re_remove_probe = RegEx.new()
@@ -741,11 +747,14 @@ func _ready():
 	TraceInfoButton.pressed.connect(self._trace_info_button_pressed)
 	ShowSrcButton.pressed.connect(self._show_src_button_pressed)
 	SrcPopOutButton.pressed.connect(self._src_pop_out_button_pressed)
+	ShowLogButton.pressed.connect(self._show_log_button_pressed)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
 	SrcTab.set_tab_title(0, "Source")
 	VarsTab.set_tab_title(0, "Variables")
+	LogTabContainer.set_tab_title(0, "Log")
+	CoreActivityTabContainer.set_tab_title(0, "Core activity")
 
 	MovieChart.Update()
 
@@ -790,6 +799,13 @@ func _show_src_button_pressed():
 		oldVsplitTop = VSplitTop
 		VSplitTop = 0
 	_resized()
+
+func _show_log_button_pressed():
+#	if len(Trace) > 0:
+#		ShowLogButton.release_focus()
+	print("Show log!")
+#		self.grab_focus()
+#		ShowCurrentTraceInfoDialog.popup_centered()
 
 func _trace_info_button_pressed():
 	if len(Trace) > 0:
@@ -882,6 +898,9 @@ func _resized():
 
 	SrcPopOutButton.position.x = ShowSrcButton.position.x - 110
 	SrcPopOutButton.position.y = 3
+
+	ShowLogButton.position.x = SrcPopOutButton.position.x - 110
+	ShowLogButton.position.y = 3
 
 	VSplitCTop.split_offset = VSplitCTop.size.y * VSplitTop
 	HSplitCTop.split_offset = HSplitCTop.size.x * HSplitTop
@@ -1371,10 +1390,16 @@ func _toggle_show_histogram():
 		MovieContainer.visible = true
 
 func _toggle_core_activity():
-	if CoreActivity.visible == true:
-		CoreActivity.visible = false
+	if CoreActivityTabContainer.visible == true:
+		CoreActivityTabContainer.visible = false
 	else:
-		CoreActivity.visible = true
+		CoreActivityTabContainer.visible = true
+
+func _toggle_show_log():
+	if LogTabContainer.visible == true:
+		LogTabContainer.visible = false
+	else:
+		LogTabContainer.visible = true
 
 func _toggle_lossless():
 	if LossLess == false:
@@ -1409,6 +1434,9 @@ func _menu_view_pressed(id):
 	elif id == 7:
 		_toggle_core_activity()
 		MenuView.set_item_checked( 7, not MenuView.is_item_checked(7))
+	elif id == 8:
+		_toggle_show_log()
+		MenuView.set_item_checked( 8, not MenuView.is_item_checked(8))
 
 	# Some final common stuff
 	if CoreActivity.visible || MovieContainer.visible:

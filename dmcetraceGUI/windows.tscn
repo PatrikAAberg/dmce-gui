@@ -179,3 +179,6 @@ offset_right = 1224.0
 offset_bottom = 464.0
 text = "sadf"
 placeholder_text = "placeholder"
+
+[node name="MyWindow" type="Window" parent="."]
+visible = false

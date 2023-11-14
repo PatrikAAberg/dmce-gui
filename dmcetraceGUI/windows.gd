@@ -28,9 +28,7 @@ func _find_text_submitted(text):
 
 func _my_pressed():
 	print("Button pressed ")
-#	$AcceptDialog.popup_centered()
-	get_node("../Background").visible=true
-	self.visible = false
+	$MyWindow.popup_centered()
 
 func _my_id_pressed(id):
 	print("Pressed: ", str(id))
