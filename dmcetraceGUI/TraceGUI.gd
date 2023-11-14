@@ -291,9 +291,13 @@ func PopulateViews(view):
 		else:
 			for v in D.vars:
 				if CurrentSearchString in v:
-					VarsView.append_text(v.replace("[", "[lb]").replace(CurrentSearchString, "[bgcolor=#546358]" + CurrentSearchString + "[/bgcolor]") + "\n")
+					VarsView.append_text(v.replace("[", "[lb]").replace(CurrentSearchString, "[bgcolor=#546358]" + CurrentSearchString + "[/bgcolor]"))
 				else:
-					VarsView.append_text(v.replace("[", "[lb]") + "\n")
+					VarsView.append_text(v.replace("[", "[lb]"))
+				if not "dmce_printf" in D.fun:
+					VarsView.append_text("\n")
+				else:
+					VarsView.append_text(" ")
 
 func FTreeInit(trace):
 	trace.FTree = []
