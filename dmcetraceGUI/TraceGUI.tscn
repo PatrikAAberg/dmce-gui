@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://haxot671h3c4"]
+[gd_scene load_steps=45 format=3 uid="uid://haxot671h3c4"]
 
 [ext_resource type="Script" path="res://TraceGUI.gd" id="1_rncp3"]
 [ext_resource type="Script" path="res://TChart.gd" id="2_m5p0u"]
@@ -105,6 +105,18 @@ bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_awp5k"]
 bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8joqv"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.117647, 0.117647, 0.117647, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.215686, 0.215686, 0.215686, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i6jng"]
 bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 
@@ -114,7 +126,61 @@ bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eunkh"]
 bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i5th6"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.117647, 0.117647, 0.117647, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.215686, 0.215686, 0.215686, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ulhlh"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fkd24"]
+bg_color = Color(0.0627451, 0.0627451, 0.0627451, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.215686, 0.215686, 0.215686, 1)
+expand_margin_left = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lsv21"]
+bg_color = Color(0.0627451, 0.0627451, 0.0627451, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.215686, 0.215686, 0.215686, 1)
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_31pob"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kpe73"]
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0hsic"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.117647, 0.117647, 0.117647, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.215686, 0.215686, 0.215686, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_osjdt"]
 bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kt5st"]
@@ -360,6 +426,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_ofdfa")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_awp5k")
+theme_override_styles/panel = SubResource("StyleBoxFlat_8joqv")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_i6jng")
 
 [node name="CoreActivityRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/CoreActivityTabContainer"]
@@ -377,10 +444,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_ydq80")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_eunkh")
+theme_override_styles/panel = SubResource("StyleBoxFlat_i5th6")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_ulhlh")
 
-[node name="LogRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer"]
+[node name="LogVBoxContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer"]
 layout_mode = 2
+
+[node name="LogRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_fonts/normal_font = ExtResource("3_wmipt")
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
@@ -388,24 +460,47 @@ text = "No log (DMCE_PRINTF) entries available"
 meta_underlined = false
 hint_underlined = false
 
-[node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer"]
+layout_mode = 2
+
+[node name="LogSearchLineEdit" type="LineEdit" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_fkd24")
+placeholder_text = "Enter search"
+
+[node name="LogFilterLineEdit" type="LineEdit" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_lsv21")
+placeholder_text = "Enter filter"
+
+[node name="MovieTabContainer" type="TabContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_31pob")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_kpe73")
+theme_override_styles/panel = SubResource("StyleBoxFlat_0hsic")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_osjdt")
+
+[node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ProbeInfoLabel" type="Label" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer"]
+[node name="ProbeInfoLabel" type="Label" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer/MovieContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 clip_text = true
 
-[node name="MovieChartContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer"]
+[node name="MovieChartContainer" type="PanelContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer/MovieContainer"]
 clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MovieChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer"]
+[node name="MovieChart" type="Node2D" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer/MovieContainer/MovieChartContainer"]
 script = ExtResource("7_qhf0k")
 
-[node name="MovieHScrollBar" type="HScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer"]
+[node name="MovieHScrollBar" type="HScrollBar" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer/MovieContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 step = 1.0

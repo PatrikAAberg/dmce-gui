@@ -114,6 +114,7 @@ var HSplitSrcVars
 var LogTabContainer
 var LogRichTextLabel
 var CoreActivityTabContainer
+var MovieTabContainer
 
 func Activate():
 	Active = true
@@ -680,9 +681,9 @@ func _ready():
 	TCoreLabels			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TCoreLabelsPanelContainer/TCoreLabels")
 	TChartVScrollBar	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab/TChartHBoxContainer/TChartVScrollBar")
 	TChartTab			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/TChartTab")
-	MovieContainer		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer")
-	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer/MovieChart")
-	MovieChartContainer	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieContainer/MovieChartContainer")
+	MovieContainer		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer/MovieContainer")
+	MovieChart			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer/MovieContainer/MovieChartContainer/MovieChart")
+	MovieChartContainer	= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer/MovieContainer/MovieChartContainer")
 	CoreActivity		= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/CoreActivityTabContainer/CoreActivityRichTextLabel")
 	MainExtas			= get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer")
 	FChart 				= get_node("Background/VSplitTop/VSplitBot/FuncTab/FuncContainer/FuncHBoxContainer/HSplitFNameFChart/FChartPanelTop/FChartPanel/FChart")
@@ -724,8 +725,8 @@ func _ready():
 	LogTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer")
 	CoreActivityTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/CoreActivityTabContainer")
 	SrcViewScrollBar = SrcView.get_v_scroll_bar()
-	LogRichTextLabel = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogRichTextLabel")
-
+	LogRichTextLabel = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/LogRichTextLabel")
+	MovieTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer")
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
 	re_get_probenbr = RegEx.new()
@@ -763,10 +764,10 @@ func _ready():
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
 	SrcTab.set_tab_title(0, "Source")
-	VarsTab.set_tab_title(0, "Variables")
+	VarsTab.set_tab_title(0, "Data")
 	LogTabContainer.set_tab_title(0, "Log")
 	CoreActivityTabContainer.set_tab_title(0, "Core activity")
-
+	MovieTabContainer.set_tab_title(0, "Probe intensity")
 	MovieChart.Update()
 
 	$MenuBar/PopupMenuFile.name = " File "
@@ -1398,10 +1399,10 @@ func _toggle_show_original_src_path():
 	PopulateViews(TRACE)
 
 func _toggle_show_histogram():
-	if MovieContainer.visible == true:
-		MovieContainer.visible = false
+	if MovieTabContainer.visible == true:
+		MovieTabContainer.visible = false
 	else:
-		MovieContainer.visible = true
+		MovieTabContainer.visible = true
 
 func _toggle_core_activity():
 	if CoreActivityTabContainer.visible == true:
