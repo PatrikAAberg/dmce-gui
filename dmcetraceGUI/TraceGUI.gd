@@ -464,6 +464,7 @@ func LoadTrace(path, mode):
 	var first = true
 	var count = 0
 	MainProgressBar.visible = true
+	var printf_last_ts = 0
 	while count < len(filebuf):
 		var line = filebuf[count]
 		if count % 100000 == 0:
@@ -478,6 +479,7 @@ func LoadTrace(path, mode):
 			var function = sline[4]
 			var pathfunc = srcpath + ":" + function
 			var linenbr = sline[3]
+
 			if "dmce_hexdump" in function:
 				var backwardindex = count - 1
 				var psline = filebuf[backwardindex].split("@")
@@ -502,7 +504,11 @@ func LoadTrace(path, mode):
 				tracetmp.HexDumpRaw.append(null)
 				tracetmp.HexDumpTraceEntry.append(null)
 			if "dmce_printf" in function:
-				var out = str(ts) + ":" + str(core) + ":" + sline[6].rstrip("\n")
+				if printf_last_ts == 0:
+					printf_last_ts = ts
+				var printf_diff = ts - printf_last_ts
+				printf_last_ts = ts
+				var out = str(ts) + ":" + "+" + str(printf_diff) + ":" + str(core) + ":" + sline[6].rstrip("\n")
 				tracetmp.LogPrintf += "[url=" + str(len(tracetmp.tracebuffer)) + "]" + out + "[/url]\n"
 
 			var m = re_get_probenbr.search(line)
