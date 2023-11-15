@@ -254,7 +254,11 @@ func PopulateViews(view):
 		Trace[TActive].CurrentSrcFile = D.path
 
 		var srclnbr = int(D.line.replace("+",""))
-		var slines = ReadSrc(D.path, srclnbr)
+		var slines
+		if not "dmce_printf" in D.fun and not "dmce_hexdump" in D.fun:
+			slines = ReadSrc(D.path, srclnbr)
+		else:
+			slines = ["In-band data entry, source code not applicable"]
 		Trace[TActive].CurrentSrcLines = slines
 
 		var lnbr = SrcViewOffset
