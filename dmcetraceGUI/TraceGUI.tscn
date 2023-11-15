@@ -365,6 +365,8 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_i6jng")
 [node name="CoreActivityRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/CoreActivityTabContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/normal_font = ExtResource("3_wmipt")
+theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
 autowrap_mode = 0
 meta_underlined = false
@@ -379,7 +381,12 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_ulhlh")
 
 [node name="LogRichTextLabel" type="RichTextLabel" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer"]
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_wmipt")
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
 text = "No log (DMCE_PRINTF) entries available"
+meta_underlined = false
+hint_underlined = false
 
 [node name="MovieContainer" type="VBoxContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
 layout_mode = 2

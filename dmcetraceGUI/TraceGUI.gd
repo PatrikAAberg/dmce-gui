@@ -112,6 +112,7 @@ var SrcViewScrollBar
 var SrcPopOutButton
 var HSplitSrcVars
 var LogTabContainer
+var LogRichTextLabel
 var CoreActivityTabContainer
 
 func Activate():
@@ -437,6 +438,7 @@ func LoadTrace(path, mode):
 	tracetmp.SrcStepList = [null, null, null]
 	tracetmp.FindAllMarkers = []
 	tracetmp.HexDump = []
+	tracetmp.LogPrintf = ""
 	tracetmp.HexDumpRaw = []
 	tracetmp.HexDumpTraceEntry = []
 	tracetmp.HexDumpTraceEntryIndex = []
@@ -494,6 +496,9 @@ func LoadTrace(path, mode):
 				tracetmp.HexDump.append(null)
 				tracetmp.HexDumpRaw.append(null)
 				tracetmp.HexDumpTraceEntry.append(null)
+			if "dmce_printf" in function:
+				var out = str(ts) + ":" + str(core) + ":" + sline[6].rstrip("\n")
+				tracetmp.LogPrintf += "[url=" + str(len(tracetmp.tracebuffer)) + "]" + out + "[/url]\n"
 
 			var m = re_get_probenbr.search(line)
 			tracetmp.TimestampsPerCore[core].append(ts)
@@ -715,6 +720,7 @@ func _ready():
 	LogTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer")
 	CoreActivityTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/CoreActivityTabContainer")
 	SrcViewScrollBar = SrcView.get_v_scroll_bar()
+	LogRichTextLabel = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogRichTextLabel")
 
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
@@ -748,6 +754,7 @@ func _ready():
 	ShowSrcButton.pressed.connect(self._show_src_button_pressed)
 	SrcPopOutButton.pressed.connect(self._src_pop_out_button_pressed)
 	ShowLogButton.pressed.connect(self._show_log_button_pressed)
+	LogRichTextLabel.meta_clicked.connect(self._log_meta_clicked)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
@@ -1324,6 +1331,9 @@ func ToggleShowCoreChartGrid():
 	UpdateTimeLine()
 	UpdateMarkers()
 
+func _log_meta_clicked(meta):
+	_trace_view_meta_clicked(meta)
+
 func _trace_view_meta_clicked(meta):
 	Trace[TActive].index = int(meta)
 	TraceViewScrollTop = Trace[TActive].index - int(TraceViewVisibleLines / 2)
@@ -1573,6 +1583,8 @@ func SetActiveTrace(trace):
 	MovieChart.Update()
 	CoreActivity.Update()
 	PopulateViews(SRC | INFO | TRACE)
+	# Log view
+	LogRichTextLabel.text = Trace[TActive].LogPrintf
 	TCoreLabels.Init(self)
 	FuncVScrollBar.value = Trace[TActive].FuncVScrollBarIndex
 	if len(Trace[TActive].HexDumpTraceEntryIndex) > 0:
