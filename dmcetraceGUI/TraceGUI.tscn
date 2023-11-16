@@ -142,6 +142,7 @@ border_color = Color(0.215686, 0.215686, 0.215686, 1)
 bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fkd24"]
+content_margin_top = 10.0
 bg_color = Color(0.0627451, 0.0627451, 0.0627451, 1)
 border_width_left = 3
 border_width_top = 3
@@ -270,7 +271,7 @@ size_flags_horizontal = 3
 focus_mode = 2
 theme_override_fonts/normal_font = ExtResource("3_wmipt")
 theme_override_font_sizes/normal_font_size = 14
-text = "No source tree available
+text = "
 "
 autowrap_mode = 0
 selection_enabled = true
@@ -456,7 +457,6 @@ size_flags_vertical = 3
 theme_override_fonts/normal_font = ExtResource("3_wmipt")
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "No log (DMCE_PRINTF) entries available"
 meta_underlined = false
 hint_underlined = false
 

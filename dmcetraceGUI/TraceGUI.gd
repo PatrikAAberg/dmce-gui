@@ -115,6 +115,7 @@ var LogTabContainer
 var LogRichTextLabel
 var CoreActivityTabContainer
 var MovieTabContainer
+var LogFindLineEdit
 
 func Activate():
 	Active = true
@@ -444,6 +445,7 @@ func LoadTrace(path, mode):
 	tracetmp.FindAllMarkers = []
 	tracetmp.HexDump = []
 	tracetmp.LogPrintf = ""
+	tracetmp.LogPrintfLines = []
 	tracetmp.HexDumpRaw = []
 	tracetmp.HexDumpTraceEntry = []
 	tracetmp.HexDumpTraceEntryIndex = []
@@ -510,7 +512,6 @@ func LoadTrace(path, mode):
 				printf_last_ts = ts
 				var out = str(ts) + ":" + "+" + str(printf_diff) + ":" + str(core) + ":" + sline[6].rstrip("\n")
 				tracetmp.LogPrintf += "[url=" + str(len(tracetmp.tracebuffer)) + "]" + out + "[/url]\n"
-
 			var m = re_get_probenbr.search(line)
 			tracetmp.TimestampsPerCore[core].append(ts)
 
@@ -541,6 +542,8 @@ func LoadTrace(path, mode):
 			record = 1
 		elif not record:
 			tracetmp.TraceInfo.append(line)
+
+	tracetmp.LogPrintfLines = tracetmp.LogPrintf.split("\n")
 
 	tracetmp = FDrawListInsertLast(tracetmp)
 	tracetmp.ProbedTree = false
@@ -733,6 +736,7 @@ func _ready():
 	SrcViewScrollBar = SrcView.get_v_scroll_bar()
 	LogRichTextLabel = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/LogRichTextLabel")
 	MovieTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer")
+	LogFindLineEdit = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer/LogSearchLineEdit")
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
 	re_get_probenbr = RegEx.new()
@@ -766,6 +770,7 @@ func _ready():
 	SrcPopOutButton.pressed.connect(self._src_pop_out_button_pressed)
 	ShowLogButton.pressed.connect(self._show_log_button_pressed)
 	LogRichTextLabel.meta_clicked.connect(self._log_meta_clicked)
+	LogFindLineEdit.text_submitted.connect(self._log_find_text_submitted)
 
 	TChartTab.set_tab_title(0, "Cores")
 	FTab.set_tab_title(0, "Functions")
@@ -859,6 +864,13 @@ func _find_prev(searchstr):
 				PopulateViews(TRACE | INFO | SRC)
 				break
 
+func _log_find_next(searchstr):
+	if Trace[TActive].index > 0:
+		for i in range(0,len(Trace[TActive].LogPrintfLines)):
+			if searchstr in Trace[TActive].LogPrintfLines[i]:
+				print("Found at: " + str(i))
+				LogRichTextLabel.scroll_to_line(i)
+
 func _find_next_button_pressed():
 	FindNextButton.release_focus()
 	_find_next(FindLineEdit.text)
@@ -881,6 +893,12 @@ func _find_text_submitted(text):
 	PopulateViews(SRC | INFO | TRACE)
 	UpdateTimeLine()
 	UpdateMarkers()
+
+var CurrentLogSearchString = ""
+func _log_find_text_submitted(text):
+	LogFindLineEdit.release_focus()
+	CurrentLogSearchString = LogFindLineEdit.text
+	_log_find_next(LogFindLineEdit.text)
 
 func _show_all_cores(ind):
 	FChart.ClearCores(ind)
