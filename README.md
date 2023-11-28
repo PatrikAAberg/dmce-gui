@@ -1,5 +1,5 @@
 # dmce-gui
-GUI implementations for viewing dmce generated data. Use main latest of this git together with master latest of the dmce git until the upcoming 2.0 release.
+GUI implementations for viewing DMCE generated data. Use main latest of this git together with master latest of the dmce git until the upcoming 2.0 release.
 
 ### dmcetraceGUI
 
@@ -8,10 +8,10 @@ GUI implementations for viewing dmce generated data. Use main latest of this git
 
 Interactive trace GUI used to view trace bundles (.zip files) generated with:
 
-    $ # Assuming dmce is installed on your system (https://github.com/PatrikAAberg/dmce)
+    $ # Assuming DMCE is installed on your system (https://github.com/PatrikAAberg/dmce)
     $ dmce-set-profile trace-mc
     $ cd path-to-git
-    $ dmce-launcher -aq
+    $ dmce
     $ # Build and execute program here
     $ dmce-trace --bundle [trace buffer file] [ probe references file] [code tree]
 
