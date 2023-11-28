@@ -1245,10 +1245,14 @@ func _input(ev):
 					trace_up()
 				elif ev.keycode == KEY_DOWN:
 					trace_down()
-				if ev.keycode == KEY_LEFT:
+				if ev.keycode == KEY_LEFT or ev.keycode == KEY_A:
 					strafe_left()
-				elif ev.keycode == KEY_RIGHT:
+				elif ev.keycode == KEY_RIGHT or ev.keycode == KEY_D:
 					strafe_right()
+				elif ev.keycode == KEY_W:
+					TChart.MouseWheelUp()
+				elif ev.keycode == KEY_S:
+					TChart.MouseWheelDown()
 				elif ev.keycode == KEY_PAGEUP:
 					trace_pup()
 				elif ev.keycode == KEY_PAGEDOWN:
