@@ -1,5 +1,5 @@
 # dmce-gui
-GUI implementations for viewing DMCE generated data. Use main latest of this git together with master latest of the dmce git until the upcoming 2.0 release.
+GUI implementations for viewing DMCE generated data. Use main latest of this git together with master latest of the [dmce](https://github.com/PatrikAAberg/dmce) git until the upcoming 2.0 release.
 
 ### dmcetraceGUI
 
