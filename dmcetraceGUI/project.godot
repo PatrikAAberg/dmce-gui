@@ -15,7 +15,10 @@ run/main_scene="res://scene_controller.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="/tmp"
 config/features=PackedStringArray("4.0", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="res://3dSpotSplash.png"
+config/icon="res://dmce-icon-64.png"
+boot_splash/minimum_display_time=2000
 
 [display]
 
