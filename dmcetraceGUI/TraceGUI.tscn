@@ -470,6 +470,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_fkd24")
 placeholder_text = "Enter search"
 
 [node name="LogFilterLineEdit" type="LineEdit" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/normal = SubResource("StyleBoxFlat_lsv21")

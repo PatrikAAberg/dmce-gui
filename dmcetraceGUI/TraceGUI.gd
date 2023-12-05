@@ -1260,6 +1260,9 @@ func _input(ev):
 			if FindLineEdit.has_focus():
 				if ev.keycode == KEY_ESCAPE:
 					FindLineEdit.release_focus()
+			elif LogFindLineEdit.has_focus():
+				if ev.keycode == KEY_ESCAPE:
+					LogFindLineEdit.release_focus()
 			else:
 				if ev.keycode == KEY_P:
 					if ShowProbes == false:
