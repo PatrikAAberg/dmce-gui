@@ -25,7 +25,7 @@ https://godotengine.org/download/archive/4.0.4-stable/
     $ # Build and execute program here
     $ dmce-trace --bundle [trace buffer file] [ probe references file] [code tree]
 
-The probe references file is generated at the dmce probing pass. Everytime a process exists that has run at least one dmce probe will produce a trace buffer file. The code tree is the path to the git containing the probed code. Default locations for the first two:
+The probe references file is generated at the dmce probing pass. Every time a process exits, which has run at least one dmce probe, a trace buffer file is generated. The code tree is the path to the git containing the probed code. Default locations for the first two:
 
 /tmp/$USER/dmce/dmcebuffer.bin
 
