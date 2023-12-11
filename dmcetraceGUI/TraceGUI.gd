@@ -1231,6 +1231,14 @@ func _input(ev):
 		return
 	if ev is InputEventKey:
 		if ev.pressed:
+			if FindLineEdit.has_focus():
+				if ev.keycode == KEY_ESCAPE:
+					FindLineEdit.release_focus()
+				return
+			elif LogFindLineEdit.has_focus():
+				if ev.keycode == KEY_ESCAPE:
+					LogFindLineEdit.release_focus()
+				return
 			if Input.is_physical_key_pressed(KEY_CTRL):
 				if ev.keycode == KEY_UP:
 					trace_up_ctrl()
@@ -1257,20 +1265,13 @@ func _input(ev):
 					trace_pup()
 				elif ev.keycode == KEY_PAGEDOWN:
 					trace_pdown()
-			if FindLineEdit.has_focus():
-				if ev.keycode == KEY_ESCAPE:
-					FindLineEdit.release_focus()
-			elif LogFindLineEdit.has_focus():
-				if ev.keycode == KEY_ESCAPE:
-					LogFindLineEdit.release_focus()
-			else:
-				if ev.keycode == KEY_P:
+				elif ev.keycode == KEY_P:
 					if ShowProbes == false:
 						ShowProbes = true
 					else:
 						ShowProbes = false
 					PopulateViews(TRACE | SRC)
-				if ev.keycode == KEY_G:
+				elif ev.keycode == KEY_G:
 					if Input.is_physical_key_pressed(KEY_SHIFT):
 						Trace[TActive].index = Trace[TActive].INDEX_MAX
 					else:
