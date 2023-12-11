@@ -1546,17 +1546,17 @@ func _menu_help_pressed(id):
 		ht += "================================\n"
 		ht += "UP / DOWN - Move one trace entry up / down\n"
 		ht += "PAGE UP / DOWN - Move several trace entries up / down\n"
-		ht += "LEFT / RIGHT - Strafe left / right\n"
-		ht += "Mouse wheel forward/back or comma / period - Zoom in / out\n"
+		ht += "LEFT/A / RIGHT/D - Strafe left / right\n"
+		ht += "Mouse wheel forward/back or comma / period - Zoom in / out or W / S\n"
 		ht += "Left-click - Set cursor\n"
 		ht += "Right-click-and-hold - select zoom window\n"
 		ht += "CTRL-right-click-and-hold - measure time without zooming when released\n"
 		ht += "G - jump to beginning of trace\n"
 		ht += "SHIFT-G - jump to end of trace\n"
+		ht += "H - Enter hexviewer (hexdumps created with DMCE_HEXDUMP())\n"
 		ht += "Z - Reset zoom level\n"
 		ht += "CTRL-Z - Restore previous zoom level\n"
 		ht += "P - Toggle inserted probes visible\n"
-		ht += "ESC - Quit program\n"
 
 		GenericAcceptDialog.title = "Help"
 		GenericAcceptDialog.dialog_text = ht
@@ -1585,7 +1585,7 @@ func _menu_help_pressed(id):
 		ht += "SOFTWARE.\n"
 
 		GenericAcceptDialog.dialog_text = ht
-		GenericAcceptDialog.title = "dmce-wgui version 1.0"
+		GenericAcceptDialog.title = "dmce-wgui version 2.0"
 		GenericAcceptDialog.popup_centered()
 
 func _funcvscrollbar_value_changed(val):
