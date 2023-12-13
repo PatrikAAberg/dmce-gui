@@ -357,6 +357,7 @@ custom_minimum_size = Vector2(1000, 0)
 offset_right = 1000.0
 offset_bottom = 40.0
 bbcode_enabled = true
+fit_content = true
 scroll_active = false
 autowrap_mode = 0
 shortcut_keys_enabled = false
