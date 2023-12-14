@@ -1602,6 +1602,11 @@ func _menu_help_pressed(id):
 		ht += "Z - Reset zoom level\n"
 		ht += "CTRL-Z - Restore previous zoom level\n"
 		ht += "P - Toggle inserted probes visible\n"
+		ht += "\n"
+		ht += "Other\n"
+		ht += "================================\n"
+		ht += "Select / Deselect cores by clicking on respective number in the 'Cores' view\n"
+		ht += "Darker shades of blue markers in the 'Source' view indicates previously viewed lines when stepping \n"
 
 		GenericAcceptDialog.title = "Help"
 		GenericAcceptDialog.dialog_text = ht
