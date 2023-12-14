@@ -442,6 +442,7 @@ meta_underlined = false
 script = ExtResource("7_nh6xr")
 
 [node name="LogTabContainer" type="TabContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_ydq80")
@@ -476,6 +477,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/normal = SubResource("StyleBoxFlat_lsv21")
 placeholder_text = "Enter filter"
+
+[node name="LogSearchNextButton" type="Button" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Next"
+
+[node name="LogSearchPrevButton" type="Button" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Prev"
 
 [node name="MovieTabContainer" type="TabContainer" parent="Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer"]
 layout_mode = 2
@@ -553,7 +562,6 @@ item_7/checked = true
 item_7/id = 7
 item_8/text = "Show log"
 item_8/checkable = 1
-item_8/checked = true
 item_8/id = 8
 
 [node name="PopupMenuSearch" type="PopupMenu" parent="MenuBar"]

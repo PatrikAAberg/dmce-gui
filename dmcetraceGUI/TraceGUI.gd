@@ -116,6 +116,8 @@ var LogRichTextLabel
 var CoreActivityTabContainer
 var MovieTabContainer
 var LogFindLineEdit
+var LogSearchNextButton
+var LogSearchPrevButton
 
 func Activate():
 	Active = true
@@ -446,6 +448,7 @@ func LoadTrace(path, mode):
 	tracetmp.HexDump = []
 	tracetmp.LogPrintf = ""
 	tracetmp.LogPrintfLines = []
+	tracetmp.LogSearchIndex = 0
 	tracetmp.HexDumpRaw = []
 	tracetmp.HexDumpTraceEntry = []
 	tracetmp.HexDumpTraceEntryIndex = []
@@ -737,6 +740,8 @@ func _ready():
 	LogRichTextLabel = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/LogRichTextLabel")
 	MovieTabContainer = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/MovieTabContainer")
 	LogFindLineEdit = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer/LogSearchLineEdit")
+	LogSearchNextButton = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer/LogSearchNextButton")
+	LogSearchPrevButton = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer/LogSearchPrevButton")
 	re_remove_probe = RegEx.new()
 	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
 	re_get_probenbr = RegEx.new()
@@ -769,6 +774,9 @@ func _ready():
 	ShowSrcButton.pressed.connect(self._show_src_button_pressed)
 	SrcPopOutButton.pressed.connect(self._src_pop_out_button_pressed)
 	ShowLogButton.pressed.connect(self._show_log_button_pressed)
+	LogSearchNextButton.pressed.connect(self._log_search_next_button_pressed)
+	LogSearchPrevButton.pressed.connect(self._log_search_prev_button_pressed)
+
 	LogRichTextLabel.meta_clicked.connect(self._log_meta_clicked)
 	LogFindLineEdit.text_submitted.connect(self._log_find_text_submitted)
 
@@ -865,11 +873,48 @@ func _find_prev(searchstr):
 				break
 
 func _log_find_next(searchstr):
+	CurrentLogSearchString = searchstr
 	if Trace[TActive].index > 0:
-		for i in range(0,len(Trace[TActive].LogPrintfLines)):
+		var i = Trace[TActive].LogSearchIndex
+		i += 1
+		if i >= len(Trace[TActive].LogPrintfLines):
+			i = 0
+		while true:
 			if searchstr in Trace[TActive].LogPrintfLines[i]:
-				print("Found at: " + str(i))
 				LogRichTextLabel.scroll_to_line(i)
+				Trace[TActive].LogSearchIndex = i
+				break
+			i += 1
+			if i >= len(Trace[TActive].LogPrintfLines):
+				i = 0
+			if i == Trace[TActive].LogSearchIndex:
+				break
+
+func _log_find_prev(searchstr):
+	CurrentLogSearchString = searchstr
+	if Trace[TActive].index > 0:
+		var i = Trace[TActive].LogSearchIndex
+		i -= 1
+		if i <= 0:
+			i = len(Trace[TActive].LogPrintfLines) - 1
+		while true:
+			if searchstr in Trace[TActive].LogPrintfLines[i]:
+				LogRichTextLabel.scroll_to_line(i)
+				Trace[TActive].LogSearchIndex = i
+				break
+			i -= 1
+			if i <= 0:
+				i = len(Trace[TActive].LogPrintfLines) - 1
+			if i == Trace[TActive].LogSearchIndex:
+				break
+
+func _log_search_next_button_pressed():
+	_log_find_next(CurrentLogSearchString)
+	LogSearchNextButton.release_focus()
+
+func _log_search_prev_button_pressed():
+	_log_find_prev(CurrentLogSearchString)
+	LogSearchPrevButton.release_focus()
 
 func _find_next_button_pressed():
 	FindNextButton.release_focus()
@@ -1620,8 +1665,11 @@ func SetActiveTrace(trace):
 	MovieChart.Update()
 	CoreActivity.Update()
 	PopulateViews(SRC | INFO | TRACE)
+
 	# Log view
 	LogRichTextLabel.text = Trace[TActive].LogPrintf
+	LogRichTextLabel.scroll_to_line(Trace[TActive].LogSearchIndex)
+
 	TCoreLabels.Init(self)
 	FuncVScrollBar.value = Trace[TActive].FuncVScrollBarIndex
 	if len(Trace[TActive].HexDumpTraceEntryIndex) > 0:
