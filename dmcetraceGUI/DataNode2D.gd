@@ -285,7 +285,12 @@ func Load():
 	HexDumpMaxLines = 0
 	HDLabelsText = []
 
+	var count = 0
+
 	for i in range(NumHexdumps):
+		count += 1
+		if count % 100 == 0:
+			print("Formatting hexdump " + str(count) + " (" + str(NumHexdumps) + ")")
 		var hdtmp = HDRichTextLabelTemplate.duplicate()
 		hdtmp.visible = false
 		var pad = 7 + 16 * 4

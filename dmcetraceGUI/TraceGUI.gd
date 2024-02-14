@@ -400,6 +400,7 @@ func _get_hexdump(vars):
 	var varstmp = vars[0] + "\n\n"
 	varstmp += "000000 "
 	var ascii = ""
+	var varstmplist = []
 	for i in range (1, len(vars)):
 		if i % 16 == 0:
 			varstmp += vars[i] + " "
@@ -410,6 +411,8 @@ func _get_hexdump(vars):
 
 			varstmp += ascii + "\n" + "%06x" % i + " "
 			ascii = ""
+			varstmplist.append(varstmp)
+			varstmp = ""
 		else:
 			varstmp += vars[i]
 			varstmp += " "
@@ -417,7 +420,7 @@ func _get_hexdump(vars):
 				ascii += char(vars[i].hex_to_int())
 			else:
 				ascii += "."
-	return varstmp
+	return "".join(varstmplist)
 
 func LoadTrace(path, mode):
 	var file = path
@@ -468,9 +471,11 @@ func LoadTrace(path, mode):
 	var prefix
 	var first = true
 	var count = 0
+	var hexdumpcount = 0
 	MainProgressBar.visible = true
 	var printf_last_ts = 0
 	while count < len(filebuf):
+
 		var line = filebuf[count]
 		if count % 100000 == 0:
 			print("Processed trace lines: " + str(count) + " ( " +  str(100 * (float(count) / len(filebuf))) + "% )")
@@ -494,16 +499,19 @@ func LoadTrace(path, mode):
 				while int(psline[0]) != core and backwardindex > 0:
 					psline = filebuf[backwardindex].split("@")
 					backwardindex -= 1
-
 				srcpath = psline[2]
 				linenbr = psline[3]
 				sline[2] = psline[2]
 				sline[3] = psline[3]
 				line = "@".join(sline)
-				tracetmp.HexDump.append(_get_hexdump(sline[6]))
+				var encodedhexdump = _get_hexdump(sline[6])
+				tracetmp.HexDump.append(encodedhexdump)
 				tracetmp.HexDumpRaw.append(sline[6])
 				tracetmp.HexDumpTraceEntry.append(sline)
 				tracetmp.HexDumpTraceEntryIndex.append(len(tracetmp.HexDumpTraceEntry) - 1)
+				hexdumpcount += 1
+				if hexdumpcount % 100 == 0:
+					print("Got hexdump entry " + str(hexdumpcount) + " at entry: " + str(count))
 			else:
 				tracetmp.HexDump.append(null)
 				tracetmp.HexDumpRaw.append(null)
@@ -584,7 +592,8 @@ func LoadTrace(path, mode):
 	Trace.append(tracetmp)
 	print("...finished creating data structures")
 
-	print("Loaded trace in tab " + str(len(TraceViews) - 1 ))
+	# TraceViews will be increased in add_tab
+	print("Loaded trace in tab " + str(len(TraceViews) - 1  + 1))
 
 
 #	print("Initial gfx setup...")
@@ -956,7 +965,7 @@ func _hide_all_cores(ind):
 	UpdateTimeLine()
 
 func _trace_tab_changed(tab):
-		SetActiveTrace(tab)
+	SetActiveTrace(tab)
 
 func _dragged(_offset):
 	Dragged = true
@@ -1081,8 +1090,10 @@ func _process(_delta):
 		if LoaderThread.is_started() and not LoaderThread.is_alive():
 			LoaderThread.wait_to_finish()
 			print("Adding new tab: ", LoaderFilename)
+			# add_tab() will cause _trace_tab_changed() to be run, which will call SetActiveTrace, so no need to do that below
 			add_tab(LoaderFilename)
-			SetActiveTrace(TActive)
+#			print("Process():")
+#			SetActiveTrace(TActive)
 			_show_all_cores(TActive)
 			LoaderFilename = ""
 		return
@@ -1677,6 +1688,7 @@ func SetActiveTrace(trace):
 
 	TCoreLabels.Init(self)
 	FuncVScrollBar.value = Trace[TActive].FuncVScrollBarIndex
+	print("Hexdumps found, loading hexdump scene...")
 	if len(Trace[TActive].HexDumpTraceEntryIndex) > 0:
 		SceneController.HexdumpSceneRef.Load()
 
