@@ -371,7 +371,7 @@ func _read_trace_from_bundle(bundle):
 		var rawtrace = null
 		if err != OK:
 			print("Error " + str(err) + " when opening .zip file!")
-			return
+			return null
 
 		var zippedfiles = reader.get_files()
 
@@ -462,6 +462,10 @@ func LoadTrace(path, mode):
 		filebuf = _read_trace_from_bundle(file)
 	elif mode == "file":
 		filebuf = _read_trace_from_file(file)
+
+	if filebuf == null:
+		LoaderFilename = ""
+		return
 
 	tracetmp.load_mode = mode
 	tracetmp.filename = file
@@ -594,7 +598,7 @@ func LoadTrace(path, mode):
 
 	# TraceViews will be increased in add_tab
 	print("Loaded trace in tab " + str(len(TraceViews) - 1  + 1))
-
+	return 0
 
 #	print("Initial gfx setup...")
 #	ResetTimespan()
@@ -645,8 +649,10 @@ func init(node):
 	# Initial state
 	print("dmce-wgui: started with args: " + str(OS.get_cmdline_args()))
 
-	if len(OS.get_cmdline_args()) > 0 and OS.get_cmdline_args()[0] != "res://TraceGUI.tscn":
+	if len(OS.get_cmdline_args()) > 0 and OS.get_cmdline_args()[0] != "res://scene_controller.tscn":
 		var file = OS.get_cmdline_args()[0]
+		print("Loading " + file)
+
 		if not FileAccess.file_exists(file):
 			print("dmce-wgui: Could not open " + str(file))
 		else:
@@ -658,6 +664,8 @@ func init(node):
 				_show_all_cores(0)
 			else:
 				print("Unsupported file extension, please provide a .zip file.")
+				# Here we come from prompt, so just exit
+				get_tree().quit()
 	else:
 		print("dmce-wgui: No trace loaded from args")
 		# dev state, uncomment for release:
