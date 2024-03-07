@@ -5,7 +5,11 @@ GUI implementations for viewing DMCE generated data.
 
 <img src="https://github.com/PatrikAAberg/dmce-gui/assets/22773714/db5bef9a-63ef-4d7d-8fd9-5ba53a9be0b1" width=40% height=40%>
 
-Interactive trace GUI used to view DMCE trace bundles (.zip files). Use main latest of this git together with master latest of the [dmce](https://github.com/PatrikAAberg/dmce) git until the upcoming 2.0 release.
+Interactive trace GUI used to view DMCE trace bundles (.zip files). 
+
+## Latest stable tag: v2.0.0
+
+Use together with v2.0.0 of the [dmce](https://github.com/PatrikAAberg/dmce) git, or master / main on both.
 
 ![dmce-trace-threads](https://github.com/PatrikAAberg/dmce-gui/assets/22773714/f988f245-47c3-4580-9950-c6d483281fac)
 
