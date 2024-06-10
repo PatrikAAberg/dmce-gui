@@ -704,3 +704,9 @@ offset_left = 87.0
 offset_top = 163.0
 offset_right = 1070.0
 offset_bottom = 340.0
+
+[node name="TogglePerFuncOrCoreButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Toggle Func/Core View"

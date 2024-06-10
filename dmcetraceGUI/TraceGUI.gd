@@ -79,6 +79,7 @@ var FindPrevButton
 var TraceInfoButton
 var ShowSrcButton
 var ShowLogButton
+var TogglePerFuncOrCoreButton
 var re_remove_probe
 var re_get_probenbr
 var TraceViewStart
@@ -440,6 +441,7 @@ func LoadTrace(path, mode):
 	for i in range(MAX_NUM_CORES):
 		tracetmp.TimestampsPerCore.append([])
 
+	tracetmp.FuncPerCore = false
 	tracetmp.TimeLineTS = []
 	tracetmp.TraceEntry2ProbeListIndex = []
 	tracetmp.UniqueProbeList = [] 			# probe numbers found in the trace
@@ -741,6 +743,7 @@ func _ready():
 	ShowSrcButton		= get_node("ShowSrcButton")
 	SrcPopOutButton		= get_node("SrcPopOutButton")
 	ShowLogButton		= get_node("ShowLogButton")
+	TogglePerFuncOrCoreButton	= get_node("TogglePerFuncOrCoreButton")
 	GenericAcceptDialog	= get_node("GenericAcceptDialog")
 	ShowCurrentTraceInfoDialog = get_node("ShowCurrentTraceInfoDialog")
 	AskForConfirmationDialog = get_node("AskForConfirmationDialog")
@@ -791,6 +794,7 @@ func _ready():
 	ShowSrcButton.pressed.connect(self._show_src_button_pressed)
 	SrcPopOutButton.pressed.connect(self._src_pop_out_button_pressed)
 	ShowLogButton.pressed.connect(self._show_log_button_pressed)
+	TogglePerFuncOrCoreButton.pressed.connect(self._toggle_per_func_or_core_button_pressed)
 	LogSearchNextButton.pressed.connect(self._log_search_next_button_pressed)
 	LogSearchPrevButton.pressed.connect(self._log_search_prev_button_pressed)
 
@@ -854,6 +858,10 @@ func _show_log_button_pressed():
 	print("Show log!")
 #		self.grab_focus()
 #		ShowCurrentTraceInfoDialog.popup_centered()
+func _toggle_per_func_or_core_button_pressed():
+	TogglePerFuncOrCoreButton.release_focus()
+	if len(Trace) > 0:
+		_toggle_func_per_core()
 
 func _trace_info_button_pressed():
 	if len(Trace) > 0:
@@ -999,6 +1007,9 @@ func _resized():
 
 	ShowLogButton.position.x = SrcPopOutButton.position.x - 110
 	ShowLogButton.position.y = 3
+
+	TogglePerFuncOrCoreButton.position.x = ShowLogButton.position.x - 80
+	TogglePerFuncOrCoreButton.position.y = 3
 
 	VSplitCTop.split_offset = VSplitCTop.size.y * VSplitTop
 	HSplitCTop.split_offset = HSplitCTop.size.x * HSplitTop
@@ -1517,6 +1528,17 @@ func _toggle_lossless():
 		LossLess = true
 	else:
 		LossLess = false
+
+func _toggle_func_per_core():
+	if Trace[TActive].FuncPerCore == false:
+		Trace[TActive].FuncPerCore = true
+	else:
+		Trace[TActive].FuncPerCore = false
+
+	PopulateViews(SRC | INFO | TRACE)
+	InitTimeLine()
+	UpdateTimeLine()
+	UpdateMarkers()
 
 func _menu_view_pressed(id):
 	if len(Trace) == 0:
