@@ -13,7 +13,9 @@ var ZoomStart = 0
 var ZoomEnd = 0
 var mutex
 var FChartPanel
-var FuncFont : Font
+var FuncFont:Font
+var FuncFontMinWidth
+var FuncFontCharWidth
 
 func ClearCores(ind):
 	Cores[ind] = []
@@ -49,8 +51,18 @@ func _ready():
 	FMarkers = get_node("../FMarkers")
 	mutex = Mutex.new()
 
-	FuncFont =  ThemeDB.fallback_font;
+#	FuncFont =  ThemeDB.fallback_font;
+	FuncFont = load("res://FiraCode-Medium.ttf")
 
+# Lets hard code size to 10 for now
+#	FuncFontMinWidth = FuncFont.get_string_size("                    ").x
+#	FuncFontCharWidth = int(FuncFontMinWidth / 20)
+#	FuncFontMinWidth = FuncFontCharWidth * 8
+	FuncFontMinWidth = 10 * 8
+	FuncFontCharWidth = 8
+
+	# Set the desired font size
+#	FuncFont.size = 10
 	print("FChart ready")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -224,7 +236,7 @@ func _draw_from_core_list():
 
 		# Set vscroll size
 		var page = int(FChartPanel.size.y / tgui.FNameText.get_line_offset(1))
-		tgui.FuncVScrollBar.max_value = num_draw_cores
+		tgui.FuncVScrollBar.max_value = num_trace_cores
 		tgui.FuncVScrollBar.page = page
 
 		print("num_draw_cores			: " + str(num_draw_cores))
@@ -313,10 +325,12 @@ func _draw_from_core_list_interval(indstart, indend):
 							if width > Width:
 								width = Width
 							var y_start = int(line_height * core + 3)
+							var stringwidth = int(width / FuncFontCharWidth)
+							var korvstring = tgui.Trace[tgui.TActive].FList[korv.index].substr(0, stringwidth)
 							mutex.lock()
 							draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
-							if width > 20:
-								draw_string(FuncFont, Vector2(x_start, y_start), tgui.Trace[tgui.TActive].FList[korv.index])
+							if width > FuncFontMinWidth:
+								draw_string(FuncFont, Vector2(x_start, y_start + 12), korvstring, 0, -1, 10)
 							mutex.unlock()
 							rect_count += 1
 							# Find next entry for this function that shall be drawn in next x position
@@ -423,8 +437,14 @@ func UpdateScrollPosition():
 	if _timeline_inited:
 		var line_height = tgui.FNameText.get_line_offset(1)
 		tgui.FNameText.scroll_to_line(tgui.Trace[tgui.TActive].FuncVScrollBarIndex)
-		if len(tgui.Trace[tgui.TActive].FList) >= (tgui.Trace[tgui.TActive].FuncVScrollBarIndex + tgui.FNameText.get_visible_line_count()):
-			tgui.FChart.position.y = 0 - tgui.Trace[tgui.TActive].FuncVScrollBarIndex * line_height
+
+		# Function or core centric view?
+		if not tgui.Trace[tgui.TActive].FuncPerCore:
+			if len(tgui.Trace[tgui.TActive].FList) >= (tgui.Trace[tgui.TActive].FuncVScrollBarIndex + tgui.FNameText.get_visible_line_count()):
+				tgui.FChart.position.y = 0 - tgui.Trace[tgui.TActive].FuncVScrollBarIndex * line_height
+		else:
+			if tgui.Trace[tgui.TActive].NumCores >= (tgui.Trace[tgui.TActive].FuncVScrollBarIndex + tgui.FNameText.get_visible_line_count()):
+				tgui.FChart.position.y = 0 - tgui.Trace[tgui.TActive].FuncVScrollBarIndex * line_height
 
 func UpdateMarkers():
 	var xpos
