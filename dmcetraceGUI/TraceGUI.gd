@@ -1532,8 +1532,10 @@ func _toggle_lossless():
 func _toggle_func_per_core():
 	if Trace[TActive].FuncPerCore == false:
 		Trace[TActive].FuncPerCore = true
+		FTab.set_tab_title(0, "Cores")
 	else:
 		Trace[TActive].FuncPerCore = false
+		FTab.set_tab_title(0, "Functions")
 
 	PopulateViews(SRC | INFO | TRACE)
 	InitTimeLine()
