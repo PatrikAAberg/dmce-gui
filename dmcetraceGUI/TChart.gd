@@ -34,7 +34,10 @@ func _draw():
 					# time border to next pixel
 					var fictive = (x + 1) / ratio + tgui.Trace[tgui.TActive].TimeSpanStart
 					var fictive_index = tgui.Trace[tgui.TActive].TimestampsPerCore[core].bsearch(fictive)
-					j = fictive_index
+					if fictive_index > j:
+						j = fictive_index
+					else:
+						j = j + 1
 				else:
 					# if we end up with next timestamp being the same as the last, lets look at next entry
 					j = j + 1
