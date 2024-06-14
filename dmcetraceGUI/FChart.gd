@@ -292,7 +292,7 @@ func _draw_from_core_list_interval(indstart, indend):
 		for klistindex in range(indstart, indend):
 			if klistindex > len(tgui.Trace[tgui.TActive].FTree) - 1:
 				break
-			var klist = tgui.Trace[tgui.TActive].FTree[klistindex]
+			var klist = tgui.Trace[tgui.TActive].FTree[Cores[tgui.TActive][klistindex]]
 			if len(klist) > 0:
 					var length = len (klist)
 					var step = 1
@@ -304,14 +304,14 @@ func _draw_from_core_list_interval(indstart, indend):
 					j = klist.bsearch_custom(fictive, _compare_end)
 					while j < length:
 						var korv = klist[j]
-						var core = klistindex
+						var corepos = klistindex
 						var color
-						# Show this core?
-						if core not in Cores[tgui.TActive]:
-							j += 1
-							continue
-						else:
-							color = Colors[korv.index % 256]
+						# TBD: how to visualize "Show this core?" below
+#						if corepos not in Cores[tgui.TActive]:
+#							j += 1
+#							continue
+#						else:
+						color = Colors[korv.index % 256]
 
 						# skip entries to the right
 						if korv.tstart > tgui.Trace[tgui.TActive].TimeSpanEnd:
@@ -324,7 +324,7 @@ func _draw_from_core_list_interval(indstart, indend):
 							var width = int((korv.tend - tgui.Trace[tgui.TActive].TimeSpanStart) * ratio - x_start)
 							if width > Width:
 								width = Width
-							var y_start = int(line_height * core + 3)
+							var y_start = int(line_height * corepos + 3)
 							var stringwidth = int(width / FuncFontCharWidth)
 							var korvstring = tgui.Trace[tgui.TActive].FList[korv.index].substr(0, stringwidth)
 							mutex.lock()
