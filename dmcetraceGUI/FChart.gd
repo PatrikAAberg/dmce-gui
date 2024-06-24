@@ -413,8 +413,8 @@ func InitTimeLine(node, box):
 		for i in range(len(tgui.Trace[tgui.TActive].FList)):
 			tgui.FNameText.text += tgui.Trace[tgui.TActive].FList[i] + "\n"
 	else:
-		for i in range(len(tgui.Trace[tgui.TActive].CoreList)):
-			tgui.FNameText.text += "Core " + str(tgui.Trace[tgui.TActive].CoreList[i]) + "\n"
+		for i in range(len(Cores[tgui.TActive])):
+			tgui.FNameText.text += "Core " + str(Cores[tgui.TActive][i]) + "\n"
 
 	_timeline_inited = true
 	print("FCHart init timeline done")

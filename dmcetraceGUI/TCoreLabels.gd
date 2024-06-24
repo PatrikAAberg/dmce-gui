@@ -34,4 +34,5 @@ func MouseLeftPressed():
 	var ind = int(get_local_mouse_position().y / tgui.CORE_KORV_HEIGHT)
 	if ind < len(tgui.Trace[tgui.TActive].CoreList):
 		tgui.FChart.AddCore(tgui.Trace[tgui.TActive].CoreList[ind], tgui.TActive)
+	tgui.InitTimeLine()
 	tgui.UpdateTimeLine()
