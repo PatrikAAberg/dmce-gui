@@ -325,12 +325,14 @@ func _draw_from_core_list_interval(indstart, indend):
 							if width > Width:
 								width = Width
 							var y_start = int(line_height * corepos + 3)
-							var stringwidth = int(width / FuncFontCharWidth)
-							var korvstring = tgui.Trace[tgui.TActive].FList[korv.index].substr(0, stringwidth)
 							mutex.lock()
 							draw_rect(Rect2(x_start, y_start, width, line_height - 6), color, false)
 							if width > FuncFontMinWidth:
-								draw_string(FuncFont, Vector2(x_start, y_start + 12), korvstring, 0, -1, 10)
+								var stringwidth = int(width / FuncFontCharWidth)
+								var stringlength = tgui.Trace[tgui.TActive].FList[korv.index].length()
+								var pos = stringlength - stringwidth if stringlength > stringwidth else 0;
+								var korvstring = tgui.Trace[tgui.TActive].FList[korv.index].substr(pos, stringwidth)
+								draw_string(FuncFont, Vector2(x_start + 2, y_start + 10), korvstring, 0, -1, 10)
 							mutex.unlock()
 							rect_count += 1
 							# Find next entry for this function that shall be drawn in next x position
