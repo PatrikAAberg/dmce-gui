@@ -80,7 +80,9 @@ var TraceInfoButton
 var ShowSrcButton
 var ShowLogButton
 var TogglePerFuncOrCoreButton
-var re_remove_probe
+var re_remove_probe_type0
+var re_remove_probe_type1begin
+var re_remove_probe_type1end
 var re_get_probenbr
 var TraceViewStart
 var TraceViewEnd
@@ -138,7 +140,8 @@ func RemoveProbe(tstr):
 	if ShowProbes:
 		pass
 	else:
-		tstr = re_remove_probe.sub(tstr,"")
+		# Probe type 0
+		tstr = re_remove_probe_type0.sub(tstr,"")
 		var pcnt = 0
 		var found = -1
 		for pos in range(len(tstr)):
@@ -151,6 +154,12 @@ func RemoveProbe(tstr):
 				break
 		if found != -1:
 			tstr = tstr.left(found) + tstr.right(len(tstr) - found - 1)
+
+		# Probe type 1
+		if "{ do { DMCE_PROBE" in tstr:
+			tstr = re_remove_probe_type1begin.sub(tstr,"")
+			tstr = re_remove_probe_type1end.sub(tstr,"")
+
 	return tstr
 
 var LastSrcFileLookup = ""
@@ -762,8 +771,12 @@ func _ready():
 	LogFindLineEdit = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer/LogSearchLineEdit")
 	LogSearchNextButton = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer/LogSearchNextButton")
 	LogSearchPrevButton = get_node("Background/VSplitTop/VSplitBot/TCMovieHSplitContainer/HistoCoreActivityHSplitContainer/LogCoreActivityHSplitContainer/LogTabContainer/LogVBoxContainer/HBoxContainer/LogSearchPrevButton")
-	re_remove_probe = RegEx.new()
-	re_remove_probe.compile("\\(DMCE_PROBE.*?\\),")      #\d*(.*?),")
+	re_remove_probe_type0 = RegEx.new()
+	re_remove_probe_type0.compile("\\(DMCE_PROBE.*?\\),")
+	re_remove_probe_type1begin = RegEx.new()
+	re_remove_probe_type1begin.compile("{ do { DMCE_PROBE.*?;")
+	re_remove_probe_type1end = RegEx.new()
+	re_remove_probe_type1end.compile("\\} while \\(0\\);\\}")
 	re_get_probenbr = RegEx.new()
 	re_get_probenbr.compile("DMCE_PROBE\\d*\\((\\d*)")
 
